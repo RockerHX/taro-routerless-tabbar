@@ -23,3 +23,26 @@ export const normalizeTabKey = <Key extends string>(options: {
 
   return value && isTabKey(value, tabKeys) ? value : defaultKey
 }
+
+export const createVisitedTabRecord = <Key extends string>(options: {
+  tabKeys: readonly Key[]
+  defaultKey: Key
+}): Record<Key, boolean> => {
+  const { defaultKey, tabKeys } = options
+
+  return tabKeys.reduce(
+    (result, key) => ({
+      ...result,
+      [key]: key === defaultKey,
+    }),
+    {} as Record<Key, boolean>,
+  )
+}
+
+export const getVisitedTabs = <
+  Key extends string,
+  Item extends KeyedTabItem<Key>,
+>(
+  tabs: readonly Item[],
+  visited: Partial<Record<Key, boolean>>,
+) => tabs.filter((tab) => visited[tab.key] === true)

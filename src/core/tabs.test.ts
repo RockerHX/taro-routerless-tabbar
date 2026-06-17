@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { getTabKeys, isTabKey, normalizeTabKey } from './tabs'
+import {
+  createVisitedTabRecord,
+  getTabKeys,
+  getVisitedTabs,
+  isTabKey,
+  normalizeTabKey,
+} from './tabs'
 
 const tabs = [
   { key: 'recommend', text: '推荐' },
@@ -58,5 +64,31 @@ describe('tab key helpers', () => {
         aliases: { index: 'recommend' },
       }),
     ).toBe('recommend')
+  })
+
+  it('初始化 visited record 时仅默认 tab 为 true', () => {
+    expect(
+      createVisitedTabRecord({
+        tabKeys: getTabKeys(tabs),
+        defaultKey: 'recommend',
+      }),
+    ).toEqual({
+      recommend: true,
+      orders: false,
+      profile: false,
+    })
+  })
+
+  it('按原顺序返回已访问 tabs，并忽略脏 key', () => {
+    expect(
+      getVisitedTabs(tabs, {
+        profile: true,
+        recommend: true,
+        unknown: true,
+      } as Partial<Record<'recommend' | 'orders' | 'profile', boolean>>),
+    ).toEqual([
+      { key: 'recommend', text: '推荐' },
+      { key: 'profile', text: '我的' },
+    ])
   })
 })

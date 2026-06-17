@@ -5,5 +5,11 @@ export type {
 } from './types'
 
 export { resolveTabClick } from './core/click'
-export { getTabKeys, isTabKey, normalizeTabKey } from './core/tabs'
+export {
+  createVisitedTabRecord,
+  getTabKeys,
+  getVisitedTabs,
+  isTabKey,
+  normalizeTabKey,
+} from './core/tabs'
 export { buildRouterlessTabUrl, resolveTabPageModuleKey } from './core/routes'
