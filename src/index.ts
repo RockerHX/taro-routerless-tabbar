@@ -20,3 +20,4 @@ export {
   resolveTabPageModuleKey,
 } from './core/routes.js'
 export { createRetapRefreshCore } from './core/retap.js'
+export { createRetapRefreshContext } from './vue/useRetapRefresh.js'
