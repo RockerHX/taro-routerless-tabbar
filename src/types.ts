@@ -12,3 +12,11 @@ export type RouterlessTabQueryValue =
   | boolean
   | null
   | undefined
+
+export type RetapRefreshHandler = () => void | Promise<void>
+
+export type RetapAnimationListener<Key extends string> = (key: Key | '') => void
+
+export type RetapRefreshContextOptions<Key extends string> = {
+  onError?: (error: unknown, key: Key) => void
+}
