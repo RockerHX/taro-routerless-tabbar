@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildRouterlessTabUrl, resolveTabPageModuleKey } from './routes'
+import { buildRouterlessTabUrl, resolveTabPageModuleKey } from './routes.js'
 
 describe('routerless route helpers', () => {
   it('使用默认 tab query 生成主入口路径', () => {

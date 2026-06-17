@@ -1,4 +1,4 @@
-import type { KeyedTabItem } from '../types'
+import type { KeyedTabItem } from '../types.js'
 
 export const getTabKeys = <Key extends string, Item extends KeyedTabItem<Key>>(
   tabs: readonly Item[],

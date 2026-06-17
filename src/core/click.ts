@@ -1,4 +1,4 @@
-import type { TabClickResult } from '../types'
+import type { TabClickResult } from '../types.js'
 
 export const resolveTabClick = <Key extends string>(
   activeKey: Key,

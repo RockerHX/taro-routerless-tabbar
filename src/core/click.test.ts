@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { resolveTabClick } from './click'
+import { resolveTabClick } from './click.js'
 
 describe('resolveTabClick', () => {
   it('点击非当前 tab 返回 change', () => {

@@ -1,4 +1,4 @@
-import type { RouterlessTabQueryValue } from '../types'
+import type { RouterlessTabQueryValue } from '../types.js'
 
 export const buildRouterlessTabUrl = <Key extends string>(options: {
   mainPagePath: string

@@ -2,14 +2,17 @@ export type {
   KeyedTabItem,
   RouterlessTabQueryValue,
   TabClickResult,
-} from './types'
+} from './types.js'
 
-export { resolveTabClick } from './core/click'
+export { resolveTabClick } from './core/click.js'
 export {
   createVisitedTabRecord,
   getTabKeys,
   getVisitedTabs,
   isTabKey,
   normalizeTabKey,
-} from './core/tabs'
-export { buildRouterlessTabUrl, resolveTabPageModuleKey } from './core/routes'
+} from './core/tabs.js'
+export {
+  buildRouterlessTabUrl,
+  resolveTabPageModuleKey,
+} from './core/routes.js'

@@ -6,7 +6,7 @@ import {
   getVisitedTabs,
   isTabKey,
   normalizeTabKey,
-} from './tabs'
+} from './tabs.js'
 
 const tabs = [
   { key: 'recommend', text: '推荐' },
