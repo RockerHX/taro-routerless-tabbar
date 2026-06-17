@@ -5,3 +5,10 @@ export type KeyedTabItem<Key extends string = string> = {
 export type TabClickResult<Key extends string> =
   | { type: 'change'; key: Key }
   | { type: 'retap'; key: Key }
+
+export type RouterlessTabQueryValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
