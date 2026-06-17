@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "test:run": "vitest run -c vitest.config.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "peerDependencies": {
@@ -28,6 +29,7 @@
     "@tarojs/components": "4.2.0",
     "@tarojs/taro": "4.2.0",
     "typescript": "^5.1.0",
+    "vitest": "^0.34.6",
     "vue": "^3.3.0"
   }
 }
