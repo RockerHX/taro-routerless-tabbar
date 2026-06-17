@@ -28,6 +28,7 @@
   "devDependencies": {
     "@tarojs/components": "4.2.0",
     "@tarojs/taro": "4.2.0",
+    "happy-dom": "^15.11.7",
     "typescript": "^5.1.0",
     "vitest": "^0.34.6",
     "vue": "^3.3.0"
