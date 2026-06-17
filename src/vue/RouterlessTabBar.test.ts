@@ -107,4 +107,54 @@ describe('RouterlessTabBar', () => {
     expect(wrapper.find('image').exists()).toBe(false)
     expect(wrapper.text()).toContain('我的')
   })
+
+  it('refreshing item 带 refreshing class 和 active class', () => {
+    const wrapper = mount(RouterlessTabBar, {
+      props: {
+        active: 'recommend',
+        items,
+        refreshing: 'recommend',
+      },
+    })
+
+    const firstItem = wrapper.findAll('.routerless-tabbar-item')[0]
+
+    expect(firstItem?.classes()).toContain('routerless-tabbar-item-active')
+    expect(firstItem?.classes()).toContain('routerless-tabbar-item-refreshing')
+  })
+
+  it('refreshIcon 存在时显示 refresh icon 并隐藏默认 text/icon', () => {
+    const wrapper = mount(RouterlessTabBar, {
+      props: {
+        active: 'recommend',
+        items,
+        refreshing: 'recommend',
+        refreshIcon: '/icons/refresh.svg',
+      },
+    })
+    const firstItem = wrapper.findAll('.routerless-tabbar-item')[0]
+
+    expect(firstItem?.find('.routerless-tabbar-refresh-icon').exists()).toBe(
+      true,
+    )
+    expect(
+      firstItem?.find('.routerless-tabbar-refresh-icon').attributes('src'),
+    ).toBe('/icons/refresh.svg')
+    expect(firstItem?.find('.routerless-tabbar-icon').exists()).toBe(false)
+    expect(firstItem?.find('.routerless-tabbar-text').exists()).toBe(false)
+  })
+
+  it('refreshIcon 缺失时回退普通内容', () => {
+    const wrapper = mount(RouterlessTabBar, {
+      props: {
+        active: 'recommend',
+        items,
+        refreshing: 'recommend',
+      },
+    })
+
+    expect(wrapper.find('.routerless-tabbar-refresh-icon').exists()).toBe(false)
+    expect(wrapper.find('.routerless-tabbar-icon').exists()).toBe(true)
+    expect(wrapper.find('.routerless-tabbar-text').exists()).toBe(true)
+  })
 })

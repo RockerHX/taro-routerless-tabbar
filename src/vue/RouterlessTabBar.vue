@@ -6,16 +6,26 @@
       :class="[
         'routerless-tabbar-item',
         item.key === active ? 'routerless-tabbar-item-active' : '',
+        isItemRefreshing(item.key) ? 'routerless-tabbar-item-refreshing' : '',
       ]"
       @click="onTabClick(item)"
     >
-      <image
-        v-if="resolveIconPath(item)"
-        class="routerless-tabbar-icon"
-        mode="scaleToFill"
-        :src="resolveIconPath(item)"
-      />
-      <text class="routerless-tabbar-text">{{ item.text }}</text>
+      <template v-if="isItemRefreshing(item.key) && refreshIcon">
+        <image
+          class="routerless-tabbar-refresh-icon"
+          mode="scaleToFill"
+          :src="refreshIcon"
+        />
+      </template>
+      <template v-else>
+        <image
+          v-if="resolveIconPath(item)"
+          class="routerless-tabbar-icon"
+          mode="scaleToFill"
+          :src="resolveIconPath(item)"
+        />
+        <text class="routerless-tabbar-text">{{ item.text }}</text>
+      </template>
     </view>
   </view>
 </template>
@@ -47,6 +57,8 @@ const props = defineProps({
 
 const emit = defineEmits(['change', 'retap'])
 
+const isItemRefreshing = (key: string) => props.refreshing === key
+
 const resolveIconPath = (item: RouterlessTabBarItem) =>
   item.key === props.active
     ? (item.selectedIconPath ?? item.iconPath ?? '')
@@ -63,3 +75,5 @@ const onTabClick = (item: RouterlessTabBarItem) => {
   emit('change', result.key)
 }
 </script>
+
+<style src="./RouterlessTabBar.scss" lang="scss"></style>

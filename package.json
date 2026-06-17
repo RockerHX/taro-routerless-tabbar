@@ -16,8 +16,10 @@
     }
   },
   "scripts": {
-    "build": "pnpm run build:types && pnpm run build:lib",
+    "build": "pnpm run build:clean && pnpm run build:types && pnpm run build:lib && pnpm run build:postprocess",
+    "build:clean": "node ./scripts/clean-dist.mjs",
     "build:lib": "vite build -c vite.config.ts",
+    "build:postprocess": "node ./scripts/postbuild.mjs",
     "build:types": "vue-tsc -p tsconfig.build.json",
     "test:run": "vitest run -c vitest.config.ts",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json"
