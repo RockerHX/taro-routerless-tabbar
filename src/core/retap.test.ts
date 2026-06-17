@@ -76,3 +76,48 @@ describe('createRetapRefreshCore registry and runner', () => {
     expect(onError).toHaveBeenCalledWith(error, 'orders')
   })
 })
+
+describe('createRetapRefreshCore animation state', () => {
+  it('开始和结束动画时能同步当前 key', () => {
+    const core = createRetapRefreshCore<'recommend' | 'orders' | 'profile'>()
+    const states: Array<'recommend' | 'orders' | 'profile' | ''> = []
+    const unsubscribe = core.subscribeRefreshAnimation((key) => {
+      states.push(key)
+    })
+
+    expect(core.startRefreshAnimation('recommend')).toBe(true)
+    expect(core.getAnimatingKey()).toBe('recommend')
+    expect(core.startRefreshAnimation('recommend')).toBe(false)
+    expect(core.stopRefreshAnimation('orders')).toBe(false)
+    expect(core.stopRefreshAnimation('recommend')).toBe(true)
+    expect(core.getAnimatingKey()).toBe('')
+
+    unsubscribe()
+    expect(states).toEqual(['recommend', ''])
+  })
+
+  it('不同 key 可以切换动画归属，旧 key 不会误停新动画', () => {
+    const core = createRetapRefreshCore<'recommend' | 'orders'>()
+
+    expect(core.startRefreshAnimation('recommend')).toBe(true)
+    expect(core.startRefreshAnimation('orders')).toBe(true)
+    expect(core.getAnimatingKey()).toBe('orders')
+    expect(core.stopRefreshAnimation('recommend')).toBe(false)
+    expect(core.getAnimatingKey()).toBe('orders')
+    expect(core.stopRefreshAnimation('orders')).toBe(true)
+    expect(core.getAnimatingKey()).toBe('')
+  })
+
+  it('unsubscribe 后不再收到状态更新', () => {
+    const core = createRetapRefreshCore<'recommend'>()
+    const listener = vi.fn()
+    const unsubscribe = core.subscribeRefreshAnimation(listener)
+
+    expect(core.startRefreshAnimation('recommend')).toBe(true)
+    unsubscribe()
+    expect(core.stopRefreshAnimation('recommend')).toBe(true)
+
+    expect(listener).toHaveBeenCalledTimes(1)
+    expect(listener).toHaveBeenCalledWith('recommend')
+  })
+})
