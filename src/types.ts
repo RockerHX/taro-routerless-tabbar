@@ -2,6 +2,13 @@ export type KeyedTabItem<Key extends string = string> = {
   key: Key
 }
 
+export type RouterlessTabBarItem<Key extends string = string> =
+  KeyedTabItem<Key> & {
+    text: string
+    iconPath?: string
+    selectedIconPath?: string
+  }
+
 export type TabClickResult<Key extends string> =
   | { type: 'change'; key: Key }
   | { type: 'retap'; key: Key }
