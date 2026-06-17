@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
@@ -156,5 +157,84 @@ describe('RouterlessTabBar', () => {
     expect(wrapper.find('.routerless-tabbar-refresh-icon').exists()).toBe(false)
     expect(wrapper.find('.routerless-tabbar-icon').exists()).toBe(true)
     expect(wrapper.find('.routerless-tabbar-text').exists()).toBe(true)
+  })
+
+  it('item 插槽能拿到完整 slot props，并替换默认内容', () => {
+    const received: Array<{
+      active: boolean
+      iconPath: string
+      item: (typeof items)[number]
+      refreshing: boolean
+    }> = []
+    const wrapper = mount(RouterlessTabBar, {
+      props: {
+        active: 'recommend',
+        items,
+        refreshing: 'orders',
+      },
+      slots: {
+        item: (slotProps) => {
+          received.push(
+            slotProps as {
+              active: boolean
+              iconPath: string
+              item: (typeof items)[number]
+              refreshing: boolean
+            },
+          )
+
+          return h('div', { class: 'slot-content' }, slotProps.item.text)
+        },
+      },
+    })
+
+    expect(received).toHaveLength(2)
+    expect(received[0]).toEqual({
+      item: items[0],
+      active: true,
+      refreshing: false,
+      iconPath: '/icons/recommend-active.png',
+    })
+    expect(received[1]).toEqual({
+      item: items[1],
+      active: false,
+      refreshing: true,
+      iconPath: '/icons/orders.png',
+    })
+    expect(wrapper.findAll('.slot-content')).toHaveLength(2)
+    expect(wrapper.find('.routerless-tabbar-text').exists()).toBe(false)
+    expect(wrapper.find('.routerless-tabbar-icon').exists()).toBe(false)
+  })
+
+  it('使用 item 插槽后点击非当前 tab 仍 emits change', async () => {
+    const wrapper = mount(RouterlessTabBar, {
+      props: {
+        active: 'recommend',
+        items,
+      },
+      slots: {
+        item: ({ item }) => h('div', { class: 'slot-content' }, item.text),
+      },
+    })
+
+    await wrapper.findAll('.routerless-tabbar-item')[1]?.trigger('click')
+
+    expect(wrapper.emitted('change')).toEqual([['orders']])
+  })
+
+  it('使用 item 插槽后点击当前 tab 仍 emits retap', async () => {
+    const wrapper = mount(RouterlessTabBar, {
+      props: {
+        active: 'recommend',
+        items,
+      },
+      slots: {
+        item: ({ item }) => h('div', { class: 'slot-content' }, item.text),
+      },
+    })
+
+    await wrapper.findAll('.routerless-tabbar-item')[0]?.trigger('click')
+
+    expect(wrapper.emitted('retap')).toEqual([['recommend']])
   })
 })

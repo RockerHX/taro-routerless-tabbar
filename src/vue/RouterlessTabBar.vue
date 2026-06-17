@@ -10,22 +10,30 @@
       ]"
       @click="onTabClick(item)"
     >
-      <template v-if="isItemRefreshing(item.key) && refreshIcon">
-        <image
-          class="routerless-tabbar-refresh-icon"
-          mode="scaleToFill"
-          :src="refreshIcon"
-        />
-      </template>
-      <template v-else>
-        <image
-          v-if="resolveIconPath(item)"
-          class="routerless-tabbar-icon"
-          mode="scaleToFill"
-          :src="resolveIconPath(item)"
-        />
-        <text class="routerless-tabbar-text">{{ item.text }}</text>
-      </template>
+      <slot
+        name="item"
+        :item="item"
+        :active="item.key === active"
+        :refreshing="isItemRefreshing(item.key)"
+        :icon-path="resolveIconPath(item)"
+      >
+        <template v-if="isItemRefreshing(item.key) && refreshIcon">
+          <image
+            class="routerless-tabbar-refresh-icon"
+            mode="scaleToFill"
+            :src="refreshIcon"
+          />
+        </template>
+        <template v-else>
+          <image
+            v-if="resolveIconPath(item)"
+            class="routerless-tabbar-icon"
+            mode="scaleToFill"
+            :src="resolveIconPath(item)"
+          />
+          <text class="routerless-tabbar-text">{{ item.text }}</text>
+        </template>
+      </slot>
     </view>
   </view>
 </template>
