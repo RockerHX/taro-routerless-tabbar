@@ -1,6 +1,10 @@
 import { createApp, defineComponent } from 'vue'
 
-export const mountSetup = <T>(setup: () => T) => {
+export interface SetupFactory<T> {
+  (): T
+}
+
+export function mountSetup<T>(setup: SetupFactory<T>) {
   let exposed!: T
   const root = document.createElement('div')
 
@@ -8,7 +12,9 @@ export const mountSetup = <T>(setup: () => T) => {
     defineComponent({
       setup() {
         exposed = setup()
-        return () => null
+        return function renderEmptySetup() {
+          return null
+        }
       },
     }),
   )

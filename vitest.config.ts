@@ -8,7 +8,9 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => taroTemplateTags.has(tag),
+          isCustomElement(tag) {
+            return taroTemplateTags.has(tag)
+          },
         },
       },
     }),

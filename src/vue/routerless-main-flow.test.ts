@@ -1,51 +1,50 @@
 // @vitest-environment happy-dom
-
 import { defineComponent, h } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-
 import RouterlessTabPaneHost from './RouterlessTabPaneHost.vue'
 import { useRouterlessTabs } from './useRouterlessTabs.js'
-
 const panes = [
   { key: 'recommend', text: '推荐' },
   { key: 'orders', text: '订单' },
   { key: 'profile', text: '我的' },
 ] as const
-
-describe('routerless main flow', () => {
-  it('默认 tab 首屏可见，切换后已访问 pane 保留实例，retap 不修改 active', async () => {
+describe('routerless main flow', function () {
+  it('默认 tab 首屏可见，切换后已访问 pane 保留实例，retap 不修改 active', async function () {
     const mounts = {
       recommend: 0,
       orders: 0,
       profile: 0,
     }
-
     const paneComponents = {
       recommend: defineComponent({
         name: 'RecommendPane',
         setup() {
           mounts.recommend += 1
-          return () =>
-            h('div', { class: 'pane-inner pane-recommend' }, 'recommend')
+          return function () {
+            return h('div', { class: 'pane-inner pane-recommend' }, 'recommend')
+          }
         },
       }),
       orders: defineComponent({
         name: 'OrdersPane',
         setup() {
           mounts.orders += 1
-          return () => h('div', { class: 'pane-inner pane-orders' }, 'orders')
+          return function () {
+            return h('div', { class: 'pane-inner pane-orders' }, 'orders')
+          }
         },
       }),
       profile: defineComponent({
         name: 'ProfilePane',
         setup() {
           mounts.profile += 1
-          return () => h('div', { class: 'pane-inner pane-profile' }, 'profile')
+          return function () {
+            return h('div', { class: 'pane-inner pane-profile' }, 'profile')
+          }
         },
       }),
     } as const
-
     const wrapper = mount(
       defineComponent({
         components: {
@@ -56,7 +55,6 @@ describe('routerless main flow', () => {
             tabs: panes,
             defaultKey: 'recommend',
           })
-
           return {
             tabs,
             paneComponents,
@@ -78,7 +76,6 @@ describe('routerless main flow', () => {
         `,
       }),
     )
-
     expect(wrapper.findAll('.routerless-tab-pane')).toHaveLength(1)
     expect(wrapper.find('.pane-recommend').exists()).toBe(true)
     expect(mounts).toEqual({
@@ -86,13 +83,11 @@ describe('routerless main flow', () => {
       orders: 0,
       profile: 0,
     })
-
     await (
       wrapper.vm as unknown as {
         tabs: ReturnType<typeof useRouterlessTabs>
       }
     ).tabs.activateTab('orders')
-
     expect(wrapper.findAll('.routerless-tab-pane')).toHaveLength(2)
     expect(wrapper.find('.pane-recommend').exists()).toBe(true)
     expect(wrapper.find('.pane-orders').exists()).toBe(true)
@@ -101,7 +96,6 @@ describe('routerless main flow', () => {
       orders: 1,
       profile: 0,
     })
-
     const panesAfterOrders = wrapper.findAll('.routerless-tab-pane')
     expect(panesAfterOrders[0]?.classes()).toContain(
       'routerless-tab-pane-hidden',
@@ -109,33 +103,32 @@ describe('routerless main flow', () => {
     expect(panesAfterOrders[1]?.classes()).not.toContain(
       'routerless-tab-pane-hidden',
     )
-
     await (
       wrapper.vm as unknown as {
         tabs: ReturnType<typeof useRouterlessTabs>
       }
     ).tabs.activateTab('recommend')
-
     expect(wrapper.findAll('.routerless-tab-pane')).toHaveLength(2)
     expect(mounts).toEqual({
       recommend: 1,
       orders: 1,
       profile: 0,
     })
-
     const retapResult = (
       wrapper.vm as unknown as {
         tabs: ReturnType<typeof useRouterlessTabs>
       }
     ).tabs.handleTabClick('recommend')
-
     expect(retapResult).toEqual({
       type: 'retap',
       key: 'recommend',
     })
     expect(
-      (wrapper.vm as unknown as { tabs: ReturnType<typeof useRouterlessTabs> })
-        .tabs.activeKey.value,
+      (
+        wrapper.vm as unknown as {
+          tabs: ReturnType<typeof useRouterlessTabs>
+        }
+      ).tabs.activeKey.value,
     ).toBe('recommend')
     expect(mounts).toEqual({
       recommend: 1,

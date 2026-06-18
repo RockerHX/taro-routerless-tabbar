@@ -10,7 +10,9 @@ export default defineConfig({
     vue({
       template: {
         compilerOptions: {
-          isCustomElement: (tag) => taroTemplateTags.has(tag),
+          isCustomElement(tag) {
+            return taroTemplateTags.has(tag)
+          },
         },
       },
     }),
@@ -20,7 +22,9 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      fileName: () => 'index.js',
+      fileName() {
+        return 'index.js'
+      },
       formats: ['es'],
     },
     rollupOptions: {

@@ -7,19 +7,19 @@ import type {
   RetapRefreshHandler,
 } from '../types.js'
 
-export const createRetapRefreshContext = <Key extends string>(
+export function createRetapRefreshContext<Key extends string>(
   options: RetapRefreshContextOptions<Key> = {},
-) => {
+) {
   const core = createRetapRefreshCore<Key>(options)
 
-  const useRetapRefresh = (
+  function useRetapRefresh(
     key: Key,
     handler: RetapRefreshHandler,
     enabled: MaybeRefOrGetter<boolean> = true,
-  ) => {
+  ) {
     let registered = false
 
-    const syncRegistration = (nextEnabled: boolean) => {
+    function syncRegistration(nextEnabled: boolean) {
       if (nextEnabled) {
         core.registerRefreshHandler(key, handler)
         registered = true
@@ -33,25 +33,32 @@ export const createRetapRefreshContext = <Key extends string>(
     }
 
     const stopWatching = watch(
-      () => Boolean(toValue(enabled)),
-      (nextEnabled) => {
+      function getEnabledValue() {
+        return Boolean(toValue(enabled))
+      },
+      function handleEnabledChange(nextEnabled) {
         syncRegistration(nextEnabled)
       },
       { immediate: true },
     )
 
-    onUnmounted(() => {
+    onUnmounted(function cleanupRetapRefresh() {
       stopWatching()
       core.unregisterRefreshHandler(key, handler)
       registered = false
     })
   }
 
-  const useRetapRefreshAnimation = (key: Key) => {
-    const startRefreshAnimation = () => core.startRefreshAnimation(key)
-    const stopRefreshAnimation = () => core.stopRefreshAnimation(key)
+  function useRetapRefreshAnimation(key: Key) {
+    function startRefreshAnimation() {
+      return core.startRefreshAnimation(key)
+    }
 
-    onUnmounted(() => {
+    function stopRefreshAnimation() {
+      return core.stopRefreshAnimation(key)
+    }
+
+    onUnmounted(function cleanupRefreshAnimation() {
       stopRefreshAnimation()
     })
 

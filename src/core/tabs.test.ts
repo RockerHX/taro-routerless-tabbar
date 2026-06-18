@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-
 import {
   createVisitedTabRecord,
   getTabKeys,
@@ -7,29 +6,23 @@ import {
   isTabKey,
   normalizeTabKey,
 } from './tabs.js'
-
 const tabs = [
   { key: 'recommend', text: '推荐' },
   { key: 'orders', text: '订单' },
   { key: 'profile', text: '我的' },
 ] as const
-
-describe('tab key helpers', () => {
-  it('按原顺序返回 tab keys', () => {
+describe('tab key helpers', function () {
+  it('按原顺序返回 tab keys', function () {
     expect(getTabKeys(tabs)).toEqual(['recommend', 'orders', 'profile'])
   })
-
-  it('识别合法和非法 tab key', () => {
+  it('识别合法和非法 tab key', function () {
     const tabKeys = getTabKeys(tabs)
-
     expect(isTabKey('recommend', tabKeys)).toBe(true)
     expect(isTabKey('orders', tabKeys)).toBe(true)
     expect(isTabKey('unknown', tabKeys)).toBe(false)
   })
-
-  it('归一化合法 key、未知 key 和空值', () => {
+  it('归一化合法 key、未知 key 和空值', function () {
     const tabKeys = getTabKeys(tabs)
-
     expect(
       normalizeTabKey({
         value: 'orders',
@@ -52,10 +45,8 @@ describe('tab key helpers', () => {
       }),
     ).toBe('recommend')
   })
-
-  it('alias 优先于直接 fallback', () => {
+  it('alias 优先于直接 fallback', function () {
     const tabKeys = getTabKeys(tabs)
-
     expect(
       normalizeTabKey({
         value: 'index',
@@ -65,8 +56,7 @@ describe('tab key helpers', () => {
       }),
     ).toBe('recommend')
   })
-
-  it('初始化 visited record 时仅默认 tab 为 true', () => {
+  it('初始化 visited record 时仅默认 tab 为 true', function () {
     expect(
       createVisitedTabRecord({
         tabKeys: getTabKeys(tabs),
@@ -78,8 +68,7 @@ describe('tab key helpers', () => {
       profile: false,
     })
   })
-
-  it('按原顺序返回已访问 tabs，并忽略脏 key', () => {
+  it('按原顺序返回已访问 tabs，并忽略脏 key', function () {
     expect(
       getVisitedTabs(tabs, {
         profile: true,

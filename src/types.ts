@@ -23,12 +23,16 @@ export type RouterlessTabQueryValue =
   | null
   | undefined
 
-export type RetapRefreshHandler = () => void | Promise<void>
+export interface RetapRefreshHandler {
+  (): void | Promise<void>
+}
 
-export type RetapAnimationListener<Key extends string> = (key: Key | '') => void
+export interface RetapAnimationListener<Key extends string> {
+  (key: Key | ''): void
+}
 
 export type RetapRefreshContextOptions<Key extends string> = {
-  onError?: (error: unknown, key: Key) => void
+  onError?(error: unknown, key: Key): void
 }
 
 export type UseRouterlessTabsOptions<
@@ -48,9 +52,9 @@ export type UseRouterlessTabsResult<
   activeTab: import('vue').ComputedRef<Item | undefined>
   visitedKeys: import('vue').ComputedRef<Key[]>
   visitedTabs: import('vue').ComputedRef<Item[]>
-  activateTab: (key: Key) => Key
-  handleTabClick: (key: Key) => TabClickResult<Key>
-  isVisited: (key: Key) => boolean
-  isActive: (key: Key) => boolean
-  resetVisited: () => void
+  activateTab(key: Key): Key
+  handleTabClick(key: Key): TabClickResult<Key>
+  isVisited(key: Key): boolean
+  isActive(key: Key): boolean
+  resetVisited(): void
 }

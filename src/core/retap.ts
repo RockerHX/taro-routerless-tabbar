@@ -4,27 +4,26 @@ import type {
   RetapRefreshHandler,
 } from '../types.js'
 
-export const createRetapRefreshCore = <Key extends string>(
+export function createRetapRefreshCore<Key extends string>(
   options: RetapRefreshContextOptions<Key> = {},
-) => {
+) {
   const { onError } = options
   const refreshHandlers = new Map<Key, RetapRefreshHandler>()
   const runningKeys = new Set<Key>()
   const animationListeners = new Set<RetapAnimationListener<Key>>()
   let animatingKey: Key | '' = ''
 
-  const notifyAnimationListeners = () => {
-    animationListeners.forEach((listener) => listener(animatingKey))
+  function notifyAnimationListeners() {
+    animationListeners.forEach(function notifyAnimationListener(listener) {
+      listener(animatingKey)
+    })
   }
 
-  const registerRefreshHandler = (key: Key, handler: RetapRefreshHandler) => {
+  function registerRefreshHandler(key: Key, handler: RetapRefreshHandler) {
     refreshHandlers.set(key, handler)
   }
 
-  const unregisterRefreshHandler = (
-    key: Key,
-    handler?: RetapRefreshHandler,
-  ) => {
+  function unregisterRefreshHandler(key: Key, handler?: RetapRefreshHandler) {
     if (!refreshHandlers.has(key)) {
       return
     }
@@ -34,9 +33,11 @@ export const createRetapRefreshCore = <Key extends string>(
     }
   }
 
-  const getRefreshHandler = (key: Key) => refreshHandlers.get(key)
+  function getRefreshHandler(key: Key) {
+    return refreshHandlers.get(key)
+  }
 
-  const runRefresh = async (key: Key) => {
+  async function runRefresh(key: Key) {
     if (runningKeys.has(key)) {
       return false
     }
@@ -62,9 +63,11 @@ export const createRetapRefreshCore = <Key extends string>(
     return true
   }
 
-  const getAnimatingKey = () => animatingKey
+  function getAnimatingKey() {
+    return animatingKey
+  }
 
-  const startRefreshAnimation = (key: Key) => {
+  function startRefreshAnimation(key: Key) {
     if (animatingKey === key) {
       return false
     }
@@ -74,7 +77,7 @@ export const createRetapRefreshCore = <Key extends string>(
     return true
   }
 
-  const stopRefreshAnimation = (key?: Key) => {
+  function stopRefreshAnimation(key?: Key) {
     if (!animatingKey) {
       return false
     }
@@ -88,10 +91,10 @@ export const createRetapRefreshCore = <Key extends string>(
     return true
   }
 
-  const subscribeRefreshAnimation = (listener: RetapAnimationListener<Key>) => {
+  function subscribeRefreshAnimation(listener: RetapAnimationListener<Key>) {
     animationListeners.add(listener)
 
-    return () => {
+    return function unsubscribeRefreshAnimation() {
       animationListeners.delete(listener)
     }
   }

@@ -1,20 +1,26 @@
 import type { KeyedTabItem } from '../types.js'
 
-export const getTabKeys = <Key extends string, Item extends KeyedTabItem<Key>>(
+export function getTabKeys<Key extends string, Item extends KeyedTabItem<Key>>(
   tabs: readonly Item[],
-): Key[] => tabs.map((tab) => tab.key)
+): Key[] {
+  return tabs.map(function getTabKey(tab) {
+    return tab.key
+  })
+}
 
-export const isTabKey = <Key extends string>(
+export function isTabKey<Key extends string>(
   value: string,
   tabKeys: readonly Key[],
-): value is Key => tabKeys.includes(value as Key)
+): value is Key {
+  return tabKeys.includes(value as Key)
+}
 
-export const normalizeTabKey = <Key extends string>(options: {
+export function normalizeTabKey<Key extends string>(options: {
   value?: string
   tabKeys: readonly Key[]
   defaultKey: Key
   aliases?: Partial<Record<string, Key>>
-}): Key => {
+}): Key {
   const { aliases, defaultKey, tabKeys, value } = options
 
   if (value && aliases?.[value]) {
@@ -24,25 +30,28 @@ export const normalizeTabKey = <Key extends string>(options: {
   return value && isTabKey(value, tabKeys) ? value : defaultKey
 }
 
-export const createVisitedTabRecord = <Key extends string>(options: {
+export function createVisitedTabRecord<Key extends string>(options: {
   tabKeys: readonly Key[]
   defaultKey: Key
-}): Record<Key, boolean> => {
+}): Record<Key, boolean> {
   const { defaultKey, tabKeys } = options
 
   return tabKeys.reduce(
-    (result, key) => ({
-      ...result,
-      [key]: key === defaultKey,
-    }),
+    function reduceVisitedRecord(result, key) {
+      return {
+        ...result,
+        [key]: key === defaultKey,
+      }
+    },
     {} as Record<Key, boolean>,
   )
 }
 
-export const getVisitedTabs = <
+export function getVisitedTabs<
   Key extends string,
   Item extends KeyedTabItem<Key>,
->(
-  tabs: readonly Item[],
-  visited: Partial<Record<Key, boolean>>,
-) => tabs.filter((tab) => visited[tab.key] === true)
+>(tabs: readonly Item[], visited: Partial<Record<Key, boolean>>): Item[] {
+  return tabs.filter(function isVisitedTab(tab) {
+    return visited[tab.key] === true
+  })
+}

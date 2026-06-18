@@ -65,14 +65,17 @@ const props = defineProps({
 
 const emit = defineEmits(['change', 'retap'])
 
-const isItemRefreshing = (key: string) => props.refreshing === key
+function isItemRefreshing(key: string) {
+  return props.refreshing === key
+}
 
-const resolveIconPath = (item: RouterlessTabBarItem) =>
-  item.key === props.active
+function resolveIconPath(item: RouterlessTabBarItem) {
+  return item.key === props.active
     ? (item.selectedIconPath ?? item.iconPath ?? '')
     : (item.iconPath ?? '')
+}
 
-const onTabClick = (item: RouterlessTabBarItem) => {
+function onTabClick(item: RouterlessTabBarItem) {
   const result = resolveTabClick(props.active, item.key)
 
   if (result.type === 'retap') {

@@ -1,17 +1,17 @@
 import type { RouterlessTabQueryValue } from '../types.js'
 
-export const buildRouterlessTabUrl = <Key extends string>(options: {
+export function buildRouterlessTabUrl<Key extends string>(options: {
   mainPagePath: string
   tabKey: Key
   queryKey?: string
   query?: Record<string, RouterlessTabQueryValue>
-}) => {
+}): string {
   const { mainPagePath, query, queryKey = 'tab', tabKey } = options
   const params = new URLSearchParams()
 
   params.append(queryKey, tabKey)
 
-  Object.entries(query ?? {}).forEach(([key, value]) => {
+  Object.entries(query ?? {}).forEach(function appendQueryEntry([key, value]) {
     if (key === queryKey || value === null || value === undefined) {
       return
     }
@@ -22,7 +22,7 @@ export const buildRouterlessTabUrl = <Key extends string>(options: {
   return `${mainPagePath}?${params.toString()}`
 }
 
-export const resolveTabPageModuleKey = (pagePath: string) => {
+export function resolveTabPageModuleKey(pagePath: string): string {
   const normalizedPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`
 
   if (!normalizedPath.startsWith('/pages/')) {

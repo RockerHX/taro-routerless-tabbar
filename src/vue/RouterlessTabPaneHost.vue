@@ -34,9 +34,11 @@ const props = defineProps({
   },
 })
 
-const visitedItems = computed(() =>
-  props.items.filter((item) => props.visited.includes(item.key)),
-)
+const visitedItems = computed(function getVisitedItems() {
+  return props.items.filter(function isVisitedItem(item) {
+    return props.visited.includes(item.key)
+  })
+})
 </script>
 
 <style lang="scss">
