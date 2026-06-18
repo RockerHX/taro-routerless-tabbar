@@ -1,4 +1,5 @@
 import { computed, reactive, ref } from 'vue'
+import type { Ref } from 'vue'
 
 import { resolveTabClick } from '../core/click.js'
 import {
@@ -21,9 +22,9 @@ export const useRouterlessTabs = <
 ): UseRouterlessTabsResult<Key, Item> => {
   const { defaultKey, initialKey, tabs } = options
   const tabKeys = getTabKeys(tabs)
-  const activeKey = ref<Key>(
+  const activeKey = ref(
     initialKey && tabKeys.includes(initialKey) ? initialKey : defaultKey,
-  )
+  ) as Ref<Key>
   const visitedRecord = reactive(
     createVisitedTabRecord({
       tabKeys,
