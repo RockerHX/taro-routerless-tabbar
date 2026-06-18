@@ -286,3 +286,189 @@ useLoad((query: PageQuery) => {
 ```
 
 `import.meta.glob` 必须写在业务项目里。不同项目的 `pages` 目录结构不一定相同，package 不会也不能可靠扫描使用者的页面文件。
+
+## Tab 页面与 retap 刷新
+
+Tab 页面建议同时支持两种打开方式：
+
+- `embedded=true`：被 main 容器内嵌渲染，参与 routerless Tab 切换和保活。
+- `embedded=false`：被独立页面路由打开，此时应重定向回 main 容器对应 Tab。
+
+### 业务侧封装 `useStandaloneTabRedirect`
+
+当前 package 暂未导出 `useStandaloneTabRedirect`。业务项目可以按下面方式自行封装：
+
+```ts
+// utils/tab-page.ts
+import Taro from '@tarojs/taro'
+import { onMounted } from 'vue'
+import { buildRouterlessTabUrl } from 'taro-routerless-tabbar'
+
+import { mainPagePath } from '@/config/tabbar'
+import type { TabKey } from '@/config/tabbar'
+
+export const useStandaloneTabRedirect = (
+  tabKey: TabKey,
+  isEmbedded: () => boolean,
+) => {
+  onMounted(() => {
+    if (isEmbedded()) {
+      return
+    }
+
+    Taro.redirectTo({
+      url: buildRouterlessTabUrl({
+        mainPagePath,
+        tabKey,
+      }),
+    })
+  })
+}
+```
+
+### `pages/home/index.vue`
+
+```vue
+<template>
+  <view v-if="embedded" class="home-page">
+    <text>Home active: {{ active }}</text>
+  </view>
+  <view v-else class="page">
+    <text>正在打开首页...</text>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { createRetapRefreshContext } from 'taro-routerless-tabbar'
+
+import type { TabKey } from '@/config/tabbar'
+import { useStandaloneTabRedirect } from '@/utils/tab-page'
+
+const props = defineProps({
+  embedded: {
+    type: Boolean,
+    default: false,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+// 实际项目通常把这个 context 放在 pages/main/retap-refresh.ts，
+// 由 main 容器和各 tab 页面共享同一个业务单例。
+const retap = createRetapRefreshContext<TabKey>()
+const { startRefreshAnimation, stopRefreshAnimation } =
+  retap.useRetapRefreshAnimation('home')
+
+const refreshHome = async () => {
+  if (!startRefreshAnimation()) {
+    return
+  }
+
+  try {
+    // 在这里执行首页刷新逻辑，例如重新请求列表。
+  } finally {
+    stopRefreshAnimation()
+  }
+}
+
+useStandaloneTabRedirect('home', () => props.embedded)
+retap.useRetapRefresh('home', refreshHome, () => props.embedded)
+</script>
+```
+
+> 注意：上面为了展示完整 API，直接创建了 `createRetapRefreshContext`。真实项目应创建一个共享业务单例，例如 `pages/main/retap-refresh.ts`，然后导出 `useTabRetapRefresh`、`useTabRetapRefreshAnimation` 给各 Tab 页面使用，避免 main 容器和页面各自拥有不同 context。
+
+### `pages/order/index.vue`
+
+```vue
+<template>
+  <view v-if="embedded" class="order-page">
+    <text>Order active: {{ active }}</text>
+  </view>
+  <view v-else class="page">
+    <text>正在打开订单...</text>
+  </view>
+</template>
+
+<script setup lang="ts">
+import {
+  useTabRetapRefresh,
+  useTabRetapRefreshAnimation,
+} from '@/pages/main/retap-refresh'
+import { useStandaloneTabRedirect } from '@/utils/tab-page'
+
+const props = defineProps({
+  embedded: {
+    type: Boolean,
+    default: false,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const { startRefreshAnimation, stopRefreshAnimation } =
+  useTabRetapRefreshAnimation('order')
+
+const refreshOrder = async () => {
+  if (!startRefreshAnimation()) {
+    return
+  }
+
+  try {
+    // 在这里执行订单刷新逻辑。
+  } finally {
+    stopRefreshAnimation()
+  }
+}
+
+useStandaloneTabRedirect('order', () => props.embedded)
+useTabRetapRefresh('order', refreshOrder, () => props.embedded)
+</script>
+```
+
+### `pages/profile/index.vue`
+
+```vue
+<template>
+  <view v-if="embedded" class="profile-page">
+    <text>Profile active: {{ active }}</text>
+  </view>
+  <view v-else class="page">
+    <text>正在打开我的...</text>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { useTabRetapRefresh } from '@/pages/main/retap-refresh'
+import { useStandaloneTabRedirect } from '@/utils/tab-page'
+
+const props = defineProps({
+  embedded: {
+    type: Boolean,
+    default: false,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const refreshProfile = async () => {
+  // 在这里执行我的页面刷新逻辑。
+}
+
+useStandaloneTabRedirect('profile', () => props.embedded)
+useTabRetapRefresh('profile', refreshProfile, () => props.embedded)
+</script>
+```
+
+retap 刷新的行为约定：
+
+- 点击非当前 Tab 时派发 `change`，主容器切换 active key。
+- 点击当前 Tab 时派发 `retap`，主容器调用对应刷新 handler。
+- 同一个 Tab 的 handler 执行中，再次 retap 会返回 `false`，避免并发刷新。
+- 刷新内容、失败提示和动画时机由业务页面自行决定。
