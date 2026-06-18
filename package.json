@@ -24,6 +24,10 @@
     "build:lib": "vite build -c vite.config.ts",
     "build:postprocess": "node ./scripts/postbuild.mjs",
     "build:types": "vue-tsc -p tsconfig.build.json",
+    "format:check": "prettier . --check --ignore-unknown --ignore-path ../../.prettierignore",
+    "lint": "eslint src/**/*.ts src/**/*.vue *.ts",
+    "pack:dry-run": "npm pack --dry-run",
+    "prepublishOnly": "pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run test:run && pnpm run build && pnpm run pack:dry-run",
     "test:run": "vitest run -c vitest.config.ts",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json"
   },
