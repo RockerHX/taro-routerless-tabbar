@@ -4,8 +4,11 @@ export type {
   RetapRefreshContextOptions,
   RetapRefreshHandler,
   RouterlessTabBarItem,
+  RouterlessTabPaneItem,
   RouterlessTabQueryValue,
   TabClickResult,
+  UseRouterlessTabsOptions,
+  UseRouterlessTabsResult,
 } from './types.js'
 
 export { resolveTabClick } from './core/click.js'
@@ -23,3 +26,4 @@ export {
 export { createRetapRefreshCore } from './core/retap.js'
 export { createRetapRefreshContext } from './vue/useRetapRefresh.js'
 export { default as RouterlessTabBar } from './vue/RouterlessTabBar.vue'
+export { useRouterlessTabs } from './vue/useRouterlessTabs.js'

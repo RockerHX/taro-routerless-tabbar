@@ -6,23 +6,19 @@ import {
   getTabKeys,
   getVisitedTabs,
 } from '../core/tabs.js'
-import type { KeyedTabItem, TabClickResult } from '../types.js'
-
-type UseRouterlessTabsOptions<
-  Key extends string,
-  Item extends KeyedTabItem<Key>,
-> = {
-  tabs: readonly Item[]
-  defaultKey: Key
-  initialKey?: Key
-}
+import type {
+  KeyedTabItem,
+  TabClickResult,
+  UseRouterlessTabsOptions,
+  UseRouterlessTabsResult,
+} from '../types.js'
 
 export const useRouterlessTabs = <
   Key extends string,
   Item extends KeyedTabItem<Key>,
 >(
   options: UseRouterlessTabsOptions<Key, Item>,
-) => {
+): UseRouterlessTabsResult<Key, Item> => {
   const { defaultKey, initialKey, tabs } = options
   const tabKeys = getTabKeys(tabs)
   const activeKey = ref<Key>(
