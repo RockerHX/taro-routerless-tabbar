@@ -77,3 +77,212 @@
 ## 当前状态
 
 当前包仍处于 internal package 阶段，尚未作为公开 npm 包发布。正式发布前会继续补齐发布配置、版本管理和独立 demo 验证。
+
+## 安装
+
+当前包仍是 internal package，推荐在 pnpm workspace 里使用：
+
+```json
+{
+  "dependencies": {
+    "taro-routerless-tabbar": "workspace:*"
+  }
+}
+```
+
+如果业务项目需要在开发/测试时直接引用源码，可以在 Vite/Vitest/TypeScript 配置里把包名别名到 `packages/taro-routerless-tabbar/src/index.ts`。正式 npm 发布后再改为普通安装：
+
+```bash
+pnpm add taro-routerless-tabbar
+```
+
+## 最小接入示例
+
+下面示例展示一个 `home`、`order`、`profile` 三个 Tab 的最小接入方式。示例省略业务顶部导航、图片资源和 store，只保留 routerless tab 的核心链路。
+
+### `config/tabbar.ts`
+
+```ts
+import {
+  buildRouterlessTabUrl,
+  getTabKeys,
+  isTabKey as isRouterlessTabKey,
+  normalizeTabKey as normalizeRouterlessTabKey,
+  resolveTabPageModuleKey,
+} from 'taro-routerless-tabbar'
+
+export const mainPagePath = '/pages/main/index'
+export const defaultTabKey = 'home'
+
+export const tabbarItems = [
+  {
+    key: 'home',
+    text: '首页',
+    pagePath: '/pages/home/index',
+    iconPath: '/assets/tabbar/home.png',
+    selectedIconPath: '/assets/tabbar/home-active.png',
+  },
+  {
+    key: 'order',
+    text: '订单',
+    pagePath: '/pages/order/index',
+    iconPath: '/assets/tabbar/order.png',
+    selectedIconPath: '/assets/tabbar/order-active.png',
+  },
+  {
+    key: 'profile',
+    text: '我的',
+    pagePath: '/pages/profile/index',
+    iconPath: '/assets/tabbar/profile.png',
+    selectedIconPath: '/assets/tabbar/profile-active.png',
+  },
+] as const
+
+export type TabbarItem = (typeof tabbarItems)[number]
+export type TabKey = TabbarItem['key']
+
+export const tabKeys = getTabKeys(tabbarItems)
+
+export const isTabKey = (value: string): value is TabKey =>
+  isRouterlessTabKey(value, tabKeys)
+
+export const normalizeTabKey = (value: string | undefined): TabKey =>
+  normalizeRouterlessTabKey({
+    value,
+    tabKeys,
+    defaultKey: defaultTabKey,
+    aliases: {
+      index: defaultTabKey,
+    },
+  })
+
+export const buildMainTabUrl = (tabKey: TabKey = defaultTabKey) =>
+  buildRouterlessTabUrl({
+    mainPagePath,
+    tabKey,
+  })
+
+export { resolveTabPageModuleKey }
+```
+
+### `pages/main/index.vue`
+
+```vue
+<template>
+  <view class="page main-page">
+    <view class="main-page-content">
+      <view
+        v-for="pane in visitedTabPanes"
+        :key="pane.key"
+        :class="[
+          'main-page-pane',
+          activeTab !== pane.key ? 'main-page-pane-hidden' : '',
+        ]"
+      >
+        <component
+          :is="pane.component"
+          embedded
+          :active="activeTab === pane.key"
+        />
+      </view>
+    </view>
+
+    <RouterlessTabBar
+      :active="activeTab"
+      :items="tabbarItems"
+      :refreshing="refreshingTab"
+      refresh-icon="/assets/tabbar/refresh.svg"
+      @change="activateTab"
+      @retap="handleTabRetap"
+    />
+  </view>
+</template>
+
+<script setup lang="ts">
+import { useLoad } from '@tarojs/taro'
+import {
+  RouterlessTabBar,
+  createRetapRefreshContext,
+  useRouterlessTabs,
+} from 'taro-routerless-tabbar'
+import type { Component } from 'vue'
+import { onUnmounted, ref } from 'vue'
+
+import {
+  buildMainTabUrl,
+  defaultTabKey,
+  normalizeTabKey,
+  resolveTabPageModuleKey,
+  tabbarItems,
+} from '@/config/tabbar'
+import type { TabKey } from '@/config/tabbar'
+
+type PageQuery = Record<string, string | undefined>
+type TabPageModule = { default: Component }
+type TabPane = (typeof tabbarItems)[number] & { component: Component }
+
+const retap = createRetapRefreshContext<TabKey>()
+const tabPageModules = import.meta.glob<TabPageModule>('../*/index.vue', {
+  eager: true,
+})
+
+const tabPanes: TabPane[] = tabbarItems.map((item) => {
+  const moduleKey = resolveTabPageModuleKey(item.pagePath)
+  const pageModule = tabPageModules[moduleKey]
+
+  if (!pageModule) {
+    throw new Error(`Missing tab page component: ${item.pagePath}`)
+  }
+
+  return {
+    ...item,
+    component: pageModule.default,
+  }
+})
+
+const tabs = useRouterlessTabs({
+  tabs: tabPanes,
+  defaultKey: defaultTabKey,
+})
+const activeTab = tabs.activeKey
+const visitedTabPanes = tabs.visitedTabs
+const activateTab = tabs.activateTab
+const refreshingTab = ref<TabKey | ''>(retap.getAnimatingKey())
+const stopWatchingRefreshAnimation = retap.subscribeRefreshAnimation((tab) => {
+  refreshingTab.value = tab
+})
+
+const handleTabRetap = async (tab: TabKey) => {
+  await retap.runRefresh(tab)
+}
+
+onUnmounted(() => {
+  stopWatchingRefreshAnimation()
+})
+
+defineOptions({
+  onShareAppMessage() {
+    return {
+      title: '示例应用',
+      path: buildMainTabUrl(defaultTabKey),
+    }
+  },
+})
+
+useLoad((query: PageQuery) => {
+  activateTab(normalizeTabKey(String(query.tab ?? '')))
+})
+</script>
+
+<style lang="scss">
+.main-page-content {
+  min-height: 100vh;
+}
+
+.main-page-pane-hidden {
+  display: none;
+}
+</style>
+```
+
+`import.meta.glob` 必须写在业务项目里。不同项目的 `pages` 目录结构不一定相同，package 不会也不能可靠扫描使用者的页面文件。
