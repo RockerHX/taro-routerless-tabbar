@@ -1,13 +1,16 @@
 {
   "name": "taro-routerless-tabbar",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0-beta.0",
+  "private": false,
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {
@@ -42,5 +45,16 @@
     "vitest": "^0.34.6",
     "vue": "^3.3.0",
     "vue-tsc": "^2.1.10"
-  }
+  },
+  "author": "rockerhx",
+  "license": "MIT",
+  "keywords": [
+    "taro",
+    "tabbar",
+    "vue3",
+    "miniapp",
+    "custom-tabbar",
+    "routerless",
+    "keep-alive"
+  ]
 }
