@@ -472,3 +472,93 @@ retap 刷新的行为约定：
 - 点击当前 Tab 时派发 `retap`，主容器调用对应刷新 handler。
 - 同一个 Tab 的 handler 执行中，再次 retap 会返回 `false`，避免并发刷新。
 - 刷新内容、失败提示和动画时机由业务页面自行决定。
+
+## 默认 TabBar 与样式自定义
+
+`RouterlessTabBar` 是受控组件，只负责展示和派发事件，不负责路由跳转。
+
+```vue
+<RouterlessTabBar
+  :active="activeTab"
+  :items="tabbarItems"
+  :refreshing="refreshingTab"
+  refresh-icon="/assets/tabbar/refresh.svg"
+  @change="activateTab"
+  @retap="handleTabRetap"
+/>
+```
+
+Props：
+
+| 名称          | 说明                                 |
+| ------------- | ------------------------------------ |
+| `active`      | 当前激活 Tab key                     |
+| `items`       | Tab 列表，至少包含 `key` 和 `text`   |
+| `refreshing`  | 正在显示刷新态的 Tab key，默认为空   |
+| `refreshIcon` | 刷新态图标，传入后会替换默认图标文字 |
+
+Events：
+
+| 名称     | 触发时机                       |
+| -------- | ------------------------------ |
+| `change` | 点击非当前 Tab，参数为目标 key |
+| `retap`  | 点击当前 Tab，参数为当前 key   |
+
+### 使用 `#item` 完全自定义单个 Tab
+
+```vue
+<RouterlessTabBar :active="activeTab" :items="tabbarItems">
+  <template #item="{ item, active, refreshing, iconPath }">
+    <view class="my-tabbar-item">
+      <image v-if="iconPath" :src="iconPath" mode="scaleToFill" />
+      <text :class="active ? 'is-active' : ''">
+        {{ refreshing ? '刷新中' : item.text }}
+      </text>
+    </view>
+  </template>
+</RouterlessTabBar>
+```
+
+### 使用 CSS 变量覆盖默认样式
+
+```scss
+.routerless-tabbar {
+  --routerless-tabbar-height: 52px;
+  --routerless-tabbar-icon-size: 28px;
+  --routerless-tabbar-text-size: 11px;
+  --routerless-tabbar-color: #8a8f99;
+  --routerless-tabbar-active-color: #ff4d4f;
+  --routerless-tabbar-border-color: #edf2fd;
+  --routerless-tabbar-bg: #fff;
+}
+```
+
+默认样式只保证开箱可用。复杂业务视觉建议优先通过 `#item` 插槽或业务侧样式覆盖实现。
+
+## API 速查
+
+| API                         | 类型     | 说明                                              |
+| --------------------------- | -------- | ------------------------------------------------- |
+| `resolveTabClick`           | 纯函数   | 判断点击结果是 `change` 还是 `retap`              |
+| `getTabKeys`                | 纯函数   | 从 Tab 配置按原顺序取出 key                       |
+| `isTabKey`                  | 纯函数   | 判断字符串是否为合法 Tab key                      |
+| `normalizeTabKey`           | 纯函数   | 把 query、alias 或非法值归一化为合法 Tab key      |
+| `buildRouterlessTabUrl`     | 纯函数   | 生成主容器 URL，例如 `/pages/main/index?tab=home` |
+| `resolveTabPageModuleKey`   | 纯函数   | 把 `/pages/home/index` 转为 `../home/index.vue`   |
+| `createRetapRefreshCore`    | 纯逻辑   | 创建 retap 注册表、runner 和动画状态管理          |
+| `createRetapRefreshContext` | Vue API  | 创建带 Vue 生命周期封装的 retap context           |
+| `useRouterlessTabs`         | Vue API  | 管理 active、visited、懒挂载和点击切换状态        |
+| `RouterlessTabBar`          | Vue 组件 | 默认底部 TabBar UI                                |
+| `RouterlessTabPaneHost`     | Vue 组件 | 可选 pane 宿主，只渲染 visited panes              |
+
+## 关于页面模块解析
+
+`import.meta.glob` 必须由业务项目自己调用：
+
+```ts
+const tabPageModules = import.meta.glob('../*/index.vue', {
+  eager: true,
+})
+```
+
+原因是 Vite 需要静态分析 glob 路径，而不同项目的 `src/pages` 结构不一定相同。package 只提供 `resolveTabPageModuleKey` 这类 helper，不扫描使用者项目目录。
