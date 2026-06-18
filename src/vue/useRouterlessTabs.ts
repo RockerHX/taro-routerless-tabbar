@@ -14,23 +14,20 @@ import type {
   UseRouterlessTabsResult,
 } from '../types.js'
 
-export const useRouterlessTabs = <
-  Key extends string,
-  Item extends KeyedTabItem<Key>,
->(
-  options: UseRouterlessTabsOptions<Key, Item>,
-): UseRouterlessTabsResult<Key, Item> => {
+export const useRouterlessTabs = <Item extends KeyedTabItem<string>>(
+  options: UseRouterlessTabsOptions<Item['key'], Item>,
+): UseRouterlessTabsResult<Item['key'], Item> => {
   const { defaultKey, initialKey, tabs } = options
   const tabKeys = getTabKeys(tabs)
-  const activeKey = ref(
+  const activeKey = ref<Item['key']>(
     initialKey && tabKeys.includes(initialKey) ? initialKey : defaultKey,
-  ) as Ref<Key>
+  ) as Ref<Item['key']>
   const visitedRecord = reactive(
     createVisitedTabRecord({
       tabKeys,
       defaultKey,
     }),
-  ) as Record<Key, boolean>
+  ) as Record<Item['key'], boolean>
 
   visitedRecord[activeKey.value] = true
 
@@ -41,16 +38,16 @@ export const useRouterlessTabs = <
   const visitedTabs = computed(() => getVisitedTabs(tabs, visitedRecord))
   const visitedKeys = computed(() => visitedTabs.value.map((tab) => tab.key))
 
-  const activateTab = (key: Key) => {
+  const activateTab = (key: Item['key']) => {
     activeKey.value = key
     visitedRecord[key] = true
     return key
   }
 
-  const isVisited = (key: Key) => visitedRecord[key] === true
-  const isActive = (key: Key) => activeKey.value === key
+  const isVisited = (key: Item['key']) => visitedRecord[key] === true
+  const isActive = (key: Item['key']) => activeKey.value === key
 
-  const handleTabClick = (key: Key): TabClickResult<Key> => {
+  const handleTabClick = (key: Item['key']): TabClickResult<Item['key']> => {
     const result = resolveTabClick(activeKey.value, key)
 
     if (result.type === 'change') {

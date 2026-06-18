@@ -21,7 +21,12 @@ describe('RouterlessTabPaneHost', () => {
         visited: ['recommend', 'profile'],
       },
       slots: {
-        pane: ({ pane }) => h('div', { class: 'pane-slot' }, pane.text),
+        pane: ({ pane }) =>
+          h(
+            'div',
+            { class: 'pane-slot' },
+            (pane as (typeof items)[number]).text,
+          ),
       },
     })
 
@@ -41,8 +46,10 @@ describe('RouterlessTabPaneHost', () => {
       },
       slots: {
         pane: ({ pane, active }) => {
-          received.push({ key: pane.key, active })
-          return h('div', pane.text)
+          const typedPane = pane as (typeof items)[number]
+
+          received.push({ key: typedPane.key, active })
+          return h('div', typedPane.text)
         },
       },
     })
@@ -61,7 +68,12 @@ describe('RouterlessTabPaneHost', () => {
         visited: ['recommend', 'orders'],
       },
       slots: {
-        pane: ({ pane }) => h('div', { class: 'pane-slot' }, pane.text),
+        pane: ({ pane }) =>
+          h(
+            'div',
+            { class: 'pane-slot' },
+            (pane as (typeof items)[number]).text,
+          ),
       },
     })
 
@@ -82,8 +94,10 @@ describe('RouterlessTabPaneHost', () => {
       },
       slots: {
         pane: ({ pane }) => {
-          received.push(pane)
-          return h('div', pane.text)
+          const typedPane = pane as (typeof items)[number]
+
+          received.push(typedPane)
+          return h('div', typedPane.text)
         },
       },
     })
