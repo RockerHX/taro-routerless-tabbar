@@ -76,7 +76,9 @@
 
 ## 当前状态
 
-当前包仍处于 internal package 阶段，尚未作为公开 npm 包发布。正式发布前会继续补齐发布配置、版本管理和独立 demo 验证。
+当前版本 `0.1.0-beta.0` 是发布前 beta，已完成 internal package 能力和当前业务项目 workspace 接入验证，但尚未执行 `npm publish`。
+
+正式发布前仍需补真实 repository URL；当前仓库暂无可写入 package 元数据的远程地址。
 
 ## 安装
 
