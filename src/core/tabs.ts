@@ -1,8 +1,8 @@
 import type { KeyedTabItem } from '../types.js'
 
-export function getTabKeys<Key extends string, Item extends KeyedTabItem<Key>>(
+export function getTabKeys<const Item extends KeyedTabItem<string>>(
   tabs: readonly Item[],
-): Key[] {
+): Array<Item['key']> {
   return tabs.map(function getTabKey(tab) {
     return tab.key
   })

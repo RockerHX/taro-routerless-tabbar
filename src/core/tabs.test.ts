@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, expectTypeOf, it } from 'vitest'
 import {
   createVisitedTabRecord,
   getTabKeys,
@@ -12,6 +12,29 @@ const tabs = [
   { key: 'profile', text: '我的' },
 ] as const
 describe('tab key helpers', function () {
+  it('保留 as const tabs 的字面量 key 类型', function () {
+    const literalTabs = [
+      { key: 'recommend' },
+      { key: 'orders' },
+      { key: 'profile' },
+    ] as const
+
+    const literalKeys = getTabKeys(literalTabs)
+    const normalized = normalizeTabKey({
+      value: 'orders',
+      tabKeys: literalKeys,
+      defaultKey: 'recommend',
+      aliases: {
+        index: 'recommend',
+      },
+    })
+
+    expectTypeOf(literalKeys).toEqualTypeOf<
+      Array<'recommend' | 'orders' | 'profile'>
+    >()
+    expectTypeOf(normalized).toEqualTypeOf<'recommend' | 'orders' | 'profile'>()
+  })
+
   it('按原顺序返回 tab keys', function () {
     expect(getTabKeys(tabs)).toEqual(['recommend', 'orders', 'profile'])
   })

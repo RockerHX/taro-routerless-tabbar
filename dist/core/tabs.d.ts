@@ -1,5 +1,5 @@
 import type { KeyedTabItem } from '../types.js';
-export declare function getTabKeys<Key extends string, Item extends KeyedTabItem<Key>>(tabs: readonly Item[]): Key[];
+export declare function getTabKeys<const Item extends KeyedTabItem<string>>(tabs: readonly Item[]): Array<Item['key']>;
 export declare function isTabKey<Key extends string>(value: string, tabKeys: readonly Key[]): value is Key;
 export declare function normalizeTabKey<Key extends string>(options: {
     value?: string;
