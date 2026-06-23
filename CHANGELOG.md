@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.2.0
+
+面向发布前质量门禁和运行时边界的维护版本。
+
+### Added
+
+- 新增 Husky + lint-staged 提交前检查。
+- 新增最小 Taro Vue3 H5 示例 fixture 和 `test:taro:h5` smoke build。
+- 新增 GitHub Actions CI，覆盖 lint、format、typecheck、test、build、pack、audit 和 Taro H5 smoke。
+- `useRouterlessTabs` 增加空 tabs、非法 defaultKey、非法 key 激活的运行时校验。
+
+### Changed
+
+- 升级开发依赖链路，降低 Vite/Vitest/happy-dom 等开发环境安全风险。
+- 提高 TypeScript 检查严格度，开启 `noImplicitAny`。
+- Taro smoke fixture 改用 CSS，避免 Sass legacy JS API warning。
+
+### Fixed
+
+- 修复 `buildRouterlessTabUrl` 在 `mainPagePath` 已包含 query/hash 时的 URL 拼接问题。
+- 清理发布包中误输出的测试辅助类型声明。
+
+### Docs
+
+- 明确 retap refresh 的返回值、错误处理和重复注册覆盖语义。
+- 更新项目分析报告，标记原主要问题均已完成处理。
+
 ## 0.1.0
 
 首个稳定版本。
