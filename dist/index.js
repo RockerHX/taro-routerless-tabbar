@@ -1,26 +1,26 @@
 import "./style.css";
-import { watch as P, toValue as S, onUnmounted as _, defineComponent as A, openBlock as h, createElementBlock as y, Fragment as T, renderList as V, normalizeClass as k, renderSlot as w, createCommentVNode as H, createElementVNode as I, toDisplayString as $, computed as m, ref as x, reactive as E } from "vue";
-function C(r, e) {
+import { onUnmounted as K, watch as I, toValue as P, defineComponent as V, openBlock as h, createElementBlock as y, Fragment as T, renderList as k, normalizeClass as w, renderSlot as C, createCommentVNode as $, createElementVNode as H, toDisplayString as E, computed as m, ref as _, reactive as q } from "vue";
+function S(r, e) {
   return e === r ? { type: "retap", key: e } : { type: "change", key: e };
 }
-function q(r) {
-  return r.map(function(i) {
-    return i.key;
+function x(r) {
+  return r.map(function(s) {
+    return s.key;
   });
 }
 function B(r, e) {
   return e.includes(r);
 }
 function O(r) {
-  const { aliases: e, defaultKey: i, tabKeys: a, value: s } = r;
-  return s && (e != null && e[s]) ? e[s] : s && B(s, a) ? s : i;
+  const { aliases: e, defaultKey: s, tabKeys: a, value: i } = r;
+  return i && (e != null && e[i]) ? e[i] : i && B(i, a) ? i : s;
 }
-function K(r) {
-  const { defaultKey: e, tabKeys: i } = r;
-  return i.reduce(
-    function(s, t) {
+function A(r) {
+  const { defaultKey: e, tabKeys: s } = r;
+  return s.reduce(
+    function(i, t) {
       return {
-        ...s,
+        ...i,
         [t]: t === e
       };
     },
@@ -33,8 +33,8 @@ function L(r, e) {
   });
 }
 function Q(r) {
-  const { mainPagePath: e, query: i, queryKey: a = "tab", tabKey: s } = r, t = new URLSearchParams();
-  return t.append(a, s), Object.entries(i ?? {}).forEach(function([u, l]) {
+  const { mainPagePath: e, query: s, queryKey: a = "tab", tabKey: i } = r, t = new URLSearchParams();
+  return t.append(a, i), Object.entries(s ?? {}).forEach(function([u, l]) {
     u === a || l === null || l === void 0 || t.append(u, String(l));
   }), `${e}?${t.toString()}`;
 }
@@ -45,21 +45,21 @@ function G(r) {
   return `..${e.replace("/pages", "")}.vue`;
 }
 function z(r = {}) {
-  const { onError: e } = r, i = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Set(), s = /* @__PURE__ */ new Set();
+  const { onError: e } = r, s = /* @__PURE__ */ new Map(), a = /* @__PURE__ */ new Set(), i = /* @__PURE__ */ new Set();
   let t = "";
   function f() {
-    s.forEach(function(c) {
+    i.forEach(function(c) {
       c(t);
     });
   }
   function u(n, c) {
-    i.set(n, c);
+    s.set(n, c);
   }
   function l(n, c) {
-    i.has(n) && (!c || i.get(n) === c) && i.delete(n);
+    s.has(n) && (!c || s.get(n) === c) && s.delete(n);
   }
   function o(n) {
-    return i.get(n);
+    return s.get(n);
   }
   async function d(n) {
     if (a.has(n))
@@ -89,8 +89,8 @@ function z(r = {}) {
     return !t || n && t !== n ? !1 : (t = "", f(), !0);
   }
   function R(n) {
-    return s.add(n), function() {
-      s.delete(n);
+    return i.add(n), function() {
+      i.delete(n);
     };
   }
   return {
@@ -106,36 +106,36 @@ function z(r = {}) {
 }
 function J(r = {}) {
   const e = z(r);
-  function i(s, t, f = !0) {
+  function s(i, t, f = !0) {
     let u = !1;
     function l(d) {
       if (d) {
-        e.registerRefreshHandler(s, t), u = !0;
+        e.registerRefreshHandler(i, t), u = !0;
         return;
       }
-      u && (e.unregisterRefreshHandler(s, t), u = !1);
+      u && (e.unregisterRefreshHandler(i, t), u = !1);
     }
-    const o = P(
+    const o = I(
       function() {
-        return !!S(f);
+        return !!P(f);
       },
       function(g) {
         l(g);
       },
       { immediate: !0 }
     );
-    _(function() {
-      o(), e.unregisterRefreshHandler(s, t), u = !1;
+    K(function() {
+      o(), e.unregisterRefreshHandler(i, t), u = !1;
     });
   }
-  function a(s) {
+  function a(i) {
     function t() {
-      return e.startRefreshAnimation(s);
+      return e.startRefreshAnimation(i);
     }
     function f() {
-      return e.stopRefreshAnimation(s);
+      return e.stopRefreshAnimation(i);
     }
-    return _(function() {
+    return K(function() {
       f();
     }), {
       startRefreshAnimation: t,
@@ -144,11 +144,11 @@ function J(r = {}) {
   }
   return {
     ...e,
-    useRetapRefresh: i,
+    useRetapRefresh: s,
     useRetapRefreshAnimation: a
   };
 }
-const F = { class: "routerless-tabbar" }, U = ["onClick"], W = ["src"], M = ["src"], N = { class: "routerless-tabbar-text" }, X = /* @__PURE__ */ A({
+const F = { class: "routerless-tabbar" }, U = ["onClick"], W = ["src"], M = ["src"], N = { class: "routerless-tabbar-text" }, X = /* @__PURE__ */ V({
   __name: "RouterlessTabBar",
   props: {
     active: {
@@ -170,15 +170,15 @@ const F = { class: "routerless-tabbar" }, U = ["onClick"], W = ["src"], M = ["sr
   },
   emits: ["change", "retap"],
   setup(r, { emit: e }) {
-    const i = r, a = e;
-    function s(u) {
-      return i.refreshing === u;
+    const s = r, a = e;
+    function i(u) {
+      return s.refreshing === u;
     }
     function t(u) {
-      return u.key === i.active ? u.selectedIconPath ?? u.iconPath ?? "" : u.iconPath ?? "";
+      return u.key === s.active ? u.selectedIconPath ?? u.iconPath ?? "" : u.iconPath ?? "";
     }
     function f(u) {
-      const l = C(i.active, u.key);
+      const l = S(s.active, u.key);
       if (l.type === "retap") {
         a("retap", l.key);
         return;
@@ -186,22 +186,22 @@ const F = { class: "routerless-tabbar" }, U = ["onClick"], W = ["src"], M = ["sr
       a("change", l.key);
     }
     return (u, l) => (h(), y("view", F, [
-      (h(!0), y(T, null, V(r.items, (o) => (h(), y("view", {
+      (h(!0), y(T, null, k(r.items, (o) => (h(), y("view", {
         key: o.key,
-        class: k([
+        class: w([
           "routerless-tabbar-item",
           o.key === r.active ? "routerless-tabbar-item-active" : "",
-          s(o.key) ? "routerless-tabbar-item-refreshing" : ""
+          i(o.key) ? "routerless-tabbar-item-refreshing" : ""
         ]),
         onClick: (d) => f(o)
       }, [
-        w(u.$slots, "item", {
+        C(u.$slots, "item", {
           item: o,
           active: o.key === r.active,
-          refreshing: s(o.key),
+          refreshing: i(o.key),
           iconPath: t(o)
         }, () => [
-          s(o.key) && r.refreshIcon ? (h(), y("image", {
+          i(o.key) && r.refreshIcon ? (h(), y("image", {
             key: 0,
             class: "routerless-tabbar-refresh-icon",
             mode: "scaleToFill",
@@ -212,15 +212,14 @@ const F = { class: "routerless-tabbar" }, U = ["onClick"], W = ["src"], M = ["sr
               class: "routerless-tabbar-icon",
               mode: "scaleToFill",
               src: t(o)
-            }, null, 8, M)) : H("", !0),
-            I("text", N, $(o.text), 1)
+            }, null, 8, M)) : $("", !0),
+            H("text", N, E(o.text), 1)
           ], 64))
         ])
       ], 10, U))), 128))
     ]));
   }
-});
-const j = { class: "routerless-tab-pane-host" }, Y = /* @__PURE__ */ A({
+}), j = { class: "routerless-tab-pane-host" }, Y = /* @__PURE__ */ V({
   __name: "RouterlessTabPaneHost",
   props: {
     items: {
@@ -237,20 +236,20 @@ const j = { class: "routerless-tab-pane-host" }, Y = /* @__PURE__ */ A({
     }
   },
   setup(r) {
-    const e = r, i = m(function() {
+    const e = r, s = m(function() {
       return e.items.filter(function(t) {
         return e.visited.includes(t.key);
       });
     });
-    return (a, s) => (h(), y("view", j, [
-      (h(!0), y(T, null, V(i.value, (t) => (h(), y("view", {
+    return (a, i) => (h(), y("view", j, [
+      (h(!0), y(T, null, k(s.value, (t) => (h(), y("view", {
         key: t.key,
-        class: k([
+        class: w([
           "routerless-tab-pane",
           t.key === r.active ? "" : "routerless-tab-pane-hidden"
         ])
       }, [
-        w(a.$slots, "pane", {
+        C(a.$slots, "pane", {
           pane: t,
           active: t.key === r.active
         })
@@ -259,11 +258,11 @@ const j = { class: "routerless-tab-pane-host" }, Y = /* @__PURE__ */ A({
   }
 });
 function Z(r) {
-  const { defaultKey: e, initialKey: i, tabs: a } = r, s = q(a), t = x(
-    i && s.includes(i) ? i : e
-  ), f = E(
-    K({
-      tabKeys: s,
+  const { defaultKey: e, initialKey: s, tabs: a } = r, i = x(a), t = _(
+    s && i.includes(s) ? s : e
+  ), f = q(
+    A({
+      tabKeys: i,
       defaultKey: e
     })
   );
@@ -289,15 +288,15 @@ function Z(r) {
     return t.value === n;
   }
   function p(n) {
-    const c = C(t.value, n);
+    const c = S(t.value, n);
     return c.type === "change" && d(c.key), c;
   }
   function R() {
-    const n = K({
-      tabKeys: s,
+    const n = A({
+      tabKeys: i,
       defaultKey: e
     });
-    n[t.value] = !0, s.forEach(function(b) {
+    n[t.value] = !0, i.forEach(function(b) {
       f[b] = n[b];
     });
   }
@@ -319,12 +318,12 @@ export {
   Q as buildRouterlessTabUrl,
   J as createRetapRefreshContext,
   z as createRetapRefreshCore,
-  K as createVisitedTabRecord,
-  q as getTabKeys,
+  A as createVisitedTabRecord,
+  x as getTabKeys,
   L as getVisitedTabs,
   B as isTabKey,
   O as normalizeTabKey,
-  C as resolveTabClick,
+  S as resolveTabClick,
   G as resolveTabPageModuleKey,
   Z as useRouterlessTabs
 };

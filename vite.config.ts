@@ -22,6 +22,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
+      cssFileName: 'style',
       fileName() {
         return 'index.js'
       },
