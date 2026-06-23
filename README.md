@@ -465,6 +465,9 @@ retap 刷新的行为约定：
 - 点击非当前 Tab 时派发 `change`，主容器切换 active key。
 - 点击当前 Tab 时派发 `retap`，主容器调用对应刷新 handler。
 - 同一个 Tab 的 handler 执行中，再次 retap 会返回 `false`，避免并发刷新。
+- `runRefresh` 返回 `true` 只表示找到了 handler 并已执行，不代表业务刷新成功。
+- handler 抛错会交给 `onError`；如果 `onError` 自身不抛错，`runRefresh` 不会继续向外抛出 handler 异常。
+- 同一个 Tab key 只保留一个 handler，重复注册时后注册的 handler 会覆盖先注册的 handler。
 - 刷新内容、失败提示和动画时机由业务页面自行决定。
 
 ## 默认 TabBar 与样式自定义

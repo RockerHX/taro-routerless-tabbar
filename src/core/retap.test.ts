@@ -13,6 +13,17 @@ describe('createRetapRefreshCore registry and runner', function () {
     core.unregisterRefreshHandler('recommend', handler)
     expect(core.getRefreshHandler('recommend')).toBeUndefined()
   })
+  it('同一 key 重复注册时后注册 handler 覆盖先注册 handler', async function () {
+    const core = createRetapRefreshCore<'recommend'>()
+    const firstHandler = vi.fn()
+    const secondHandler = vi.fn()
+    core.registerRefreshHandler('recommend', firstHandler)
+    core.registerRefreshHandler('recommend', secondHandler)
+    expect(core.getRefreshHandler('recommend')).toBe(secondHandler)
+    await expect(core.runRefresh('recommend')).resolves.toBe(true)
+    expect(firstHandler).not.toHaveBeenCalled()
+    expect(secondHandler).toHaveBeenCalledTimes(1)
+  })
   it('未注册 key 上 runRefresh 返回 false', async function () {
     const core = createRetapRefreshCore<'recommend' | 'orders'>()
     await expect(core.runRefresh('orders')).resolves.toBe(false)
