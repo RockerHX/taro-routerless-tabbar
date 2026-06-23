@@ -76,23 +76,23 @@
 
 ## 当前状态
 
-当前版本 `0.1.0-beta.0` 是发布前 beta，已完成 internal package 能力和当前业务项目 workspace 接入验证，但尚未执行 `npm publish`。
+当前版本 `0.1.0-beta.0` 是发布前 beta，已迁移到独立 package 仓库并可通过 Git 依赖验证，但尚未执行 `npm publish`。
 
-正式发布前仍需补真实 repository URL；当前仓库暂无可写入 package 元数据的远程地址。
+源码仓库：https://github.com/RockerHX/taro-routerless-tabbar
 
 ## 安装
 
-当前包仍是 internal package，推荐在 pnpm workspace 里使用：
+当前包尚未发布到 npm，可先通过 Git tag 安装：
 
 ```json
 {
   "dependencies": {
-    "taro-routerless-tabbar": "workspace:*"
+    "taro-routerless-tabbar": "git+https://github.com/RockerHX/taro-routerless-tabbar.git#v0.1.0-beta.0"
   }
 }
 ```
 
-如果业务项目需要在开发/测试时直接引用源码，可以在 Vite/Vitest/TypeScript 配置里把包名别名到 `packages/taro-routerless-tabbar/src/index.ts`。正式 npm 发布后再改为普通安装：
+正式 npm 发布后再改为普通安装：
 
 ```bash
 pnpm add taro-routerless-tabbar

@@ -20,10 +20,10 @@
 - 新增默认底栏组件 `RouterlessTabBar`。
 - 新增主容器状态 composable `useRouterlessTabs`，支持 active、visited、懒挂载和 retap/change 分支。
 - 新增轻量 pane 宿主组件 `RouterlessTabPaneHost`。
-- 当前业务项目已通过 workspace dependency 接入 package 能力，覆盖点击判定、retap refresh、tab helper 和 main 容器状态。
+- 当前业务项目已通过 dependency 接入 package 能力，覆盖点击判定、retap refresh、tab helper 和 main 容器状态。
 - 新增 README，提供安装、配置、main 容器、Tab 页面、retap、独立页 redirect、样式自定义和 API 速查示例。
 
 ### Notes
 
 - 该版本尚未执行 `npm publish`。
-- 正式发布前仍需补真实 repository URL。
+- 已迁移到独立 repository：https://github.com/RockerHX/taro-routerless-tabbar。
