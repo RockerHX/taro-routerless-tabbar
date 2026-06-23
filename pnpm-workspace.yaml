@@ -1,6 +1,5 @@
 autoInstallPeers: false
 overrides:
-  'vite@<=6.4.2': 6.4.3
   'minimatch@>=9.0.0 <9.0.7': 9.0.9
 
 allowBuilds:
@@ -11,3 +10,7 @@ allowBuilds:
   core-js: true
   core-js-pure: true
   esbuild: true
+
+minimumReleaseAgeExclude:
+  - globals@17.7.0
+  - vite@8.1.0
