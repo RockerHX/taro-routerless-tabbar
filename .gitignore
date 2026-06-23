@@ -3,3 +3,5 @@ coverage/
 .temp/
 *.log
 .DS_Store
+examples/taro-vue3-basic/.swc/
+examples/taro-vue3-basic/dist/
