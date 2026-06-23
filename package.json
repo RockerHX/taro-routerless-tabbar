@@ -11,7 +11,11 @@
     "dist",
     "README.md",
     "CHANGELOG.md",
-    "LICENSE"
+    "LICENSE",
+    "doc/integration-guide.md",
+    "doc/retap-refresh.md",
+    "doc/styling.md",
+    "doc/api.md"
   ],
   "exports": {
     ".": {
