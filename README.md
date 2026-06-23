@@ -76,23 +76,15 @@
 
 ## 当前状态
 
-当前版本 `0.1.0-beta.0` 是发布前 beta，已迁移到独立 package 仓库并可通过 Git 依赖验证，但尚未执行 `npm publish`。
+当前版本 `0.1.0` 是首个稳定版本，已发布到 npm，并已在业务项目的小红书模拟器和真机预览中验证。
 
 源码仓库：https://github.com/RockerHX/taro-routerless-tabbar
 
+npm 包：https://www.npmjs.com/package/taro-routerless-tabbar
+
 ## 安装
 
-当前包尚未发布到 npm，可先通过 Git tag 安装：
-
-```json
-{
-  "dependencies": {
-    "taro-routerless-tabbar": "git+https://github.com/RockerHX/taro-routerless-tabbar.git#v0.1.0-beta.0"
-  }
-}
-```
-
-正式 npm 发布后再改为普通安装：
+通过 npm 安装：
 
 ```bash
 pnpm add taro-routerless-tabbar

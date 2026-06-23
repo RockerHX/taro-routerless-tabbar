@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0
+
+首个稳定版本。
+
+### Changed
+
+- 将 `getTabKeys` 类型签名调整为从 `as const` tabs 自动保留字面量 key 类型，避免 `normalizeTabKey` 在严格编译链中退化为 `string`。
+- README 安装说明更新为 npm 正式安装方式。
+
+### Verified
+
+- 已在当前业务项目完成类型检查、routerless 相关单测、小红书构建、模拟器和真机预览验证。
+
 ## 0.1.0-beta.0
 
 发布前 beta 版本，用于验证 `taro-routerless-tabbar` 从 internal package 走向 npm 发布的完整能力。
