@@ -30,7 +30,8 @@
     "pack:dry-run": "npm pack --dry-run",
     "prepublishOnly": "pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run test:run && pnpm run build && pnpm run pack:dry-run",
     "test:run": "vitest run -c vitest.config.ts",
-    "typecheck": "vue-tsc --noEmit -p tsconfig.json"
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "@tarojs/components": ">=4 <5",
@@ -54,6 +55,8 @@
     "eslint-plugin-vue": "^8.7.1",
     "globals": "^17.6.0",
     "happy-dom": "^15.11.7",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
     "prettier": "^3.8.4",
     "sass": "^1.101.0",
     "typescript": "^5.9.3",
@@ -82,5 +85,17 @@
     "custom-tabbar",
     "routerless",
     "keep-alive"
-  ]
+  ],
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx,mts,cts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css}": "prettier --write",
+    "*.{json,html,md,yml,yaml}": "prettier --write"
+  }
 }
