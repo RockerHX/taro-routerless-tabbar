@@ -57,7 +57,7 @@ function handleChange(key: TabKey) {
 }
 </script>
 
-<style lang="scss">
+<style>
 .fixture-page {
   min-height: 100vh;
   padding: 32px 24px 96px;
