@@ -19,6 +19,21 @@ export function useRouterlessTabs<Item extends KeyedTabItem<string>>(
 ): UseRouterlessTabsResult<Item['key'], Item> {
   const { defaultKey, initialKey, tabs } = options
   const tabKeys = getTabKeys(tabs)
+
+  if (tabKeys.length === 0) {
+    throw new Error('Routerless tabs cannot be empty')
+  }
+
+  if (!tabKeys.includes(defaultKey)) {
+    throw new Error(`Invalid default routerless tab key: ${defaultKey}`)
+  }
+
+  function assertTabKey(key: Item['key']) {
+    if (!tabKeys.includes(key)) {
+      throw new Error(`Invalid routerless tab key: ${key}`)
+    }
+  }
+
   const activeKey = ref<Item['key']>(
     initialKey && tabKeys.includes(initialKey) ? initialKey : defaultKey,
   ) as Ref<Item['key']>
@@ -49,6 +64,7 @@ export function useRouterlessTabs<Item extends KeyedTabItem<string>>(
   })
 
   function activateTab(key: Item['key']) {
+    assertTabKey(key)
     activeKey.value = key
     visitedRecord[key] = true
     return key
@@ -63,6 +79,7 @@ export function useRouterlessTabs<Item extends KeyedTabItem<string>>(
   }
 
   function handleTabClick(key: Item['key']): TabClickResult<Item['key']> {
+    assertTabKey(key)
     const result = resolveTabClick(activeKey.value, key)
 
     if (result.type === 'change') {

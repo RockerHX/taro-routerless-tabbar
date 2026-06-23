@@ -8,6 +8,27 @@ const tabs = [
   { key: 'profile', text: '我的' },
 ] as const
 describe('useRouterlessTabs', function () {
+  it('tabs 为空时抛错', function () {
+    const emptyTabs = [] as Array<{
+      key: 'recommend'
+      text: string
+    }>
+
+    expect(function mountEmptyTabs() {
+      return useRouterlessTabs({
+        tabs: emptyTabs,
+        defaultKey: 'recommend',
+      })
+    }).toThrow('Routerless tabs cannot be empty')
+  })
+  it('defaultKey 不存在于 tabs 时抛错', function () {
+    expect(function mountInvalidDefaultKey() {
+      return useRouterlessTabs({
+        tabs,
+        defaultKey: 'unknown' as (typeof tabs)[number]['key'],
+      })
+    }).toThrow('Invalid default routerless tab key: unknown')
+  })
   it('默认激活 defaultKey，且仅默认 tab 已访问', function () {
     const mounted = mountSetup(function () {
       return useRouterlessTabs({
@@ -60,6 +81,20 @@ describe('useRouterlessTabs', function () {
     expect(mounted.exposed.visitedKeys.value).toEqual(['recommend', 'orders'])
     mounted.unmount()
   })
+  it('activateTab 收到非法 key 时抛错且不改变状态', function () {
+    const mounted = mountSetup(function () {
+      return useRouterlessTabs({
+        tabs,
+        defaultKey: 'recommend',
+      })
+    })
+    expect(function activateInvalidKey() {
+      mounted.exposed.activateTab('unknown' as (typeof tabs)[number]['key'])
+    }).toThrow('Invalid routerless tab key: unknown')
+    expect(mounted.exposed.activeKey.value).toBe('recommend')
+    expect(mounted.exposed.visitedKeys.value).toEqual(['recommend'])
+    mounted.unmount()
+  })
   it('handleTabClick 点击非当前 tab 返回 change 并完成切换', function () {
     const mounted = mountSetup(function () {
       return useRouterlessTabs({
@@ -86,6 +121,20 @@ describe('useRouterlessTabs', function () {
       type: 'retap',
       key: 'recommend',
     })
+    expect(mounted.exposed.activeKey.value).toBe('recommend')
+    expect(mounted.exposed.visitedKeys.value).toEqual(['recommend'])
+    mounted.unmount()
+  })
+  it('handleTabClick 收到非法 key 时抛错且不改变状态', function () {
+    const mounted = mountSetup(function () {
+      return useRouterlessTabs({
+        tabs,
+        defaultKey: 'recommend',
+      })
+    })
+    expect(function handleInvalidClick() {
+      mounted.exposed.handleTabClick('unknown' as (typeof tabs)[number]['key'])
+    }).toThrow('Invalid routerless tab key: unknown')
     expect(mounted.exposed.activeKey.value).toBe('recommend')
     expect(mounted.exposed.visitedKeys.value).toEqual(['recommend'])
     mounted.unmount()
