@@ -7,7 +7,7 @@
 
 前序版本的消费侧稳定性、接入样板、调试能力、样式边界、运行时验证、多端 smoke 和发布预检工作已经完成。当前包已经具备进入稳定版收敛阶段的基础：导出结构清晰、核心 API 有单元测试，真实 tarball 消费侧验证可重复执行，Taro H5 有自动化运行时 smoke，WeChat 主链路 build smoke 和 Alipay experimental extended build smoke 均已落地。
 
-1.0.0 不建议继续扩展新的核心能力，而应聚焦“稳定版承诺”：冻结公开 API 与导出结构，补齐端侧验证记录，明确长期支持范围和已知限制，并把发布流程收敛到可重复、可审计、可回滚的最小步骤。
+1.0.0 不建议继续扩展新的核心能力，而应聚焦“稳定版承诺”：冻结公开 API 与导出结构，补齐端侧验证记录，明确长期支持范围和已知限制，并把发布流程收敛到可重复、可审计、可回滚的最小步骤。在不改变底层 primitives 行为的前提下，1.0.0 额外补充 `RouterlessTabs` 高阶组件，用于降低默认接入成本。
 
 ## 当前已验证基线
 
@@ -31,6 +31,7 @@
 ## 已完成能力基线
 
 - root、`./core`、`./vue`、`./style.css` 子路径导出已可从真实 tarball 正常消费。
+- `RouterlessTabs` 已作为低门槛高阶组件导出，可复用现有状态、pane host 和默认底栏能力。
 - root 入口保持默认样式自动引入；`./core` / `./vue` 不包含 `style.css` 副作用。
 - `resolveStandaloneTabRedirect` 已覆盖独立 Tab 页面 redirect URL 判断、query 合并、`embedded` 过滤和目标 `tab` 覆盖。
 - retap core/context 已提供 handler 注册、并发保护、错误回调、刷新动画 key、`hasRefreshHandler` 和 `isRefreshRunning`。
@@ -140,7 +141,7 @@
 
 **验收标准**
 
-- README 能在 3 分钟内帮助新用户判断是否适合本包。
+- README 能在 3 分钟内帮助新用户判断是否适合本包，并能通过 `RouterlessTabs` 极简示例快速接入默认模式。
 - 每个文档入口职责清晰，没有互相矛盾的验证范围描述。
 - 已知限制集中记录，不散落在多个文档里互相重复。
 
@@ -177,6 +178,7 @@
 - [x] 记录 Alipay experimental 运行时验证结果，或明确未验证原因。
 - [x] 收敛发布前必跑命令、可选扩展命令和失败排查文档。
 - [x] 检查 README、集成指南、retap、样式、兼容性、API 和运行时验证矩阵的一致性。
+- [x] 新增 `RouterlessTabs` 低门槛高阶组件，并把 README 快速开始改为极简集成示例。
 - [x] 准备 1.0.0 版本号、CHANGELOG、README 当前版本和发布说明。
 - [x] 完成 1.0.0 发布前完整质量门禁。
 
@@ -188,6 +190,6 @@
 
 ## 推荐下一步
 
-1. 先做公开 API / exports 审查，确认 1.0.0 要冻结的稳定契约。
-2. 按 `doc/runtime-validation.md` 对 WeChat 小程序补一次开发者工具或真机验证记录。
-3. 再收敛发布文档和 1.0.0 版本准备，避免在验证记录缺失时直接发布稳定版。
+1. 发布前如条件允许，继续按 `doc/runtime-validation.md` 对 WeChat 小程序补一次开发者工具或真机点击验证记录。
+2. 确认 `RouterlessTabs` 极简示例、API 文档和 package consumer 验证均随最终门禁通过。
+3. 创建 tag 前最后确认工作树干净、tarball 文件清单符合预期。
