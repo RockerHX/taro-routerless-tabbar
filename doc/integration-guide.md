@@ -207,35 +207,41 @@ Tab 页面建议同时支持两种打开方式：
 - `embedded=true`：被 main 容器内嵌渲染，参与 routerless Tab 切换和保活。
 - `embedded=false`：被独立页面路由打开，此时重定向回 main 容器对应 Tab。
 
-业务项目可以自行封装一个小工具：
+推荐用官方 `resolveStandaloneTabRedirect` 封装一个项目内 composable。这个 helper 只负责判断是否需要跳转并生成 URL，不依赖 Taro runtime，因此可以稳定单测 query 合并规则：
 
 ```ts
 // utils/tab-page.ts
 import Taro from '@tarojs/taro'
-import { onMounted } from 'vue'
-import { buildRouterlessTabUrl } from 'taro-routerless-tabbar'
+import { useLoad } from '@tarojs/taro'
+import { resolveStandaloneTabRedirect } from 'taro-routerless-tabbar'
 
 import { mainPagePath } from '@/config/tabbar'
 import type { TabKey } from '@/config/tabbar'
+
+type PageQuery = Record<string, string | undefined>
 
 export const useStandaloneTabRedirect = (
   tabKey: TabKey,
   isEmbedded: () => boolean,
 ) => {
-  onMounted(() => {
-    if (isEmbedded()) {
-      return
-    }
-
-    Taro.redirectTo({
-      url: buildRouterlessTabUrl({
-        mainPagePath,
-        tabKey,
-      }),
+  useLoad((query: PageQuery) => {
+    const redirect = resolveStandaloneTabRedirect({
+      mainPagePath,
+      tabKey,
+      embedded: isEmbedded(),
+      currentQuery: query,
     })
+
+    if (redirect.shouldRedirect) {
+      Taro.redirectTo({
+        url: redirect.url,
+      })
+    }
   })
 }
 ```
+
+`resolveStandaloneTabRedirect` 会保留独立页打开时的普通 query 参数，过滤 `embedded`，并用当前 Tab key 覆盖旧的 `tab` 参数。
 
 Tab 页面中按需使用：
 
