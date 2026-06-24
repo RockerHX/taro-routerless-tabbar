@@ -2,8 +2,10 @@ import 'taro-routerless-tabbar/style.css'
 
 import {
   RouterlessTabBar as RootRouterlessTabBar,
+  RouterlessTabs as RootRouterlessTabs,
   buildRouterlessTabUrl as buildRootRouterlessTabUrl,
   resolveStandaloneTabRedirect as resolveRootStandaloneTabRedirect,
+  type RouterlessTabsItem as RootRouterlessTabsItem,
 } from 'taro-routerless-tabbar'
 import {
   buildRouterlessTabUrl,
@@ -13,15 +15,34 @@ import {
 import {
   RouterlessTabBar,
   RouterlessTabPaneHost,
+  RouterlessTabs as VueRouterlessTabs,
   createRetapRefreshContext,
   useRouterlessTabs,
+  type RouterlessTabsItem as VueRouterlessTabsItem,
 } from 'taro-routerless-tabbar/vue'
 import { createApp, defineComponent, h } from 'vue'
 
+const HomePane = defineComponent({
+  name: 'HomePane',
+  setup() {
+    return () => h('text', 'home pane')
+  },
+})
+const OrdersPane = defineComponent({
+  name: 'OrdersPane',
+  setup() {
+    return () => h('text', 'orders pane')
+  },
+})
 const tabItems = [
   { key: 'home', text: '首页' },
   { key: 'orders', text: '订单' },
 ] as const
+const rootTabPanes = [
+  { key: 'home', text: '首页', component: HomePane },
+  { key: 'orders', text: '订单', component: OrdersPane },
+] as const satisfies readonly RootRouterlessTabsItem[]
+const vueTabPanes: readonly VueRouterlessTabsItem[] = rootTabPanes
 
 const rootUrl = buildRootRouterlessTabUrl({
   mainPagePath: '/pages/main/index',
@@ -73,6 +94,10 @@ const App = defineComponent({
           active: tabs.activeKey.value,
           items: tabItems,
         }),
+        h(RootRouterlessTabs, {
+          tabs: rootTabPanes,
+          defaultKey: 'home',
+        }),
         h(RouterlessTabPaneHost, {
           items: tabItems,
           active: tabs.activeKey.value,
@@ -81,6 +106,10 @@ const App = defineComponent({
         h(RouterlessTabBar, {
           active: tabs.activeKey.value,
           items: tabItems,
+        }),
+        h(VueRouterlessTabs, {
+          tabs: vueTabPanes,
+          defaultKey: 'orders',
         }),
       ])
   },

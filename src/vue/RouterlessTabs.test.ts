@@ -171,7 +171,7 @@ describe('RouterlessTabs', function () {
           return h(
             'div',
             { class: 'custom-pane', 'data-active': String(active) },
-            pane.text,
+            (pane as (typeof panes)[number]).text,
           )
         },
       },
