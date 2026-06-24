@@ -35,16 +35,13 @@ export function createVisitedTabRecord<Key extends string>(options: {
   defaultKey: Key
 }): Record<Key, boolean> {
   const { defaultKey, tabKeys } = options
+  const result = {} as Record<Key, boolean>
 
-  return tabKeys.reduce(
-    function reduceVisitedRecord(result, key) {
-      return {
-        ...result,
-        [key]: key === defaultKey,
-      }
-    },
-    {} as Record<Key, boolean>,
-  )
+  tabKeys.forEach(function setVisitedTab(key) {
+    result[key] = key === defaultKey
+  })
+
+  return result
 }
 
 export function getVisitedTabs<
