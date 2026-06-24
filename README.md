@@ -50,72 +50,29 @@ import 'taro-routerless-tabbar/style.css'
 
 ## 快速开始
 
-下面示例只展示核心链路：`useRouterlessTabs` 管状态，`RouterlessTabPaneHost` 渲染已访问 pane，`RouterlessTabBar` 展示底栏并派发事件。完整项目通常还会接入 query 解析、`import.meta.glob`、独立页 redirect 和 retap refresh，详见 [完整接入指南](doc/integration-guide.md)。
+最小集成只需要准备 Tab 配置，并把页面组件交给 `RouterlessTabs`。组件内部会自动管理 active、visited、懒挂载和默认底栏切换：
 
 ```vue
 <script setup lang="ts">
-import {
-  RouterlessTabBar,
-  RouterlessTabPaneHost,
-  useRouterlessTabs,
-} from 'taro-routerless-tabbar'
-import type { Component } from 'vue'
+import { RouterlessTabs } from 'taro-routerless-tabbar'
 
 import HomePage from '@/pages/home/index.vue'
 import OrderPage from '@/pages/order/index.vue'
 import ProfilePage from '@/pages/profile/index.vue'
 
-type TabKey = 'home' | 'order' | 'profile'
-type TabPane = {
-  key: TabKey
-  text: string
-  component: Component
-  iconPath?: string
-  selectedIconPath?: string
-}
-
-const tabPanes: TabPane[] = [
+const tabs = [
   { key: 'home', text: '首页', component: HomePage },
   { key: 'order', text: '订单', component: OrderPage },
   { key: 'profile', text: '我的', component: ProfilePage },
-]
-
-const tabs = useRouterlessTabs({
-  tabs: tabPanes,
-  defaultKey: 'home',
-})
-
-const activeTab = tabs.activeKey
-const visitedKeys = tabs.visitedKeys
-const activateTab = tabs.activateTab
-
-const handleTabRetap = (tab: TabKey) => {
-  // 完整刷新链路请按 doc/retap-refresh.md 创建共享单例后调用 runRefresh(tab)
-  console.log('retap tab:', tab)
-}
+] as const
 </script>
 
 <template>
-  <view class="page main-page">
-    <RouterlessTabPaneHost
-      :items="tabPanes"
-      :active="activeTab"
-      :visited="visitedKeys"
-    >
-      <template #pane="{ pane, active }">
-        <component :is="pane.component" embedded :active="active" />
-      </template>
-    </RouterlessTabPaneHost>
-
-    <RouterlessTabBar
-      :active="activeTab"
-      :items="tabPanes"
-      @change="activateTab"
-      @retap="handleTabRetap"
-    />
-  </view>
+  <RouterlessTabs :tabs="tabs" default-key="home" />
 </template>
 ```
+
+需要完全控制 active/visited、接入复杂 retap refresh、定制 PaneHost 或自行拼装底栏时，可以改用 `useRouterlessTabs`、`RouterlessTabPaneHost` 和 `RouterlessTabBar` 组成的高级受控模式，详见 [完整接入指南](doc/integration-guide.md)。
 
 ## 文档
 
@@ -131,6 +88,7 @@ const handleTabRetap = (tab: TabKey) => {
 
 | API                            | 说明                                       |
 | ------------------------------ | ------------------------------------------ |
+| `RouterlessTabs`               | 低门槛高阶组件，内部管理 active/visited    |
 | `useRouterlessTabs`            | 管理 active、visited 和点击状态            |
 | `RouterlessTabPaneHost`        | 渲染已访问 Tab pane                        |
 | `RouterlessTabBar`             | 默认底部 TabBar UI                         |

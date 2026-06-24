@@ -1,6 +1,6 @@
 # 样式自定义指南
 
-`RouterlessTabBar` 是受控展示组件：它只展示当前 active、刷新态和底栏内容，并派发 `change` / `retap` 事件；路由跳转、业务数据刷新和页面布局由业务项目控制。
+`RouterlessTabs` 是低门槛高阶组件，默认复用 `RouterlessTabPaneHost` 和 `RouterlessTabBar` 的 class、CSS 变量和 slot。`RouterlessTabBar` 是受控展示组件：它只展示当前 active、刷新态和底栏内容，并派发 `change` / `retap` 事件；路由跳转、业务数据刷新和页面布局由业务项目控制。
 
 ## 1. 样式导入
 
@@ -10,9 +10,11 @@
 import 'taro-routerless-tabbar/style.css'
 ```
 
-只使用 `taro-routerless-tabbar/core` 的 helper-only 场景不需要导入样式。
+只使用 `taro-routerless-tabbar/core` 的 helper-only 场景不需要导入样式。`RouterlessTabs` 与默认 primitives 使用同一份默认样式。
 
-## 2. 使用默认底栏
+## 2. 使用 RouterlessTabs 或默认底栏
+
+`RouterlessTabs` 会把 `item` slot 透传给内部 `RouterlessTabBar`，把 `pane` slot 用于覆盖默认 pane 渲染；未传 slot 时，会按 `tabs[*].component` 自动渲染 pane。
 
 ```vue
 <RouterlessTabBar
