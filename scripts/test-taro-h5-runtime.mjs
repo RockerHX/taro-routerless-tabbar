@@ -104,9 +104,67 @@ async function runRuntimeAssertions(baseUrl) {
   })
 
   try {
-    await page.goto(`${baseUrl}/`)
+    await page.goto(`${baseUrl}/pages/index/index?tab=orders&from=runtime`)
     await expect(page.getByTestId('active-title')).toContainText(
-      '当前 Tab：首页',
+      '当前 Tab：订单',
+    )
+    await expect(page.getByTestId('pane-orders')).toBeVisible()
+    await expect(page.getByTestId('pane-visited-orders')).toContainText(
+      'visited: yes',
+    )
+
+    await page.getByTestId('pane-state-action-orders').click()
+    await expect(page.getByTestId('pane-state-orders')).toContainText(
+      'pane local state: 1',
+    )
+
+    await page.getByTestId('tabbar-item-profile').click()
+    await expect(page.getByTestId('active-title')).toContainText(
+      '当前 Tab：我的',
+    )
+    await expect(page.getByTestId('pane-profile')).toBeVisible()
+
+    await page.getByTestId('tabbar-item-orders').click()
+    await expect(page.getByTestId('active-title')).toContainText(
+      '当前 Tab：订单',
+    )
+    await expect(page.getByTestId('pane-state-orders')).toContainText(
+      'pane local state: 1',
+    )
+
+    await page.getByTestId('tabbar-item-orders').click()
+    await expect(page.getByTestId('pane-refresh-status-orders')).toContainText(
+      'refresh status: loading',
+    )
+    await expect(page.getByTestId('pane-refresh-status-orders')).toContainText(
+      'refresh status: success',
+    )
+    await expect(page.getByTestId('pane-retap-orders')).toContainText(
+      'retap refresh count: 1',
+    )
+
+    const previewUrl = await page
+      .getByTestId('redirect-preview-url')
+      .innerText()
+    expect(previewUrl).toContain('/pages/index/index?tab=home')
+    expect(previewUrl).toContain('campaign=summer')
+    expect(previewUrl).toContain('from=share-card')
+    expect(previewUrl).not.toContain('embedded=')
+    expect(previewUrl).not.toContain('tab=legacy')
+
+    await page.getByTestId('pane-detail-action-orders').click()
+    await expect(page.getByTestId('detail-title')).toContainText(
+      'Fixture 详情页',
+    )
+    await expect(page.getByTestId('detail-tab')).toContainText(
+      '来源 Tab：orders',
+    )
+    await page.getByTestId('detail-back').click()
+    await expect(page.getByTestId('active-title')).toContainText(
+      '当前 Tab：订单',
+    )
+    await expect(page.getByTestId('pane-state-orders')).toContainText(
+      'pane local state: 1',
     )
 
     if (pageErrors.length > 0) {

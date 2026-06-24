@@ -9,6 +9,26 @@
     <text class="fixture-retap" data-testid="retap-summary">
       {{ retapSummary }}
     </text>
+    <view
+      v-if="activeDetailTab"
+      class="fixture-inline-detail"
+      data-testid="detail-title"
+    >
+      <text class="fixture-inline-detail-title">Fixture 详情页</text>
+      <text class="fixture-inline-detail-meta" data-testid="detail-tab">
+        来源 Tab：{{ activeDetailTab }}
+      </text>
+      <text class="fixture-inline-detail-meta" data-testid="detail-from">
+        来源参数：fixture-detail
+      </text>
+      <view
+        class="fixture-inline-detail-back"
+        data-testid="detail-back"
+        @click="closeFixtureDetail"
+      >
+        <text>返回主容器</text>
+      </view>
+    </view>
     <view class="fixture-style-boundary" data-testid="style-boundary">
       <text class="fixture-style-boundary-title">样式边界示例</text>
       <text class="fixture-style-boundary-desc">
@@ -122,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import Taro, { useLoad } from '@tarojs/taro'
+import { useLoad } from '@tarojs/taro'
 import {
   RouterlessTabBar,
   RouterlessTabPaneHost,
@@ -130,7 +150,7 @@ import {
   resolveStandaloneTabRedirect,
   useRouterlessTabs,
 } from 'taro-routerless-tabbar'
-import { computed, onUnmounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 
 import refreshIcon from '../../assets/tabbar/refresh.svg'
 import {
@@ -149,6 +169,7 @@ const tabs = useRouterlessTabs({
 })
 const refreshingTab = ref<TabKey | ''>(fixtureRetap.getAnimatingKey())
 const lastRetapTab = ref<TabKey | ''>('')
+const activeDetailTab = ref<TabKey | ''>('')
 const refreshCounts = reactive<Record<TabKey, number>>({
   home: 0,
   orders: 0,
@@ -291,14 +312,47 @@ function markNextRefreshFailed(key: TabKey) {
 }
 
 function openFixtureDetail(key: TabKey) {
-  void Taro.navigateTo({
-    url: `/pages/detail/index?tab=${key}&from=fixture-detail&embedded=true`,
-  })
+  activeDetailTab.value = key
 }
 
-useLoad((query: Record<string, string | undefined>) => {
+function closeFixtureDetail() {
+  activeDetailTab.value = ''
+}
+
+function readBrowserQuery() {
+  const location = globalThis.location
+  const params = new URLSearchParams(location.search)
+  const hashQueryIndex = location.hash.indexOf('?')
+
+  if (hashQueryIndex >= 0) {
+    new URLSearchParams(location.hash.slice(hashQueryIndex + 1)).forEach(
+      function appendHashQuery(value, key) {
+        params.set(key, value)
+      },
+    )
+  }
+
+  return Object.fromEntries(params.entries()) as Record<
+    string,
+    string | undefined
+  >
+}
+
+function resolveLoadQuery(query: Record<string, string | undefined>) {
+  if (typeof globalThis.location === 'undefined') {
+    return query
+  }
+
+  return {
+    ...readBrowserQuery(),
+    ...query,
+  }
+}
+
+function activateFromQuery(query: Record<string, string | undefined>) {
+  const loadQuery = resolveLoadQuery(query)
   const nextTab = normalizeTabKey({
-    value: String(query.tab ?? ''),
+    value: String(loadQuery.tab ?? ''),
     tabKeys,
     defaultKey: defaultTabKey,
     aliases: {
@@ -307,6 +361,16 @@ useLoad((query: Record<string, string | undefined>) => {
   })
 
   tabs.activateTab(nextTab)
+}
+
+useLoad((query: Record<string, string | undefined>) => {
+  activateFromQuery(query)
+})
+
+onMounted(() => {
+  if (typeof globalThis.location !== 'undefined') {
+    activateFromQuery({})
+  }
 })
 
 onUnmounted(() => {
@@ -377,6 +441,39 @@ onUnmounted(() => {
   color: #4e5969;
   font-size: 20px;
   line-height: 1.5;
+}
+
+.fixture-inline-detail {
+  margin-top: 20px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #e6f4ff;
+}
+
+.fixture-inline-detail-title,
+.fixture-inline-detail-meta {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.fixture-inline-detail-title {
+  color: #1f2329;
+  font-size: 26px;
+}
+
+.fixture-inline-detail-meta {
+  color: #4e5969;
+  font-size: 22px;
+}
+
+.fixture-inline-detail-back {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #1677ff;
+  color: #fff;
+  font-size: 22px;
 }
 
 .fixture-pane {
