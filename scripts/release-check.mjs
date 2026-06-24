@@ -15,6 +15,7 @@ const requiredFiles = [
   'CHANGELOG.md',
   'LICENSE',
   'doc/api.md',
+  'doc/release.md',
   'doc/integration-guide.md',
   'doc/retap-refresh.md',
   'doc/styling.md',

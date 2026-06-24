@@ -125,6 +125,7 @@ const handleTabRetap = (tab: TabKey) => {
 - [多端兼容性说明](doc/compatibility.md)：H5 / WeChat 小程序 smoke、复杂页面结构说明。
 - [端侧运行时验证矩阵](doc/runtime-validation.md)：区分单测、消费侧、H5 runtime、小程序 build smoke 和手动验证。
 - [API 文档](doc/api.md)：完整导出、类型、返回值和边界行为。
+- [发布流程](doc/release.md)：发布前门禁、版本清单和常见失败排查。
 
 ## 常用 API
 
@@ -142,8 +143,8 @@ const handleTabRetap = (tab: TabKey) => {
 
 - 当前版本：`0.4.0`。
 - 目标技术栈：Taro 4、Vue 3、Vite、小程序/H5。
-- 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、打包后消费侧验证、Taro H5 / WeChat 小程序 smoke build、Taro H5 运行时自动化 smoke；支付宝小程序作为 experimental extended build smoke。
-- 验证分层：H5 已覆盖自动化运行时交互；WeChat 小程序当前为主链路 build smoke；支付宝可用 `pnpm run test:taro:extended` 做实验性构建验证；真机/开发者工具运行时请参考端侧运行时验证矩阵补充确认。
+- 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、打包后消费侧验证、API surface 检查、Taro H5 / WeChat 小程序 smoke build、Taro H5 运行时自动化 smoke；支付宝小程序作为 experimental extended build smoke。
+- 验证分层：H5 已覆盖自动化运行时交互；WeChat 小程序当前为主链路 build smoke，并在端侧运行时验证矩阵中记录开发者工具尝试结果；支付宝可用 `pnpm run test:taro:extended` 做实验性构建验证；真机/开发者工具运行时请参考端侧运行时验证矩阵补充确认。
 - 非目标：不替代 Pinia、Vue Router 或 Taro navigation；暂不承诺 React 支持；暂不承诺所有 Taro 运行端表现完全一致。
 
 源码仓库：https://github.com/RockerHX/taro-routerless-tabbar
