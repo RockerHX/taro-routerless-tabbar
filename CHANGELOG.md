@@ -2,14 +2,23 @@
 
 ## Unreleased
 
+## 0.2.2
+
+面向导出结构、多端 smoke 和兼容性说明的维护版本。
+
 ### Added
 
 - 新增 `./core` 子路径导出，提供不引入 CSS 的纯 helper 和 retap core 入口。
 - 新增 `./vue` 与 `./style.css` 子路径导出，支持 Vue API/组件和默认样式分开导入。
+- 扩展 Taro Vue3 fixture，覆盖 `home`、`orders`、`profile` 三个 Tab、query 初始化、retap 刷新、本地图标和 CSS 变量样式覆盖。
+- 新增 WeChat 小程序 smoke build，并提供 `test:taro:weapp` 与一次 prepare 后连续验证 H5/weapp 的 `test:taro`。
+- 新增多端兼容性文档，说明 H5 / WeChat 小程序验证范围、routerless tab 与原生 `tabBar` 生命周期关系，以及 subpackage / 非标准页面结构限制。
 
 ### Changed
 
 - root 入口继续保持自动引入默认样式；helper-only 使用场景可改用 `./core` 避免 CSS 副作用。
+- CI 的 Taro smoke 从单 H5 build 扩展为 H5 + WeChat 小程序多端 build。
+- 更新 roadmap，标记小程序端覆盖问题已完成，并保留复杂 resolver 能力作为后续问题。
 
 ## 0.2.1
 
