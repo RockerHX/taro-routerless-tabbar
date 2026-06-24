@@ -28,6 +28,7 @@
 - 页面展示刷新次数和最近刷新 Tab，便于 smoke 示例可见。
 - `iconPath` / `selectedIconPath` 本地图标资源。
 - 默认 TabBar CSS 变量覆盖，例如高度、图标尺寸、激活色和背景色。
+- `RouterlessTabPaneHost` 的 `paneClass` / `hiddenClass` 构建覆盖。
 - H5 与 WeChat 小程序 build smoke。
 
 ## H5 与小程序差异
@@ -39,9 +40,18 @@
 | retap 刷新链路                 | 已验证构建 | 已验证构建    | 通过共享 context 注册和触发刷新 handler。                    |
 | 本地图标资源                   | 已验证构建 | 已验证构建    | fixture 使用本地 SVG 资源走 Taro 构建链路。                  |
 | CSS 变量覆盖                   | 已验证构建 | 已验证构建    | fixture 覆盖默认底栏变量；具体渲染细节仍以端侧样式能力为准。 |
+| PaneHost 自定义 class          | 已验证构建 | 已验证构建    | fixture 覆盖 `paneClass` / `hiddenClass` 构建链路。          |
 | 原生 tabBar 生命周期           | 不依赖     | 不依赖        | 本包不接管或模拟平台原生 tabBar 生命周期。                   |
 
 当前验证属于 build smoke，不等同于覆盖所有平台运行时交互细节。接入真实业务后，仍建议在目标端做端侧点击、刷新、样式和页面返回链路验证。
+
+## 端侧布局检查清单
+
+- 安全区：确认底栏和内容区同时考虑 `env(safe-area-inset-bottom)`，避免底部内容被遮挡。
+- 内容区 padding：列表、瀑布流和长表单应预留底栏高度，尤其是最后一屏可点击内容。
+- 滚动容器：`ScrollView` / 页面滚动二选一时，确认滚动高度和底部 padding 不重复或缺失。
+- 重型原生组件：视频、地图、直播等组件在非 active pane 中被 `display: none` 隐藏时，应在目标端验证资源释放和恢复行为。
+- 隐藏策略：默认隐藏 class 是 `routerless-tab-pane-hidden`；如果目标端需要额外兼容样式，可通过 `hiddenClass` 追加业务 class。
 
 ## subpackage / 非标准页面结构
 

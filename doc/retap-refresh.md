@@ -208,7 +208,24 @@ useTabRetapRefresh('profile', refreshProfile, () => props.embedded)
 - `useRetapRefreshAnimation` 会在组件卸载时清理当前页面持有的刷新动画。
 - 刷新内容、失败提示、重试策略和动画持续时间都由业务页面自行决定。
 
-## 5. 常见错误
+## 5. 调试刷新链路
+
+复杂页面中如果 retap 没有触发预期刷新，可以优先检查共享 context 的两个状态查询方法：
+
+```ts
+console.log('has handler:', tabRetap.hasRefreshHandler(tab))
+console.log('is running:', tabRetap.isRefreshRunning(tab))
+```
+
+常见状态含义：
+
+- `hasRefreshHandler(tab) === false`：当前 Tab 没有注册刷新 handler，通常是页面尚未挂载、未使用共享 context，或 `enabled` 条件为 `false`。
+- `hasRefreshHandler(tab) === true` 且 `isRefreshRunning(tab) === true`：同一个 Tab 的刷新正在执行，再次 retap 会返回 `false`，不会并发执行。
+- `runRefresh(tab)` 返回 `true` 但业务没有刷新成功：说明 handler 已被调用；如果 handler 抛错，会进入 `createRetapRefreshContext({ onError })` 的错误回调。
+
+当前推荐用 `hasRefreshHandler` / `isRefreshRunning` 区分调试状态。`runRefresh(tab)` 的返回值保持兼容，只表示是否启动了本次刷新调用。
+
+## 6. 常见错误
 
 ### 页面里重复创建 context
 

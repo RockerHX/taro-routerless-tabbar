@@ -137,7 +137,35 @@ slot props：
 
 如果 SFC 使用 `scoped` 样式，需要按项目构建链支持情况使用深度选择器；更简单的方式是把底栏变量放在页面全局样式或应用全局样式中。
 
-## 5. 何时不用默认样式
+## 6. PaneHost class 定制与端侧布局检查
+
+`RouterlessTabPaneHost` 默认保留以下 class：
+
+- `.routerless-tab-pane-host`：pane 宿主。
+- `.routerless-tab-pane`：每个已访问 pane。
+- `.routerless-tab-pane-hidden`：非 active pane，默认 `display: none`。
+
+如需追加业务 class，可使用 `hostClass`、`paneClass` 和 `hiddenClass`：
+
+```vue
+<RouterlessTabPaneHost
+  :items="tabPanes"
+  :active="activeTab"
+  :visited="visitedKeys"
+  host-class="main-tab-host"
+  pane-class="main-tab-pane"
+  hidden-class="main-tab-pane-hidden"
+/>
+```
+
+端侧接入时建议检查：
+
+- 内容区是否预留了底栏高度和安全区，避免最后一屏被底栏遮挡。
+- 使用 `ScrollView` 的页面是否把滚动容器高度、底部 padding 和底栏高度一起计算。
+- 非 active pane 内如果有视频、地图、直播等重型原生组件，需在目标端验证 `display: none` 下的暂停、销毁或资源占用表现。
+- 如果默认隐藏策略不满足业务，可通过 `hiddenClass` 追加端侧兼容类，或自行实现 pane host。
+
+## 7. 何时不用默认样式
 
 默认样式只保证开箱可用。以下场景建议优先通过 `#item` 插槽或业务组件自行实现：
 

@@ -297,6 +297,8 @@ createRetapRefreshCore<Key extends string>(options?: {
 | `registerRefreshHandler`    | 注册指定 Tab 的刷新 handler             |
 | `unregisterRefreshHandler`  | 注销指定 Tab 的刷新 handler             |
 | `getRefreshHandler`         | 获取当前 Tab 的 handler                 |
+| `hasRefreshHandler`         | 判断当前 Tab 是否已注册刷新 handler     |
+| `isRefreshRunning`          | 判断当前 Tab 是否正在执行刷新 handler   |
 | `runRefresh`                | 执行当前 Tab 的 handler                 |
 | `getAnimatingKey`           | 获取当前显示刷新动画的 Tab key          |
 | `startRefreshAnimation`     | 设置刷新动画 key                        |
@@ -305,8 +307,8 @@ createRetapRefreshCore<Key extends string>(options?: {
 
 行为约定：
 
-- 未注册 handler 时 `runRefresh(key)` 返回 `false`。
-- 同一个 key 的 handler 执行中，再次 `runRefresh(key)` 返回 `false`。
+- 未注册 handler 时 `runRefresh(key)` 返回 `false`，可用 `hasRefreshHandler(key)` 判断。
+- 同一个 key 的 handler 执行中，再次 `runRefresh(key)` 返回 `false`，可用 `isRefreshRunning(key)` 判断。
 - handler 执行完成或抛错后都会释放执行态。
 - handler 抛错会调用 `onError(error, key)`；如果 `onError` 不抛错，`runRefresh` 不继续向外抛出 handler 异常。
 - 同一个 key 重复注册时，后注册的 handler 覆盖先注册的 handler。
@@ -400,11 +402,14 @@ Slots：
 
 Props：
 
-| 名称      | 类型                               | 说明            |
-| --------- | ---------------------------------- | --------------- |
-| `items`   | `readonly RouterlessTabPaneItem[]` | 所有 pane 配置  |
-| `active`  | `string`                           | 当前激活 key    |
-| `visited` | `readonly string[]`                | 已访问 key 列表 |
+| 名称          | 类型                               | 说明                       |
+| ------------- | ---------------------------------- | -------------------------- |
+| `items`       | `readonly RouterlessTabPaneItem[]` | 所有 pane 配置             |
+| `active`      | `string`                           | 当前激活 key               |
+| `visited`     | `readonly string[]`                | 已访问 key 列表            |
+| `hostClass`   | `string \| string[] \| object`     | 追加到 host 的自定义类     |
+| `paneClass`   | `string \| string[] \| object`     | 追加到每个 pane 的自定义类 |
+| `hiddenClass` | `string \| string[] \| object`     | 追加到非 active pane 的类  |
 
 Slots：
 
@@ -412,4 +417,4 @@ Slots：
 | ------ | ------------------ | ------------------- |
 | `pane` | `{ pane, active }` | 渲染单个已访问 pane |
 
-组件会给非 active pane 添加 `routerless-tab-pane-hidden`，默认样式为 `display: none`。
+组件会给非 active pane 添加 `routerless-tab-pane-hidden`，默认样式为 `display: none`。`hostClass` / `paneClass` / `hiddenClass` 只追加 class，不替换默认 class。

@@ -127,15 +127,15 @@ const handleTabRetap = (tab: TabKey) => {
 
 ## 常用 API
 
-| API                            | 说明                                   |
-| ------------------------------ | -------------------------------------- |
-| `useRouterlessTabs`            | 管理 active、visited 和点击状态        |
-| `RouterlessTabPaneHost`        | 渲染已访问 Tab pane                    |
-| `RouterlessTabBar`             | 默认底部 TabBar UI                     |
-| `createRetapRefreshContext`    | 创建共享 retap refresh context         |
-| `buildRouterlessTabUrl`        | 生成 main 容器 URL                     |
-| `resolveStandaloneTabRedirect` | 生成独立 Tab 页重定向 URL              |
-| `resolveTabPageModuleKey`      | 生成或配置 `import.meta.glob` 模块 key |
+| API                            | 说明                                       |
+| ------------------------------ | ------------------------------------------ |
+| `useRouterlessTabs`            | 管理 active、visited 和点击状态            |
+| `RouterlessTabPaneHost`        | 渲染已访问 Tab pane                        |
+| `RouterlessTabBar`             | 默认底部 TabBar UI                         |
+| `createRetapRefreshContext`    | 创建共享 retap refresh context，含状态查询 |
+| `buildRouterlessTabUrl`        | 生成 main 容器 URL                         |
+| `resolveStandaloneTabRedirect` | 生成独立 Tab 页重定向 URL                  |
+| `resolveTabPageModuleKey`      | 生成或配置 `import.meta.glob` 模块 key     |
 
 ## 兼容性与当前状态
 
