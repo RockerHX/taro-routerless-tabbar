@@ -1,313 +1,253 @@
-# 项目现状分析与后续路线图
+# 项目现状分析与 0.3.x 路线图
 
-生成日期：2026-06-23  
+生成日期：2026-06-24  
 当前版本：`0.2.3`
 
 ## 结论
 
-当前项目没有发现阻塞发布的代码质量问题。本次本地验证通过了 lint、格式检查、类型检查、单元测试、构建、打包预检、依赖审计和 Taro H5 / WeChat 小程序 smoke build。
+前一阶段的发布前收敛工作已经完成：README 已拆分，retap 示例已改成共享 context，`./core` / `./vue` / `./style.css` 子路径导出已落地，Taro H5 + WeChat 小程序 smoke build 已纳入验证，页面模块 resolver 也已支持复杂目录结构。
 
-但项目仍有几个需要处理或跟踪的产品化/DX 问题：
+0.3.x 不建议继续大改核心 routerless 模型，而应围绕“消费侧稳定性”和“接入样板沉淀”推进：让 npm 包在真实使用者项目中的类型、导出、样式、redirect 和发布流程更可验证、更少靠文档口头约定。
 
-1. `README.md` 已达到 561 行、约 17KB，内容混合了定位说明、完整接入、retap、样式、API 和实现限制，作为首页文档偏重，建议精简并拆分。
-2. 已处理：retap 示例已统一为共享 context，避免使用者复制出不可工作的刷新链路。
-3. 已处理：新增 `./core`、`./vue` 和 `./style.css` 子路径导出，helper-only 使用者可避开默认样式副作用。
-4. 已处理：扩展 Taro fixture 覆盖 retap、query、图标和 CSS 变量，并新增 H5 / WeChat 小程序 smoke build。
-5. 已处理：新增 `createTabPageModuleResolver`，并在文档中说明复杂项目可直接声明 `moduleKey`。
+## 当前已验证基线
 
-## 本次验证结果
-
-| 检查项               | 命令                                | 结果                                           |
-| -------------------- | ----------------------------------- | ---------------------------------------------- |
-| ESLint               | `pnpm run lint`                     | 通过                                           |
-| Prettier             | `pnpm run format:check`             | 通过                                           |
-| TypeScript           | `pnpm run typecheck`                | 通过                                           |
-| 单元测试             | `pnpm run test:run`                 | 9 个测试文件、63 个用例通过                    |
-| 库构建               | `pnpm run build`                    | 通过，生成 `dist/index.js` 与 `dist/style.css` |
-| 打包预检             | `pnpm run pack:dry-run`             | 通过，tarball 含 16 个文件                     |
-| 依赖审计             | `pnpm audit --audit-level moderate` | 未发现已知漏洞                                 |
-| Taro H5 smoke        | `pnpm run test:taro:h5`             | 通过                                           |
-| Taro weapp smoke     | `pnpm run test:taro:weapp`          | 通过                                           |
-| Taro multi-end smoke | `pnpm run test:taro`                | 通过                                           |
+| 检查项               | 命令                                | 当前状态                             |
+| -------------------- | ----------------------------------- | ------------------------------------ |
+| ESLint               | `pnpm run lint`                     | 已纳入脚本/CI                        |
+| Prettier             | `pnpm run format:check`             | 已纳入脚本/CI                        |
+| TypeScript           | `pnpm run typecheck`                | 已纳入脚本/CI                        |
+| 单元测试             | `pnpm run test:run`                 | 已纳入脚本/CI                        |
+| 库构建               | `pnpm run build`                    | 已纳入脚本/CI，生成 `dist/` 发布产物 |
+| 打包预检             | `pnpm run pack:dry-run`             | 已纳入脚本/CI                        |
+| 依赖审计             | `pnpm audit --audit-level moderate` | 已纳入脚本/CI                        |
+| Taro H5 smoke        | `pnpm run test:taro:h5`             | 已覆盖                               |
+| Taro weapp smoke     | `pnpm run test:taro:weapp`          | 已覆盖                               |
+| Taro multi-end smoke | `pnpm run test:taro`                | 已纳入脚本/CI                        |
 
 ## 发布策略备注
 
-`dist/` 不纳入 git 跟踪，只作为 npm 包发布产物存在。当前通过 `prepack` 在 `npm pack` / `npm publish` 前自动执行 `pnpm run build`，并由 `package.json` 的 `files: ["dist", ...]` 控制 tarball 内容。
+`dist/` 不纳入 git 跟踪，只作为 npm 包发布产物存在。当前通过 `prepack` 在 `npm pack` / `npm publish` 前自动执行 `pnpm run build`，并由 `package.json` 的 `files` 与 `exports` 控制 tarball 内容。
 
-这个策略与常规前端项目一致：源码进 git，构建产物不进 git。`dist/` 不再作为当前问题跟踪，只需在发布前通过 `npm pack --dry-run` 确认 tarball 清单即可。
+0.3.x 的发布策略不需要改变这一点；更重要的是补齐“打包后消费侧验证”，确保 `npm pack` 产物中的 root、`./core`、`./vue`、`./style.css` 都能被外部项目按预期解析。
 
-## 发现的问题与解决方案
+## 0.3.x 目标
 
-### 问题 1：README 过长，首页文档承担了太多职责
+### 目标 1：增加打包后消费侧类型与导出验证
 
-**优先级：高**
+**优先级：高**  
+**建议版本：0.3.0**
 
-**现象**
+**背景**
 
-- `README.md` 当前 561 行，包含完整业务配置、main 容器、多个 Tab 页面、retap 刷新、样式、API 表和页面模块解析说明。
-- 新用户只想快速判断“能不能用、怎么最小接入”时，需要阅读过多细节。
-- 高级内容和 API 约定混在 README 中，后续维护容易产生重复或过期示例。
+当前 CI 已覆盖源码类型检查、库构建和 `npm pack --dry-run`，但还没有从“外部使用者项目”的视角验证打包产物：
 
-**解决方案**
+- root 入口是否能正确解析类型与运行时代码。
+- `taro-routerless-tabbar/core` 是否完全无 CSS 副作用。
+- `taro-routerless-tabbar/vue` 是否能解析 Vue composable、组件与类型。
+- `taro-routerless-tabbar/style.css` 是否在 tarball 中可被显式导入。
+- `exports`、`types`、`files` 与实际 `dist` 文件是否始终一致。
 
-将 README 收敛到 120～180 行左右，只保留：
+**规划**
 
-- 一句话定位和核心能力。
-- 适用/不适用场景。
-- 安装方式。
-- 30～60 行最小示例：`useRouterlessTabs` + `RouterlessTabPaneHost` + `RouterlessTabBar`。
-- 常用 API 速查链接。
-- 兼容性、当前状态、文档导航。
+新增一个轻量消费侧 fixture，例如 `examples/package-consumer` 或 `test/consumer`：
 
-新增或拆分以下文档：
+1. 通过 `pnpm pack` 生成本地 tarball，fixture 依赖这个 tarball，而不是 `file:../..` 源码目录。
+2. 编写最小 TypeScript 文件分别导入：
+   - `taro-routerless-tabbar`
+   - `taro-routerless-tabbar/core`
+   - `taro-routerless-tabbar/vue`
+   - `taro-routerless-tabbar/style.css`
+3. 使用 `tsc --noEmit` 或小型 Vite build 验证类型解析与 CSS 导入。
+4. 增加脚本 `test:package-consumer`，并把它接入 CI 和 `prepublishOnly`。
+5. 增加断言：`core.js` / `vue.js` 不包含 `style.css` import，root 入口仍保持兼容自动样式导入。
 
-- `doc/integration-guide.md`：完整接入，包括 `config/tabbar.ts`、main 容器、页面模块解析、独立页 redirect。
-- `doc/retap-refresh.md`：共享 context、并发刷新、错误处理、动画状态。
-- `doc/styling.md`：默认样式、slot 自定义、CSS 变量。
-- `doc/api.md`：完整 API、类型、返回值和边界行为。
+**验收标准**
 
-### 问题 2：retap 示例容易误导（已处理）
+- CI 能在全新安装场景下验证打包后子路径导出。
+- `npm pack --dry-run` 清单和消费侧导入用例同时覆盖。
+- 如果未来新增/删除导出，消费侧测试会失败并提示同步修改文档或 `package.json`。
 
-**优先级：高**
+### 目标 2：沉淀官方独立页 redirect helper
 
-**处理状态：已完成（2026-06-24）**
+**优先级：高**  
+**建议版本：0.3.0**
 
-**现象**
+**背景**
 
-README 的 `pages/home/index.vue` 示例里直接 `createRetapRefreshContext<TabKey>()`，随后又用备注说明真实项目应共享 context。用户如果直接复制示例，main 容器和 Tab 页面会各自持有不同 context，`retap.runRefresh(tab)` 找不到页面注册的 handler。
+当前文档已经说明独立 Tab 页面需要 redirect 回 main 容器，但实际接入仍需要业务复制样板逻辑。这个逻辑是 routerless tab 的关键边界：直接打开 `/pages/home/index` 时，页面应重定向到 `/pages/main/index?tab=home`，而 main 容器内嵌渲染时不能触发 redirect。
 
-**解决方案**
+如果继续只靠文档示例，用户容易在以下细节上出错：
 
-在文档中先给出共享单例文件，例如：
+- `embedded` query / prop 的判断不统一。
+- redirect query 与原始 query 合并策略不一致。
+- 重定向时是否保留来源参数、分享参数不清晰。
+- 每个 Tab 页面重复写相同逻辑，后续改约定成本高。
 
-```ts
-// pages/main/retap-refresh.ts
-import { createRetapRefreshContext } from 'taro-routerless-tabbar'
-import type { TabKey } from '@/config/tabbar'
+**规划**
 
-export const tabRetap = createRetapRefreshContext<TabKey>()
-export const useTabRetapRefresh = tabRetap.useRetapRefresh
-export const useTabRetapRefreshAnimation = tabRetap.useRetapRefreshAnimation
-```
-
-然后 main 容器和所有 Tab 页面都只引用这个共享对象。README 里不要展示“新建第二个 context”的反例，反例可以放到 FAQ 或注意事项中。
-
-当前 README 快速示例只保留核心 retap 事件入口，并明确指向 `doc/retap-refresh.md` 的共享单例接入方式；`doc/retap-refresh.md`、`doc/integration-guide.md` 和 `doc/api.md` 均已强调 main 容器与所有 Tab 页面必须复用同一个 context。
-
-### 问题 3：root 入口自动带入 CSS，helper-only 使用场景不够干净（已处理）
-
-**优先级：中**
-
-**处理状态：已完成（2026-06-24）**
-
-**现象**
-
-构建后的 `index.js` 顶部会注入：
-
-```js
-import './style.css'
-```
-
-这对直接使用 `RouterlessTabBar` 很方便，但如果用户只使用 `buildRouterlessTabUrl`、`normalizeTabKey` 等纯 helper，也会引入默认样式副作用。
-
-**解决方案**
-
-增加子路径导出：
-
-- `taro-routerless-tabbar/core`：只导出纯函数和类型，不引入 CSS。
-- `taro-routerless-tabbar/vue`：导出 Vue composable/components，不自动引入 CSS。
-- `taro-routerless-tabbar/style.css`：提供默认样式文件，供 `./vue` 入口用户显式导入。
-- root 入口保持兼容，继续导出现有全部 API。
-
-当前 root 入口仍自动引入默认样式；helper-only 使用者可改用 `./core`，组件用户可改用 `./vue` 并按需显式导入 `./style.css`。
-
-### 问题 4：小程序端和复杂 Taro 项目覆盖不足（已处理）
-
-**优先级：中**
-
-**处理状态：已完成（2026-06-24）**
-
-**现象**
-
-此前已有最小 Taro Vue3 H5 fixture，能够证明 H5 构建链路可用；但项目 README 面向“小程序/H5 场景”，还需要更多实际端验证。
-
-已补覆盖：
-
-- WeChat 小程序构建 smoke。
-- 包含 retap 刷新链路的 fixture 示例。
-- subpackage 或非标准 pages 目录结构下的页面模块解析限制说明。
-- 图标、刷新态、CSS 变量覆盖示例。
-
-**解决方案**
-
-已完成：
-
-1. 扩展现有 `examples/taro-vue3-basic`，加入 retap、初始 query、样式覆盖和本地图标。
-2. 新增 `test:taro:weapp` 与 `test:taro`，并将 H5 + weapp smoke 纳入 CI。
-3. 新增 `doc/compatibility.md`，说明 H5 / WeChat 小程序 smoke 覆盖、routerless tab 与原生 `tabBar` 生命周期关系，以及复杂页面结构限制。
-
-### 问题 5：`resolveTabPageModuleKey` 对目录结构假设较强（已处理）
-
-**优先级：中**
-
-**处理状态：已完成（2026-06-24）**
-
-**现象**
-
-当前 helper 只接受 `/pages/...` 形式，并转换为 `../xxx/index.vue`。这对基础项目足够，但对 subpackages、自定义 pages 根目录、main 页面不在同级目录等场景不够灵活。
-
-**解决方案**
-
-已完成：
-
-1. 保留 `resolveTabPageModuleKey(pagePath)` 作为默认 resolver 的兼容快捷方法，继续支持 `/pages/...` 或 `pages/...` 转成 `../xxx/index.vue`。
-2. 新增 `createTabPageModuleResolver`，支持通过 `pageRoot`、`modulePrefix` 和 `extension` 覆盖页面根目录、模块 key 前缀和文件扩展名。
-3. 更新 README/API/完整接入/兼容性文档，说明 subpackage、自定义页面根目录、非同级 main 页面等场景可使用自定义 resolver。
-4. 文档补充 `tabbarItems` 直接声明 `moduleKey` 的写法，适合页面路径和 `import.meta.glob` key 不存在稳定推导关系的项目。
+新增纯 helper，暂定名 `createStandaloneTabRedirect` 或 `buildStandaloneTabRedirectUrl`，优先保持为 core 级能力，不直接依赖 Taro runtime：
 
 ```ts
-createTabPageModuleResolver({
-  pageRoot: '/subpackages/shop/pages',
-  modulePrefix: '../../subpackages/shop/pages',
-  extension: '.vue',
+const redirectUrl = buildStandaloneTabRedirectUrl({
+  mainPagePath: '/pages/main/index',
+  tabKey: 'home',
+  currentQuery,
+  embeddedQueryKey: 'embedded',
 })
 ```
 
-### 问题 6：组件事件类型还可以更精确（已处理）
+建议先提供 URL 构建能力，再评估是否在 `./vue` 中提供 `useStandaloneTabRedirect`：
 
-**优先级：低**
+- core helper：只负责判断是否需要 redirect、生成目标 URL、合并 query。
+- Vue helper：可选封装 Taro `useLoad` / `redirectTo`，但需要谨慎评估测试复杂度和端侧差异。
 
-**处理状态：已完成（2026-06-24）**
+**验收标准**
 
-**现象**
+- 独立页 redirect 的 query 合并规则有单元测试覆盖。
+- 文档中删除或弱化手写 redirect 样板，改为推荐官方 helper。
+- fixture 至少有一个 Tab 页面使用官方 helper。
+- 不破坏现有 `buildRouterlessTabUrl` 行为。
 
-当前 `RouterlessTabBar.vue` 的声明文件中，`change` / `retap` 事件参数仍是 `any[]`。运行时没有问题，但 TypeScript 使用体验可以更好。
+### 目标 3：补齐 retap 刷新状态的可观测能力
 
-**解决方案**
+**优先级：中**  
+**建议版本：0.3.x**
 
-已将 `defineEmits(['change', 'retap'])` 改为类型化 emits：
+**背景**
 
-```ts
-const emit = defineEmits<{
-  change: [key: string]
-  retap: [key: string]
-}>()
-```
+当前 `createRetapRefreshCore` 已支持：注册 handler、并发保护、错误回调、动画 key 订阅。但业务在调试刷新链路时，仍需要自行判断：
 
-构建后的声明文件中，`change` / `retap` 事件参数已从 `any[]` 收敛为 `string`。受限于 Vue SFC 泛型，组件 props 的 key 暂不自动保留业务字面量联合类型。
+- 当前 key 是否正在执行刷新 handler。
+- 某个 key 是否已注册 handler。
+- `runRefresh` 返回 `false` 是因为未注册，还是因为同 key 正在运行。
 
-### 问题 7：内部小性能点（已处理）
+这些不影响运行时正确性，但会影响复杂业务里的问题定位。
 
-**优先级：低**
+**规划**
 
-**处理状态：已完成（2026-06-24）**
+在保持现有 `runRefresh(key): Promise<boolean>` 兼容行为不变的前提下，评估新增更可观测的 API：
 
-**现象**
+- `isRefreshRunning(key)`：判断某个 key 是否正在执行。
+- `hasRefreshHandler(key)`：明确表达 handler 是否存在，避免使用者直接依赖 `getRefreshHandler`。
+- `runRefreshDetailed(key)`：可选，返回 `{ started: boolean; reason?: 'missing-handler' | 'running' }`。
 
-`createVisitedTabRecord` 在 reduce 中每轮展开对象，复杂度偏高：
+优先级建议：先加 `isRefreshRunning` / `hasRefreshHandler`，`runRefreshDetailed` 只有在真实业务需要区分原因时再加入。
 
-```ts
-return {
-  ...result,
-  [key]: key === defaultKey,
-}
-```
+**验收标准**
 
-Tab 数通常很少，因此不是问题。
+- 新 API 不改变现有 `runRefresh` 返回语义。
+- core 与 Vue context 均导出相同可观测能力。
+- retap 文档补充调试和空 handler 场景说明。
 
-**解决方案**
+### 目标 4：增强 pane 宿主与默认样式的端侧安全性说明/能力
 
-已改为原地赋值，避免每轮创建新对象：
+**优先级：中**  
+**建议版本：0.3.x**
 
-```ts
-const result = {} as Record<Key, boolean>
-tabKeys.forEach((key) => {
-  result[key] = key === defaultKey
-})
-return result
-```
+**背景**
 
-## README 拆分建议
+`RouterlessTabPaneHost` 当前通过 `display: none` 隐藏非 active pane。这个策略简单且符合“保留实例”的目标，但在真实小程序页面中可能遇到差异：
 
-### 新 README 结构
+- 隐藏 pane 内的滚动容器、视频、地图等端侧组件行为需要业务验证。
+- 底栏固定定位与安全区、内容区 padding 的配合仍需要接入者处理。
+- 默认 class 名和 CSS 变量虽然已文档化，但缺少更明确的布局建议和端侧检查清单。
 
-```md
-# taro-routerless-tabbar
+**规划**
 
-一句话定位
+0.3.x 不急于改组件渲染策略，先补充可执行的接入检查清单；如业务反馈明确，再考虑新增轻量 prop：
 
-## 核心能力
+- `hiddenClass`：允许业务覆盖非 active pane 的隐藏 class。
+- `paneClass` / `hostClass`：降低完全自定义 pane host 的必要性。
 
-## 适用/不适用场景
+**验收标准**
 
-## 安装
+- `doc/styling.md` 和 `doc/compatibility.md` 增加端侧布局检查清单。
+- 如果新增 prop，必须保持默认行为不变，并补组件单测。
+- fixture 覆盖自定义隐藏 class 或保留文档说明不改代码。
 
-## 快速开始
+### 目标 5：完善版本发布与 changelog 自动校验
 
-## 文档
+**优先级：中**  
+**建议版本：0.3.x**
 
-- 完整接入：doc/integration-guide.md
-- retap 刷新：doc/retap-refresh.md
-- 样式自定义：doc/styling.md
-- API：doc/api.md
+**背景**
 
-## 兼容性与当前状态
+当前已有 release workflow 和 `CHANGELOG.md`，但发布前仍依赖人工确认版本号、tag、CHANGELOG、tarball 内容是否一致。0.3.x 可以把这些发布前约束脚本化，降低 npm 发布遗漏风险。
 
-## License
-```
+**规划**
 
-### 从 README 移出的内容
+新增发布预检脚本，例如 `release:check`：
 
-| 当前内容                                      | 建议去向                                   |
-| --------------------------------------------- | ------------------------------------------ |
-| 和 Taro 原生 tabBar/custom-tab-bar 的详细对比 | README 简化版 + `doc/integration-guide.md` |
-| `config/tabbar.ts` 完整代码                   | `doc/integration-guide.md`                 |
-| `pages/main/index.vue` 完整代码               | `doc/integration-guide.md`                 |
-| 多个 Tab 页面示例                             | `doc/integration-guide.md`                 |
-| retap 刷新详细行为约定                        | `doc/retap-refresh.md`                     |
-| 样式和 slot 自定义                            | `doc/styling.md`                           |
-| API 速查表                                    | `doc/api.md`                               |
-| 页面模块解析说明                              | `doc/integration-guide.md` 或 `doc/api.md` |
+1. 检查 `package.json` version 是否在 `CHANGELOG.md` 中有对应章节。
+2. 检查 `CHANGELOG.md` 的 `Unreleased` 是否为空或符合预期。
+3. 执行 `pnpm run prepublishOnly`。
+4. 输出 `npm pack --dry-run` 清单，必要时对关键文件做断言。
+5. 在 release workflow 中复用同一套脚本，避免本地/CI 两套逻辑漂移。
+
+**验收标准**
+
+- 发布前可用一个命令完成版本、CHANGELOG、质量门禁和 tarball 清单检查。
+- release workflow 与本地脚本共享主要校验逻辑。
+- 文档记录手动发布步骤和失败排查方式。
+
+### 目标 6：持续扩展多端 smoke，但不阻塞 0.3.0
+
+**优先级：低**  
+**建议版本：0.3.x / 0.4.x**
+
+**背景**
+
+当前已覆盖 H5 和 WeChat 小程序 build smoke。考虑到本包目标是 Taro 小程序/H5，后续可以逐步增加更多端，但这类工作成本较高，且容易受 Taro 平台插件版本影响。
+
+**规划**
+
+- 优先保持 H5 + WeChat 小程序稳定。
+- 视真实使用需求再增加支付宝、抖音等平台 smoke build。
+- 如果新增端侧验证，先落在 fixture 和 CI 可重复构建，不承诺所有运行时交互完全一致。
+
+**验收标准**
+
+- 新增平台必须有独立脚本和文档矩阵记录。
+- 不因非核心平台 smoke 不稳定阻塞 H5 / WeChat 的主链路发布。
 
 ## 版本计划
 
-### 0.2.x：发布前收敛与文档减负
+### 0.3.0：消费侧稳定性与接入样板
 
-- [ ] 精简 README，保留快速判断和最小接入。
-- [ ] 新增 `doc/integration-guide.md`、`doc/retap-refresh.md`、`doc/styling.md`、`doc/api.md`。
-- [x] 修正 retap 文档示例，统一使用共享 context。
-- [x] 将 `RouterlessTabBar` emits 类型从 `any[]` 收敛到 `string`。
+- [ ] 增加打包后消费侧 fixture，验证 root、`./core`、`./vue`、`./style.css` 导入。
+- [ ] 将消费侧类型/导出验证接入 CI 和 `prepublishOnly`。
+- [ ] 设计并实现独立页 redirect 的官方 core helper。
+- [ ] 更新 `doc/integration-guide.md` / `doc/api.md`，用官方 helper 替代手写 redirect 样板。
+- [ ] fixture 至少使用一次官方 redirect helper。
 
-### 0.3.0：DX 与导出结构优化
+### 0.3.x：调试能力、样式边界与发布预检
 
-- [x] 增加 `./core` 子路径导出，纯 helper 不引入 CSS。
-- [x] 评估 `./vue` 子路径导出，明确组件与样式导入策略。
-- [x] 增强 `resolveTabPageModuleKey` 或新增可配置 resolver。
-- [ ] 评估是否导出官方版 `useStandaloneTabRedirect`。
-- [ ] 增加构建后声明文件/子路径导出的消费侧类型测试。
+- [ ] 为 retap core/context 增加 `hasRefreshHandler` / `isRefreshRunning` 等可观测 API。
+- [ ] 补充 retap 调试文档，说明未注册、执行中、handler 抛错三类场景。
+- [ ] 评估 `RouterlessTabPaneHost` 是否需要 `hiddenClass` / `paneClass` / `hostClass` 等轻量定制能力。
+- [ ] 补充端侧布局检查清单：安全区、内容区 padding、滚动容器、重型原生组件。
+- [ ] 新增发布预检脚本，校验版本号、CHANGELOG、质量门禁和 tarball 关键文件。
 
-### 0.4.0：多端验证与示例增强
+### 0.4.0：多端与运行时验证增强
 
-- [x] 扩展 Taro fixture，覆盖 retap、query 初始化、样式覆盖和 icon。
-- [x] 增加 WeChat 小程序 smoke build。
-- [x] 梳理 H5/小程序差异，形成兼容性矩阵。
-- [x] 补充 subpackage 或复杂页面结构的示例/限制说明。
+- [ ] 视真实需求增加支付宝/抖音等小程序端 smoke build。
+- [ ] 增加更接近真实业务的 fixture：长列表滚动、返回链路、分享参数、复杂 query。
+- [ ] 梳理运行时端侧验证记录，区分 build smoke、手动真机验证和自动化验证。
 
 ### 1.0.0：稳定版条件
 
 - [ ] API 命名和导出结构冻结。
-- [ ] README 与 doc 文档完成拆分且无重复过期示例。
-- [x] H5 + 至少一个主流小程序端 smoke build 稳定。
-- [ ] npm 发布流程可重复，构建产物与 tarball 内容有自动检查。
-- [x] CHANGELOG、兼容性说明、已知限制齐全。
+- [ ] 打包后消费侧类型/导出验证稳定运行。
+- [ ] 独立页 redirect、retap refresh、样式自定义均有官方推荐样板。
+- [ ] H5 + 至少一个主流小程序端 smoke build 稳定。
+- [ ] npm 发布流程可重复，tarball 内容有自动检查。
+- [ ] CHANGELOG、兼容性说明、已知限制齐全。
 
 ## 推荐下一步
 
-优先做 0.2.x 的文档收敛，不建议马上改核心代码。当前代码和质量门禁是稳定的，最大问题是 README 信息密度过高，以及 retap 示例存在复制风险。
+建议 0.3.0 先做两个最能降低发布风险的任务：
 
-建议下一次任务按这个顺序执行：
+1. 新增打包后消费侧 fixture，并接入 CI / `prepublishOnly`。
+2. 设计独立页 redirect 的 core helper，先把 URL 构建和 query 合并规则稳定下来。
 
-1. 拆分 README 和 `doc/*` 文档。
-2. 修正 retap 共享 context 示例。
-3. 小改 `RouterlessTabBar` emits 类型。
-4. 再考虑 0.3.0 的子路径导出和 resolver 设计。
+这两个任务完成后，再根据真实业务反馈决定是否继续扩展 retap 可观测 API 和 pane host 定制能力。
