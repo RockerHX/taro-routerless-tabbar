@@ -53,6 +53,9 @@ const retapContext =
 retapCore.registerRefreshHandler('home', () => undefined)
 retapContext.registerRefreshHandler('orders', () => undefined)
 
+const retapCoreStatus = `${retapCore.hasRefreshHandler('home')}:${retapCore.isRefreshRunning('home')}`
+const retapContextStatus = `${retapContext.hasRefreshHandler('orders')}:${retapContext.isRefreshRunning('orders')}`
+
 const App = defineComponent({
   name: 'PackageConsumerApp',
   setup() {
@@ -65,6 +68,7 @@ const App = defineComponent({
       h('view', [
         h('text', `${rootUrl}|${coreUrl}`),
         h('text', `${rootRedirect.url}|${coreRedirect.url}`),
+        h('text', `${retapCoreStatus}|${retapContextStatus}`),
         h(RootRouterlessTabBar, {
           active: tabs.activeKey.value,
           items: tabItems,

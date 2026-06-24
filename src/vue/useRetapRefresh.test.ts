@@ -64,8 +64,12 @@ describe('createRetapRefreshContext', function () {
   it('暴露的 core 方法仍可直接工作', async function () {
     const context = createRetapRefreshContext<'orders'>()
     const handler = vi.fn().mockResolvedValue(undefined)
+    expect(context.hasRefreshHandler('orders')).toBe(false)
+    expect(context.isRefreshRunning('orders')).toBe(false)
     context.registerRefreshHandler('orders', handler)
+    expect(context.hasRefreshHandler('orders')).toBe(true)
     await expect(context.runRefresh('orders')).resolves.toBe(true)
+    expect(context.isRefreshRunning('orders')).toBe(false)
     expect(handler).toHaveBeenCalledTimes(1)
   })
 })
