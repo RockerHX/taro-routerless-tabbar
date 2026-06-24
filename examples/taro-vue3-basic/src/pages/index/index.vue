@@ -1,8 +1,14 @@
 <template>
   <view class="fixture-page">
-    <text class="fixture-title">{{ activeTitle }}</text>
-    <text class="fixture-url">{{ previewUrl }}</text>
-    <text class="fixture-retap">{{ retapSummary }}</text>
+    <text class="fixture-title" data-testid="active-title">
+      {{ activeTitle }}
+    </text>
+    <text class="fixture-url" data-testid="redirect-preview-url">
+      {{ previewUrl }}
+    </text>
+    <text class="fixture-retap" data-testid="retap-summary">
+      {{ retapSummary }}
+    </text>
 
     <RouterlessTabPaneHost
       :items="tabItems"
@@ -12,12 +18,17 @@
       hidden-class="fixture-routerless-pane-hidden"
     >
       <template #pane="{ pane, active }">
-        <view :class="['fixture-pane', active ? 'fixture-pane-active' : '']">
-          <text class="fixture-pane-title">{{ pane.text }}</text>
-          <text class="fixture-pane-meta">
+        <view
+          :class="['fixture-pane', active ? 'fixture-pane-active' : '']"
+          :data-testid="`pane-${pane.key}`"
+        >
+          <text class="fixture-pane-title" :data-testid="`pane-title-${pane.key}`">
+            {{ pane.text }}
+          </text>
+          <text class="fixture-pane-meta" :data-testid="`pane-visited-${pane.key}`">
             visited: {{ tabs.isVisited(pane.key) ? 'yes' : 'no' }}
           </text>
-          <text class="fixture-pane-meta">
+          <text class="fixture-pane-meta" :data-testid="`pane-retap-${pane.key}`">
             retap refresh count: {{ refreshCounts[pane.key] }}
           </text>
         </view>
@@ -31,7 +42,33 @@
       :refresh-icon="refreshIcon"
       @change="handleChange"
       @retap="handleRetap"
-    />
+    >
+      <template #item="{ item, active, refreshing, iconPath }">
+        <view
+          class="fixture-tabbar-item"
+          :data-testid="`tabbar-item-${item.key}`"
+        >
+          <image
+            v-if="refreshing && refreshIcon"
+            class="fixture-tabbar-icon"
+            mode="scaleToFill"
+            :src="refreshIcon"
+          />
+          <image
+            v-else-if="iconPath"
+            class="fixture-tabbar-icon"
+            mode="scaleToFill"
+            :src="iconPath"
+          />
+          <text
+            :class="['fixture-tabbar-text', active ? 'fixture-tabbar-text-active' : '']"
+            :data-testid="`tabbar-text-${item.key}`"
+          >
+            {{ item.text }}
+          </text>
+        </view>
+      </template>
+    </RouterlessTabBar>
   </view>
 </template>
 
@@ -209,5 +246,26 @@ onUnmounted(() => {
   color: #4e5969;
   font-size: 22px;
   line-height: 1.5;
+}
+
+.fixture-tabbar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fixture-tabbar-icon {
+  width: var(--routerless-tabbar-icon-size);
+  height: var(--routerless-tabbar-icon-size);
+}
+
+.fixture-tabbar-text {
+  margin-top: 4px;
+  color: #86909c;
+  font-size: 20px;
+}
+
+.fixture-tabbar-text-active {
+  color: var(--routerless-tabbar-active-color);
 }
 </style>
