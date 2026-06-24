@@ -2,7 +2,6 @@
   "name": "taro-routerless-tabbar-taro-vue3-basic",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "build:h5": "taro build --type h5",
     "build:weapp": "taro build --type weapp"
