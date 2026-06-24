@@ -1,6 +1,6 @@
 # 多端兼容性与复杂项目说明
 
-本文记录当前已验证的 Taro 端、fixture 覆盖点和复杂页面结构限制。更细的能力覆盖层级见
+本文记录 1.0.0 稳定版面向 Taro 4 + Vue 3 + Vite 的验证范围、fixture 覆盖点和复杂页面结构限制。更细的能力覆盖层级见
 [端侧运行时验证矩阵](./runtime-validation.md)。
 
 ## 已验证范围
@@ -13,7 +13,7 @@
 | Taro Vue3 H5 runtime smoke      | `pnpm run test:taro:h5:runtime` | 已覆盖     |
 | Taro Vue3 Alipay extended build | `pnpm run test:taro:alipay`     | 实验性覆盖 |
 
-当前 fixture 位于 `examples/taro-vue3-basic`，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。
+当前 fixture 位于 `examples/taro-vue3-basic`，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。
 
 ## 与原生 tabBar 生命周期的关系
 
@@ -52,7 +52,7 @@
 | PaneHost 自定义 class          | 已验证构建 | 已验证构建    | 已验证构建    | fixture 覆盖 `paneClass` / `hiddenClass` 构建链路。          |
 | 原生 tabBar 生命周期           | 不依赖     | 不依赖        | 不依赖        | 本包不接管或模拟平台原生 tabBar 生命周期。                   |
 
-H5 已有自动化运行时 smoke。WeChat 小程序当前仍属于 build smoke；Alipay 小程序属于 experimental extended build smoke。二者都不等同于覆盖开发者工具或真机运行时交互细节。接入真实业务后，仍建议按
+H5 已有自动化运行时 smoke。WeChat 小程序主链路当前是 build smoke，并在端侧运行时验证矩阵中记录开发者工具尝试结果；Alipay 小程序属于 experimental extended build smoke。二者都不等同于完整覆盖开发者工具或真机运行时交互细节。接入真实业务后，仍建议按
 [端侧运行时验证矩阵](./runtime-validation.md)
 在目标端做点击、刷新、样式和页面返回链路验证。
 

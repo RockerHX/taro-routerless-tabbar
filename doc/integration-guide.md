@@ -1,6 +1,6 @@
 # 完整接入指南
 
-本文展示一个 `home`、`order`、`profile` 三个 Tab 的完整接入方式。示例省略业务顶部导航、图片资源和 store，只保留 routerless tab 的核心链路。
+本文展示 Taro 4 + Vue 3 + Vite 项目中一个 `home`、`order`、`profile` 三个 Tab 的完整接入方式。示例省略业务顶部导航、图片资源和 store，只保留 routerless tab 的核心链路。
 
 可运行 fixture 位于 `examples/taro-vue3-basic`，包含长列表、复杂 query、retap 异步刷新、模拟详情返回链路和样式边界示例。H5 运行时可通过
 `pnpm run test:taro:h5:runtime` 自动验证核心交互。
