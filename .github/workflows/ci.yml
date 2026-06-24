@@ -49,5 +49,5 @@ jobs:
       - name: Audit
         run: pnpm audit --audit-level moderate
 
-      - name: Taro H5 smoke build
-        run: pnpm run test:taro:h5
+      - name: Taro smoke builds
+        run: pnpm run test:taro
