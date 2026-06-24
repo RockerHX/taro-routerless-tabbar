@@ -3,7 +3,8 @@
     <view class="basic-hero">
       <text class="basic-title">RouterlessTabs 极简示例</text>
       <text class="basic-desc">
-        这个页面只演示最小接入：传入 tabs 和 defaultKey，默认底栏切换与 pane 保活由组件内部处理。
+        这个页面只演示最小接入：传入 tabs 和 defaultKey，默认底栏切换与 pane
+        保活由组件内部处理。
       </text>
     </view>
 

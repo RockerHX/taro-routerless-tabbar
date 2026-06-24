@@ -2,7 +2,9 @@
   <view class="basic-pane">
     <text class="basic-pane-title">首页</text>
     <text class="basic-pane-desc">默认展示推荐内容，首次进入时自动挂载。</text>
-    <text class="basic-pane-meta">embedded: {{ embedded ? 'true' : 'false' }}</text>
+    <text class="basic-pane-meta"
+      >embedded: {{ embedded ? 'true' : 'false' }}</text
+    >
     <text class="basic-pane-meta">active: {{ active ? 'true' : 'false' }}</text>
     <text class="basic-pane-meta">本地计数：{{ count }}</text>
     <view class="basic-pane-button" @click="count += 1">

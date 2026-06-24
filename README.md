@@ -33,6 +33,20 @@
 pnpm add taro-routerless-tabbar
 ```
 
+## 运行示例
+
+最短路径：
+
+```bash
+pnpm install
+pnpm dev
+```
+
+- `pnpm dev`：启动 `examples/taro-vue3-routerless-tabs-basic` 的 H5 极简示例，默认端口 `10086`。
+- `pnpm dev:weapp` / `pnpm dev:alipay`：启动同一个极简示例的 WeChat / Alipay watch。
+- `pnpm dev:fixture`：启动 `examples/taro-vue3-basic` 高级受控 smoke fixture 的 H5 watch，默认端口 `10087`。
+- `pnpm dev:fixture:weapp` / `pnpm dev:fixture:alipay`：启动高级 fixture 的对应端 watch。
+
 ## 入口选择
 
 | 入口                               | 适合场景                           | 样式行为                       |
@@ -72,6 +86,8 @@ const tabs = [
 </template>
 ```
 
+如果想直接运行一个可复制的最小工程，优先看 `examples/taro-vue3-routerless-tabs-basic`。
+
 需要完全控制 active/visited、接入复杂 retap refresh、定制 PaneHost 或自行拼装底栏时，可以改用 `useRouterlessTabs`、`RouterlessTabPaneHost` 和 `RouterlessTabBar` 组成的高级受控模式，详见 [完整接入指南](doc/integration-guide.md)。
 
 ## 文档
@@ -83,6 +99,8 @@ const tabs = [
 - [端侧运行时验证矩阵](doc/runtime-validation.md)：区分单测、消费侧、H5 runtime、小程序 build smoke 和手动验证。
 - [API 文档](doc/api.md)：完整导出、类型、返回值和边界行为。
 - [发布流程](doc/release.md)：发布前门禁、版本清单和常见失败排查。
+- [极简示例 README](examples/taro-vue3-routerless-tabs-basic/README.md)：面向 README 用户的最小接入工程。
+- [高级 fixture README](examples/taro-vue3-basic/README.md)：面向复杂链路验证和 smoke 的受控模式工程。
 
 ## 常用 API
 
@@ -103,6 +121,7 @@ const tabs = [
 - 目标技术栈：Taro 4、Vue 3、Vite、小程序/H5。
 - 1.0.0 稳定承诺：冻结 root、`./core`、`./vue`、`./style.css` 入口和文档列出的公开 API / 类型 / 组件契约。
 - 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、打包后消费侧验证、API surface 检查、Taro H5 / WeChat 小程序 smoke build、Taro H5 运行时自动化 smoke；支付宝小程序作为 experimental extended build smoke。
+- 示例分层：`pnpm dev` 默认启动 `RouterlessTabs` 极简示例；复杂 query、redirect、retap 和返回链路继续由 `pnpm dev:fixture` 对应的高级受控 fixture 承担。
 - 验证分层：H5 已覆盖自动化运行时交互；WeChat 小程序当前为主链路 build smoke，并在端侧运行时验证矩阵中记录开发者工具尝试结果；支付宝可用 `pnpm run test:taro:extended` 做实验性构建验证；真机/开发者工具运行时请参考端侧运行时验证矩阵补充确认。
 - 非目标：不替代 Pinia、Vue Router 或 Taro navigation；暂不承诺 React 支持；暂不承诺所有 Taro 运行端表现完全一致。
 

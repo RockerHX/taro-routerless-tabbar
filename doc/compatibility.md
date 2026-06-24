@@ -5,15 +5,16 @@
 
 ## 已验证范围
 
-| 场景                            | 验证命令                        | 状态       |
-| ------------------------------- | ------------------------------- | ---------- |
-| Taro Vue3 H5 build              | `pnpm run test:taro:h5`         | 已覆盖     |
-| Taro Vue3 WeChat 小程序 build   | `pnpm run test:taro:weapp`      | 已覆盖     |
-| H5 + WeChat 小程序连续 smoke    | `pnpm run test:taro`            | 已覆盖     |
-| Taro Vue3 H5 runtime smoke      | `pnpm run test:taro:h5:runtime` | 已覆盖     |
-| Taro Vue3 Alipay extended build | `pnpm run test:taro:alipay`     | 实验性覆盖 |
+| 场景                               | 验证命令                        | 状态       |
+| ---------------------------------- | ------------------------------- | ---------- |
+| `RouterlessTabs` 极简示例 H5 build | `pnpm run test:taro:basic:h5`   | 已覆盖     |
+| Taro Vue3 H5 build                 | `pnpm run test:taro:h5`         | 已覆盖     |
+| Taro Vue3 WeChat 小程序 build      | `pnpm run test:taro:weapp`      | 已覆盖     |
+| H5 + WeChat 小程序连续 smoke       | `pnpm run test:taro`            | 已覆盖     |
+| Taro Vue3 H5 runtime smoke         | `pnpm run test:taro:h5:runtime` | 已覆盖     |
+| Taro Vue3 Alipay extended build    | `pnpm run test:taro:alipay`     | 实验性覆盖 |
 
-当前 fixture 位于 `examples/taro-vue3-basic`，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。`RouterlessTabs` 高阶组件通过单元测试和 package consumer 覆盖；Taro fixture 保留高级受控模式，用于验证 query、redirect、retap 和样式边界等复杂链路。
+当前 examples 分为两层：`examples/taro-vue3-routerless-tabs-basic` 面向默认模式用户，提供 `RouterlessTabs` 最小接入和 H5 build 验证；`examples/taro-vue3-basic` 继续作为高级受控 smoke fixture，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。`RouterlessTabs` 高阶组件同时通过单元测试、package consumer 和极简示例构建覆盖；高级 fixture 保留 query、redirect、retap 和样式边界等复杂链路验证。
 
 ## 与原生 tabBar 生命周期的关系
 
@@ -21,7 +22,7 @@
 
 因此它不依赖平台原生 `tabBar` 生命周期，也不替代 Taro 的完整路由系统。需要完全复用原生 `tabBar` 生命周期、原生页面栈行为或平台级 tabBar 配置的项目，不适合直接用本包接管底栏切换。
 
-## fixture 覆盖点
+## 高级 fixture 覆盖点
 
 `examples/taro-vue3-basic` 当前覆盖：
 
@@ -40,6 +41,8 @@
 - H5 与 WeChat 小程序 build smoke。
 - 支付宝小程序 experimental extended build smoke。
 - H5 自动化 runtime smoke，覆盖初始化、切换、保活、retap、redirect 和返回链路。
+
+`examples/taro-vue3-routerless-tabs-basic` 当前只覆盖默认模式最小链路：`tabs + defaultKey`、默认 pane 渲染、默认底栏切换和 pane 保活示意。
 
 ## H5 与小程序差异
 

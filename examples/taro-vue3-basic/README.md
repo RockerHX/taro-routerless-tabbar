@@ -1,6 +1,6 @@
-# Taro Vue3 smoke fixture
+# Taro Vue3 高级受控 smoke fixture
 
-用于验证 `taro-routerless-tabbar` 在最小 Taro Vue3 项目中的多端构建。
+这个 example 不是最小接入示例，而是仓库内部用于复杂链路验证的高级受控 fixture。它保留 `useRouterlessTabs`、`RouterlessTabPaneHost` 和 `RouterlessTabBar` 手动拼装方式，方便继续做 smoke、runtime 和样式边界验证。
 
 ## 覆盖点
 
@@ -11,11 +11,30 @@
 - `iconPath` / `selectedIconPath` 本地图标资源。
 - 默认 TabBar CSS 变量覆盖。
 
+## 启动命令
+
+根目录短命令：
+
+```bash
+pnpm dev:fixture
+pnpm dev:fixture:weapp
+pnpm dev:fixture:alipay
+```
+
+直接在示例目录运行：
+
+```bash
+pnpm --dir examples/taro-vue3-basic run dev:h5
+pnpm --dir examples/taro-vue3-basic run dev:weapp
+pnpm --dir examples/taro-vue3-basic run dev:alipay
+```
+
 ## 构建命令
 
 ```bash
 pnpm --dir examples/taro-vue3-basic run build:h5
 pnpm --dir examples/taro-vue3-basic run build:weapp
+pnpm --dir examples/taro-vue3-basic run build:alipay
 ```
 
 根目录也提供封装命令：
@@ -24,4 +43,6 @@ pnpm --dir examples/taro-vue3-basic run build:weapp
 pnpm run test:taro:h5
 pnpm run test:taro:weapp
 pnpm run test:taro
+pnpm run test:taro:h5:runtime
+pnpm run test:taro:extended
 ```

@@ -1,8 +1,12 @@
 <template>
   <view class="basic-pane">
     <text class="basic-pane-title">订单</text>
-    <text class="basic-pane-desc">切到其他 Tab 再回来时，这里的本地状态会继续保留。</text>
-    <text class="basic-pane-meta">embedded: {{ embedded ? 'true' : 'false' }}</text>
+    <text class="basic-pane-desc"
+      >切到其他 Tab 再回来时，这里的本地状态会继续保留。</text
+    >
+    <text class="basic-pane-meta"
+      >embedded: {{ embedded ? 'true' : 'false' }}</text
+    >
     <text class="basic-pane-meta">active: {{ active ? 'true' : 'false' }}</text>
     <text class="basic-pane-meta">已筛选订单数：{{ count }}</text>
     <view class="basic-pane-button" @click="count += 1">

@@ -2,7 +2,9 @@
   <view class="basic-pane">
     <text class="basic-pane-title">我的</text>
     <text class="basic-pane-desc">适合放个人中心、设置入口或账户信息。</text>
-    <text class="basic-pane-meta">embedded: {{ embedded ? 'true' : 'false' }}</text>
+    <text class="basic-pane-meta"
+      >embedded: {{ embedded ? 'true' : 'false' }}</text
+    >
     <text class="basic-pane-meta">active: {{ active ? 'true' : 'false' }}</text>
     <text class="basic-pane-meta">已展开入口数：{{ count }}</text>
     <view class="basic-pane-button" @click="count += 1">

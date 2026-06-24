@@ -6,6 +6,7 @@
 
 | 层级                 | 命令或方式                         | 说明                                                          |
 | -------------------- | ---------------------------------- | ------------------------------------------------------------- |
+| 极简示例 build 验证  | `pnpm run test:taro:basic:h5`      | 验证 `RouterlessTabs` 最小 Taro H5 工程可构建。               |
 | 单元测试             | `pnpm run test:run`                | 覆盖 core helper、retap 和 Vue 状态。                         |
 | 打包后消费侧验证     | `pnpm run test:package-consumer`   | 验证真实 tarball 导入、类型、`RouterlessTabs` 和构建。        |
 | H5 自动化运行时验证  | `pnpm run test:taro:h5:runtime`    | Playwright 覆盖真实浏览器交互链路。                           |
@@ -15,7 +16,7 @@
 
 ## 能力覆盖矩阵
 
-H5 runtime fixture 当前保留高级受控模式，用于覆盖复杂 query、redirect、retap 和返回链路；`RouterlessTabs` 高阶组件由单元测试和打包后消费侧验证覆盖。
+H5 runtime fixture 当前保留高级受控模式，用于覆盖复杂 query、redirect、retap 和返回链路；`RouterlessTabs` 高阶组件由单元测试、打包后消费侧验证和 `pnpm run test:taro:basic:h5` 极简示例构建共同覆盖。
 
 | 能力                      | 单元测试 | 消费侧 | H5 runtime | WeChat build | Alipay build | 小程序手动 |
 | ------------------------- | -------- | ------ | ---------- | ------------ | ------------ | ---------- |
