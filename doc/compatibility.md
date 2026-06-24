@@ -1,14 +1,16 @@
 # 多端兼容性与复杂项目说明
 
-本文记录当前已验证的 Taro 端、fixture 覆盖点和复杂页面结构限制。
+本文记录当前已验证的 Taro 端、fixture 覆盖点和复杂页面结构限制。更细的能力覆盖层级见
+[端侧运行时验证矩阵](./runtime-validation.md)。
 
 ## 已验证范围
 
-| 场景                          | 验证命令                   | 状态   |
-| ----------------------------- | -------------------------- | ------ |
-| Taro Vue3 H5 build            | `pnpm run test:taro:h5`    | 已覆盖 |
-| Taro Vue3 WeChat 小程序 build | `pnpm run test:taro:weapp` | 已覆盖 |
-| H5 + WeChat 小程序连续 smoke  | `pnpm run test:taro`       | 已覆盖 |
+| 场景                          | 验证命令                        | 状态   |
+| ----------------------------- | ------------------------------- | ------ |
+| Taro Vue3 H5 build            | `pnpm run test:taro:h5`         | 已覆盖 |
+| Taro Vue3 WeChat 小程序 build | `pnpm run test:taro:weapp`      | 已覆盖 |
+| H5 + WeChat 小程序连续 smoke  | `pnpm run test:taro`            | 已覆盖 |
+| Taro Vue3 H5 runtime smoke    | `pnpm run test:taro:h5:runtime` | 已覆盖 |
 
 当前 fixture 位于 `examples/taro-vue3-basic`，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。
 
@@ -29,7 +31,12 @@
 - `iconPath` / `selectedIconPath` 本地图标资源。
 - 默认 TabBar CSS 变量覆盖，例如高度、图标尺寸、激活色和背景色。
 - `RouterlessTabPaneHost` 的 `paneClass` / `hiddenClass` 构建覆盖。
+- 长列表/卡片列表、pane 本地状态、异步 retap loading/成功/失败提示。
+- 复杂 redirect query 预览，覆盖普通 query、旧 `tab` 和 `embedded` 过滤。
+- 模拟详情入口与返回主容器后的 active Tab / pane 状态保留。
+- `hostClass`、`paneClass`、`hiddenClass` 与 CSS 变量覆盖的样式边界示例。
 - H5 与 WeChat 小程序 build smoke。
+- H5 自动化 runtime smoke，覆盖初始化、切换、保活、retap、redirect 和返回链路。
 
 ## H5 与小程序差异
 
@@ -43,7 +50,9 @@
 | PaneHost 自定义 class          | 已验证构建 | 已验证构建    | fixture 覆盖 `paneClass` / `hiddenClass` 构建链路。          |
 | 原生 tabBar 生命周期           | 不依赖     | 不依赖        | 本包不接管或模拟平台原生 tabBar 生命周期。                   |
 
-当前验证属于 build smoke，不等同于覆盖所有平台运行时交互细节。接入真实业务后，仍建议在目标端做端侧点击、刷新、样式和页面返回链路验证。
+H5 已有自动化运行时 smoke。WeChat 小程序当前仍属于 build smoke，不等同于覆盖开发者工具或真机运行时交互细节。接入真实业务后，仍建议按
+[端侧运行时验证矩阵](./runtime-validation.md)
+在目标端做点击、刷新、样式和页面返回链路验证。
 
 ## 端侧布局检查清单
 

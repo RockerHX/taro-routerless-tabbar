@@ -2,6 +2,9 @@
 
 本文展示一个 `home`、`order`、`profile` 三个 Tab 的完整接入方式。示例省略业务顶部导航、图片资源和 store，只保留 routerless tab 的核心链路。
 
+可运行 fixture 位于 `examples/taro-vue3-basic`，包含长列表、复杂 query、retap 异步刷新、模拟详情返回链路和样式边界示例。H5 运行时可通过
+`pnpm run test:taro:h5:runtime` 自动验证核心交互。
+
 ## 1. 定义 Tab 配置
 
 ```ts
@@ -243,6 +246,8 @@ export const useStandaloneTabRedirect = (
 
 `resolveStandaloneTabRedirect` 会保留独立页打开时的普通 query 参数，过滤 `embedded`，并用当前 Tab key 覆盖旧的 `tab` 参数。
 
+fixture 中的主容器会展示一条 redirect 预览 URL，用于观察普通 query 保留、`embedded` 过滤和旧 `tab` 覆盖结果。
+
 Tab 页面中按需使用：
 
 ```vue
@@ -275,6 +280,8 @@ useStandaloneTabRedirect('home', () => props.embedded)
 ```
 
 `order`、`profile` 等其他 Tab 页面保持同样结构，只替换对应 Tab key 和业务内容。需要二次点击刷新时，按 [retap 刷新指南](./retap-refresh.md) 从共享单例文件导入 `useTabRetapRefresh`，不要在每个页面重复创建新的 context。
+
+fixture 中每个 Tab 都注册了异步刷新 handler，可见 loading、成功、失败提示和重复 retap 并发保护效果。长列表和卡片列表用于验证内容区底部 padding，样式边界区域展示 `hostClass`、`paneClass`、`hiddenClass` 与 CSS 变量覆盖的推荐写法。
 
 ## 5. 页面模块解析
 
