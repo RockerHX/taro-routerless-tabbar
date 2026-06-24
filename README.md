@@ -75,7 +75,7 @@ const visitedKeys = tabs.visitedKeys
 const activateTab = tabs.activateTab
 
 const handleTabRetap = (tab: TabKey) => {
-  // 可在这里调用共享 retap context 的 runRefresh(tab)
+  // 完整刷新链路请按 doc/retap-refresh.md 创建共享单例后调用 runRefresh(tab)
   console.log('retap tab:', tab)
 }
 </script>
