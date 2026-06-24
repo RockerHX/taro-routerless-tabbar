@@ -139,10 +139,11 @@ const handleTabRetap = (tab: TabKey) => {
 | `resolveStandaloneTabRedirect` | 生成独立 Tab 页重定向 URL                  |
 | `resolveTabPageModuleKey`      | 生成或配置 `import.meta.glob` 模块 key     |
 
-## 兼容性与当前状态
+## 兼容性与稳定版承诺
 
-- 当前版本：`0.4.0`。
+- 当前版本：`1.0.0`。
 - 目标技术栈：Taro 4、Vue 3、Vite、小程序/H5。
+- 1.0.0 稳定承诺：冻结 root、`./core`、`./vue`、`./style.css` 入口和文档列出的公开 API / 类型 / 组件契约。
 - 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、打包后消费侧验证、API surface 检查、Taro H5 / WeChat 小程序 smoke build、Taro H5 运行时自动化 smoke；支付宝小程序作为 experimental extended build smoke。
 - 验证分层：H5 已覆盖自动化运行时交互；WeChat 小程序当前为主链路 build smoke，并在端侧运行时验证矩阵中记录开发者工具尝试结果；支付宝可用 `pnpm run test:taro:extended` 做实验性构建验证；真机/开发者工具运行时请参考端侧运行时验证矩阵补充确认。
 - 非目标：不替代 Pinia、Vue Router 或 Taro navigation；暂不承诺 React 支持；暂不承诺所有 Taro 运行端表现完全一致。
