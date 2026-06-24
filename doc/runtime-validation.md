@@ -37,13 +37,14 @@
 
 ## 验证环境记录
 
-| 日期       | Taro  | Vue | 平台插件                       | 环境             | 结果                                                                                          |
-| ---------- | ----- | --- | ------------------------------ | ---------------- | --------------------------------------------------------------------------------------------- |
-| 2026-06-24 | 4.2.0 | 3.x | h5/weapp/alipay 4.2.0          | Node 24 / macOS  | H5 runtime、H5/WeChat build、Alipay extended build 通过                                       |
-| 2026-06-24 | 4.2.0 | 3.x | WeChat 开发者工具 1.06.2402040 | macOS / CLI open | 已确认工具版本；`pnpm run test:taro` 通过；本轮尝试打开构建产物超时，未完成开发者工具点击验证 |
+| 日期       | Taro  | Vue | 平台插件                       | 环境             | 结果                                                                                           |
+| ---------- | ----- | --- | ------------------------------ | ---------------- | ---------------------------------------------------------------------------------------------- |
+| 2026-06-24 | 4.2.0 | 3.x | h5/weapp/alipay 4.2.0          | Node 24 / macOS  | H5 runtime、H5/WeChat build、Alipay extended build 通过                                        |
+| 2026-06-24 | 4.2.0 | 3.x | WeChat 开发者工具 1.06.2402040 | macOS / CLI open | 已确认工具版本；`pnpm run test:taro` 通过；本轮尝试打开构建产物超时，未完成开发者工具点击验证  |
+| 2026-06-24 | 4.2.0 | 3.x | Alipay 4.2.0                   | Node 24 / macOS  | `pnpm run test:taro:extended` 通过；本机未安装支付宝开发者工具，未执行 experimental 运行时验证 |
 
 ## 已知限制
 
 - WeChat 小程序当前自动化只覆盖 build smoke；2026-06-24 已识别本机 WeChat 开发者工具 1.06.2402040，但 CLI 打开构建产物超时，本轮未完成开发者工具或真机点击验证。
-- 支付宝小程序已作为 experimental extended build smoke 覆盖，可用 `pnpm run test:taro:alipay` 或 `pnpm run test:taro:extended` 验证；它未进入 `test:taro` 主链路前不视为稳定支持范围。
+- 支付宝小程序已作为 experimental extended build smoke 覆盖，可用 `pnpm run test:taro:alipay` 或 `pnpm run test:taro:extended` 验证；本机未安装支付宝开发者工具，未执行运行时点击验证；它未进入 `test:taro` 主链路前不视为稳定支持范围。
 - Alipay 构建中 fixture 会预先 emit `.browserslistrc`，用于规避 Taro 4.2.0 alipay 插件覆盖该 asset 时的 vite-runner 输出限制。
