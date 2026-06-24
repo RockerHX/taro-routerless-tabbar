@@ -17,6 +17,31 @@ import 'taro-routerless-tabbar/style.css'
 `RouterlessTabs` 会把 `item` slot 透传给内部 `RouterlessTabBar`，把 `pane` slot 用于覆盖默认 pane 渲染；未传 slot 时，会按 `tabs[*].component` 自动渲染 pane。
 
 ```vue
+<RouterlessTabs
+  :tabs="tabs"
+  default-key="home"
+  host-class="main-tab-host"
+  pane-class="main-tab-pane"
+  hidden-class="main-tab-pane-hidden"
+>
+  <template #pane="{ pane, active }">
+    <component :is="pane.component" embedded :active="active" />
+  </template>
+
+  <template #item="{ item, active, refreshing, iconPath }">
+    <view class="my-tabbar-item">
+      <image v-if="iconPath" class="my-tabbar-icon" :src="iconPath" />
+      <text :class="active ? 'is-active' : ''">
+        {{ refreshing ? '刷新中' : item.text }}
+      </text>
+    </view>
+  </template>
+</RouterlessTabs>
+```
+
+如果需要完全控制 active/visited，仍可直接使用受控底栏：
+
+```vue
 <RouterlessTabBar
   :active="activeTab"
   :items="tabbarItems"
@@ -80,7 +105,7 @@ export const tabbarItems = [
 
 ## 4. 使用 slot 完全自定义单个 Tab
 
-需要自定义图标结构、文案、徽标或刷新态时，使用 `#item` 插槽接管单个 Tab 的渲染。
+需要自定义图标结构、文案、徽标或刷新态时，使用 `#item` 插槽接管单个 Tab 的渲染。`RouterlessTabs` 和 `RouterlessTabBar` 的 `#item` slot props 保持一致。
 
 ```vue
 <RouterlessTabBar
@@ -147,7 +172,7 @@ slot props：
 - `.routerless-tab-pane`：每个已访问 pane。
 - `.routerless-tab-pane-hidden`：非 active pane，默认 `display: none`。
 
-如需追加业务 class，可使用 `hostClass`、`paneClass` 和 `hiddenClass`：
+如需追加业务 class，`RouterlessTabs` 可直接传入 `hostClass`、`paneClass` 和 `hiddenClass`，高级受控模式也可以把同名 props 传给 `RouterlessTabPaneHost`：
 
 ```vue
 <RouterlessTabPaneHost

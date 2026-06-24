@@ -13,7 +13,7 @@
 | Taro Vue3 H5 runtime smoke      | `pnpm run test:taro:h5:runtime` | 已覆盖     |
 | Taro Vue3 Alipay extended build | `pnpm run test:taro:alipay`     | 实验性覆盖 |
 
-当前 fixture 位于 `examples/taro-vue3-basic`，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。
+当前 fixture 位于 `examples/taro-vue3-basic`，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。`RouterlessTabs` 高阶组件通过单元测试和 package consumer 覆盖；Taro fixture 保留高级受控模式，用于验证 query、redirect、retap 和样式边界等复杂链路。
 
 ## 与原生 tabBar 生命周期的关系
 
@@ -31,6 +31,7 @@
 - 页面展示刷新次数和最近刷新 Tab，便于 smoke 示例可见。
 - `iconPath` / `selectedIconPath` 本地图标资源。
 - 默认 TabBar CSS 变量覆盖，例如高度、图标尺寸、激活色和背景色。
+- `RouterlessTabs` 默认模式通过单元测试和 package consumer 覆盖。
 - `RouterlessTabPaneHost` 的 `paneClass` / `hiddenClass` 构建覆盖。
 - 长列表/卡片列表、pane 本地状态、异步 retap loading/成功/失败提示。
 - 复杂 redirect query 预览，覆盖普通 query、旧 `tab` 和 `embedded` 过滤。

@@ -2,6 +2,14 @@
 
 本文展示 Taro 4 + Vue 3 + Vite 项目中一个 `home`、`order`、`profile` 三个 Tab 的高级受控接入方式。若只需要默认 active/visited 管理和默认底栏，优先使用 README 中的 `RouterlessTabs` 极简示例；本文适合需要完全控制状态、页面模块 resolver、独立页 redirect 或复杂 retap refresh 的项目。
 
+## 何时使用哪种模式
+
+| 目标                                                                   | 推荐模式                  | 说明                                                                                            |
+| ---------------------------------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------- |
+| 几行代码接入默认底栏、懒挂载和 pane 保活                               | `RouterlessTabs` 默认模式 | 只需要传入 `tabs` 和 `defaultKey`，适合大多数简单 main 容器。                                   |
+| 需要从 query 归一化初始 Tab、接入 `import.meta.glob` 或独立页 redirect | 高级受控模式              | 自行拼装 `useRouterlessTabs`、`RouterlessTabPaneHost` 和 `RouterlessTabBar`，控制每一步数据流。 |
+| 需要完全控制 active/visited、切换副作用、底栏布局或 pane host class    | 高级受控模式              | 避免高阶组件隐藏状态变化，便于复杂业务调试。                                                    |
+
 可运行 fixture 位于 `examples/taro-vue3-basic`，包含长列表、复杂 query、retap 异步刷新、模拟详情返回链路和样式边界示例。H5 运行时可通过
 `pnpm run test:taro:h5:runtime` 自动验证核心交互。
 

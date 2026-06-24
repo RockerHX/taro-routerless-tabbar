@@ -2,7 +2,14 @@
 
 `retap` 指用户再次点击当前激活 Tab。`taro-routerless-tabbar` 只负责识别 retap、维护刷新 handler 注册表和刷新动画 key；真正的数据刷新、错误提示和动画时机由业务页面决定。
 
-可复制的接入链路只有三步：
+`RouterlessTabs` 和高级受控模式都可以接入同一套 retap refresh：
+
+| 接入层                    | main 容器怎么派发 retap                                                                 | 适合场景                                      |
+| ------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------- |
+| `RouterlessTabs` 默认模式 | 在 `<RouterlessTabs @retap="handleTabRetap" />` 中调用共享 `tabRetap.runRefresh(tab)`   | 只需要默认 active/visited 和默认底栏          |
+| 高级受控模式              | 在 `<RouterlessTabBar @retap="handleTabRetap" />` 中调用共享 `tabRetap.runRefresh(tab)` | 需要完全控制 active/visited、pane host 或底栏 |
+
+可复制的刷新链路只有三步：
 
 1. 在 `pages/main/retap-refresh.ts` 创建并导出唯一的共享单例。
 2. main 容器导入同一个 `tabRetap`，在 `retap` 事件里调用 `tabRetap.runRefresh(tab)`。
@@ -32,7 +39,48 @@ export const useTabRetapRefreshAnimation = tabRetap.useRetapRefreshAnimation
 
 ## 2. main 容器派发 retap
 
-main 容器监听默认底栏的 `retap` 事件，并调用共享 `tabRetap` 的 `runRefresh`。
+### 2.1 RouterlessTabs 默认模式
+
+使用 `RouterlessTabs` 时，main 容器只需要监听高阶组件的 `retap` 事件。`refreshing` 和 `refreshIcon` 会继续透传给内部默认底栏。
+
+```vue
+<template>
+  <RouterlessTabs
+    :tabs="tabs"
+    default-key="home"
+    :refreshing="refreshingTab"
+    refresh-icon="/assets/tabbar/refresh.svg"
+    @retap="handleTabRetap"
+  />
+</template>
+
+<script setup lang="ts">
+import { onUnmounted, ref } from 'vue'
+import { RouterlessTabs } from 'taro-routerless-tabbar'
+
+import type { TabKey } from '@/config/tabbar'
+import { tabRetap } from '@/pages/main/retap-refresh'
+
+const refreshingTab = ref<TabKey | ''>(tabRetap.getAnimatingKey())
+const stopWatchingRefreshAnimation = tabRetap.subscribeRefreshAnimation(
+  (tab) => {
+    refreshingTab.value = tab
+  },
+)
+
+const handleTabRetap = async (tab: TabKey) => {
+  await tabRetap.runRefresh(tab)
+}
+
+onUnmounted(() => {
+  stopWatchingRefreshAnimation()
+})
+</script>
+```
+
+### 2.2 高级受控模式
+
+高级受控模式下，main 容器监听默认底栏的 `retap` 事件，并调用共享 `tabRetap` 的 `runRefresh`。
 
 ```vue
 <!-- pages/main/index.vue 片段 -->
