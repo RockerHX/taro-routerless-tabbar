@@ -11,7 +11,7 @@
 
 1. `README.md` 已达到 561 行、约 17KB，内容混合了定位说明、完整接入、retap、样式、API 和实现限制，作为首页文档偏重，建议精简并拆分。
 2. 已处理：retap 示例已统一为共享 context，避免使用者复制出不可工作的刷新链路。
-3. root 入口会自动引入 `style.css`，纯 helper 使用者也会被带入默认样式；后续可以通过子路径导出改善。
+3. 已处理：新增 `./core`、`./vue` 和 `./style.css` 子路径导出，helper-only 使用者可避开默认样式副作用。
 4. 当前多端验证以 H5 smoke 为主，对小程序端、subpackages、自定义页面目录等真实 Taro 场景覆盖还不够。
 
 ## 本次验证结果
@@ -91,9 +91,11 @@ export const useTabRetapRefreshAnimation = tabRetap.useRetapRefreshAnimation
 
 当前 README 快速示例只保留核心 retap 事件入口，并明确指向 `doc/retap-refresh.md` 的共享单例接入方式；`doc/retap-refresh.md`、`doc/integration-guide.md` 和 `doc/api.md` 均已强调 main 容器与所有 Tab 页面必须复用同一个 context。
 
-### 问题 3：root 入口自动带入 CSS，helper-only 使用场景不够干净
+### 问题 3：root 入口自动带入 CSS，helper-only 使用场景不够干净（已处理）
 
 **优先级：中**
+
+**处理状态：已完成（2026-06-24）**
 
 **现象**
 
@@ -107,13 +109,14 @@ import './style.css'
 
 **解决方案**
 
-在后续版本增加子路径导出：
+增加子路径导出：
 
 - `taro-routerless-tabbar/core`：只导出纯函数和类型，不引入 CSS。
-- `taro-routerless-tabbar/vue`：导出 Vue composable/components，并引入或声明样式使用方式。
+- `taro-routerless-tabbar/vue`：导出 Vue composable/components，不自动引入 CSS。
+- `taro-routerless-tabbar/style.css`：提供默认样式文件，供 `./vue` 入口用户显式导入。
 - root 入口保持兼容，继续导出现有全部 API。
 
-这属于 DX 改进，不是当前发布阻塞项。
+当前 root 入口仍自动引入默认样式；helper-only 使用者可改用 `./core`，组件用户可改用 `./vue` 并按需显式导入 `./style.css`。
 
 ### 问题 4：小程序端和复杂 Taro 项目覆盖不足
 
@@ -264,8 +267,8 @@ return result
 
 ### 0.3.0：DX 与导出结构优化
 
-- [ ] 增加 `./core` 子路径导出，纯 helper 不引入 CSS。
-- [ ] 评估 `./vue` 子路径导出，明确组件与样式导入策略。
+- [x] 增加 `./core` 子路径导出，纯 helper 不引入 CSS。
+- [x] 评估 `./vue` 子路径导出，明确组件与样式导入策略。
 - [ ] 增强 `resolveTabPageModuleKey` 或新增可配置 resolver。
 - [ ] 评估是否导出官方版 `useStandaloneTabRedirect`。
 - [ ] 增加构建后声明文件/子路径导出的消费侧类型测试。
