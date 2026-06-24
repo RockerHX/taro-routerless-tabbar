@@ -1,0 +1,17 @@
+{
+  "name": "taro-routerless-tabbar-package-consumer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^6.0.7",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0",
+    "vue": "^3.5.38"
+  },
+  "devDependencies": {}
+}

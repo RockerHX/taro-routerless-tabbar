@@ -45,6 +45,7 @@
     "prepack": "pnpm run build",
     "prepublishOnly": "pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run test:run && pnpm run pack:dry-run",
     "test:run": "vitest run -c vitest.config.ts",
+    "test:package-consumer": "node ./scripts/test-package-consumer.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "prepare": "husky",
     "test:taro:h5": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5",
