@@ -39,29 +39,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Format check
-        run: pnpm run format:check
-
-      - name: Lint
-        run: pnpm run lint
-
-      - name: Type check
-        run: pnpm run typecheck
-
-      - name: Unit tests
-        run: pnpm run test:run
-
-      - name: Build package
-        run: pnpm run build
-
-      - name: Pack dry run
-        run: pnpm run pack:dry-run
-
-      - name: Package consumer validation
-        run: pnpm run test:package-consumer
-
-      - name: Audit
-        run: pnpm audit --audit-level moderate
+      - name: Release check
+        run: pnpm run release:check
 
       - name: Taro smoke builds
         run: pnpm run test:taro

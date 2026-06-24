@@ -226,7 +226,7 @@ const redirectUrl = buildStandaloneTabRedirectUrl({
 - [ ] 补充 retap 调试文档，说明未注册、执行中、handler 抛错三类场景。
 - [ ] 评估 `RouterlessTabPaneHost` 是否需要 `hiddenClass` / `paneClass` / `hostClass` 等轻量定制能力。
 - [ ] 补充端侧布局检查清单：安全区、内容区 padding、滚动容器、重型原生组件。
-- [ ] 新增发布预检脚本，校验版本号、CHANGELOG、质量门禁和 tarball 关键文件。
+- [x] 新增发布预检脚本，校验版本号、CHANGELOG、质量门禁和 tarball 关键文件。
 
 ### 0.4.0：多端与运行时验证增强
 
