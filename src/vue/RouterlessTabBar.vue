@@ -63,7 +63,10 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['change', 'retap'])
+const emit = defineEmits<{
+  change: [key: string]
+  retap: [key: string]
+}>()
 
 function isItemRefreshing(key: string) {
   return props.refreshing === key
