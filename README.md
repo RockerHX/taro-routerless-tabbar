@@ -33,6 +33,21 @@
 pnpm add taro-routerless-tabbar
 ```
 
+## 入口选择
+
+| 入口                               | 适合场景                           | 样式行为                       |
+| ---------------------------------- | ---------------------------------- | ------------------------------ |
+| `taro-routerless-tabbar`           | 兼容入口，导出全部 API             | 自动引入默认 `style.css`       |
+| `taro-routerless-tabbar/core`      | 只使用 URL、key、retap core helper | 不引入 CSS，也不导出 Vue 组件  |
+| `taro-routerless-tabbar/vue`       | 使用 Vue composable 或组件         | 不自动引入 CSS                 |
+| `taro-routerless-tabbar/style.css` | 配合 `./vue` 入口显式引入默认样式  | 只包含默认底栏和 pane 宿主样式 |
+
+如果只需要 `buildRouterlessTabUrl`、`normalizeTabKey` 等纯 helper，优先从 `taro-routerless-tabbar/core` 导入。使用 `taro-routerless-tabbar/vue` 的默认组件时，请在业务入口显式导入样式：
+
+```ts
+import 'taro-routerless-tabbar/style.css'
+```
+
 ## 快速开始
 
 下面示例只展示核心链路：`useRouterlessTabs` 管状态，`RouterlessTabPaneHost` 渲染已访问 pane，`RouterlessTabBar` 展示底栏并派发事件。完整项目通常还会接入 query 解析、`import.meta.glob`、独立页 redirect 和 retap refresh，详见 [完整接入指南](doc/integration-guide.md)。
@@ -109,7 +124,7 @@ const handleTabRetap = (tab: TabKey) => {
 - [样式自定义指南](doc/styling.md)：默认样式、`#item` slot、CSS 变量。
 - [API 文档](doc/api.md)：完整导出、类型、返回值和边界行为。
 
-## 常用入口
+## 常用 API
 
 | API                         | 说明                             |
 | --------------------------- | -------------------------------- |

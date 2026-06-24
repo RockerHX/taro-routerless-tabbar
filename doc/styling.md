@@ -2,7 +2,17 @@
 
 `RouterlessTabBar` 是受控展示组件：它只展示当前 active、刷新态和底栏内容，并派发 `change` / `retap` 事件；路由跳转、业务数据刷新和页面布局由业务项目控制。
 
-## 1. 使用默认底栏
+## 1. 样式导入
+
+从 root 入口 `taro-routerless-tabbar` 导入组件时，默认样式会随 root 入口自动引入。若改用 `taro-routerless-tabbar/vue` 子路径入口，则默认不自动带 CSS，需要在业务入口显式导入：
+
+```ts
+import 'taro-routerless-tabbar/style.css'
+```
+
+只使用 `taro-routerless-tabbar/core` 的 helper-only 场景不需要导入样式。
+
+## 2. 使用默认底栏
 
 ```vue
 <RouterlessTabBar
@@ -51,7 +61,7 @@ export const tabbarItems = [
 }
 ```
 
-## 2. 刷新态图标
+## 3. 刷新态图标
 
 当 `refreshing` 等于某个 Tab key 时，该 Tab 会添加 `routerless-tabbar-item-refreshing` 类。如果同时传入 `refresh-icon`，默认内容会展示旋转刷新图标：
 
@@ -66,7 +76,7 @@ export const tabbarItems = [
 
 刷新态只表示 UI 动画状态。何时开始、停止动画由业务页面通过 `useTabRetapRefreshAnimation` 控制，详见 [retap 刷新指南](./retap-refresh.md)。
 
-## 3. 使用 slot 完全自定义单个 Tab
+## 4. 使用 slot 完全自定义单个 Tab
 
 需要自定义图标结构、文案、徽标或刷新态时，使用 `#item` 插槽接管单个 Tab 的渲染。
 
@@ -97,7 +107,7 @@ slot props：
 | `refreshing` | 当前 Tab 是否处于刷新态                    |
 | `iconPath`   | 已按 active 状态解析后的图标路径，可能为空 |
 
-## 4. 使用 CSS 变量覆盖默认样式
+## 5. 使用 CSS 变量覆盖默认样式
 
 默认底栏样式通过 CSS 变量暴露常用视觉项。建议在全局样式或不带 `scoped` 的页面样式里覆盖：
 

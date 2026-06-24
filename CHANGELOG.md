@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- 新增 `./core` 子路径导出，提供不引入 CSS 的纯 helper 和 retap core 入口。
+- 新增 `./vue` 与 `./style.css` 子路径导出，支持 Vue API/组件和默认样式分开导入。
+
+### Changed
+
+- root 入口继续保持自动引入默认样式；helper-only 使用场景可改用 `./core` 避免 CSS 副作用。
+
 ## 0.2.1
 
 面向文档信息架构的维护版本。

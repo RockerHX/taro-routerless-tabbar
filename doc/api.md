@@ -1,8 +1,19 @@
 # API 文档
 
-本文按当前 root 入口 `taro-routerless-tabbar` 的导出项整理 API。类型以源码声明为准，示例面向 Taro 4 + Vue 3。
+本文按 root 入口和子路径入口整理 API。类型以源码声明为准，示例面向 Taro 4 + Vue 3。
 
 ## 1. 导出总览
+
+### 入口
+
+| 入口                               | 导出范围                       | 样式行为                    |
+| ---------------------------------- | ------------------------------ | --------------------------- |
+| `taro-routerless-tabbar`           | 全部 API，保持兼容             | 自动引入默认 `style.css`    |
+| `taro-routerless-tabbar/core`      | 纯 helper、retap core 和纯类型 | 不引入 CSS，不导出 Vue API  |
+| `taro-routerless-tabbar/vue`       | Vue composable、组件和相关类型 | 不自动引入 CSS              |
+| `taro-routerless-tabbar/style.css` | 默认样式文件                   | 供 `./vue` 入口用户显式导入 |
+
+helper-only 场景应从 `taro-routerless-tabbar/core` 导入，避免 root 入口的默认样式副作用。使用 `taro-routerless-tabbar/vue` 时，如果需要默认底栏样式，请额外导入 `taro-routerless-tabbar/style.css`。
 
 ### 类型
 
