@@ -16,6 +16,8 @@ const expectedSurface = {
     'RouterlessTabBarItem',
     'RouterlessTabPaneHost',
     'RouterlessTabPaneItem',
+    'RouterlessTabs',
+    'RouterlessTabsItem',
     'RouterlessTabQueryValue',
     'StandaloneTabRedirectOptions',
     'StandaloneTabRedirectResult',
@@ -70,6 +72,8 @@ const expectedSurface = {
     'RouterlessTabBarItem',
     'RouterlessTabPaneHost',
     'RouterlessTabPaneItem',
+    'RouterlessTabs',
+    'RouterlessTabsItem',
     'TabClickResult',
     'UseRouterlessTabsOptions',
     'UseRouterlessTabsResult',
@@ -99,6 +103,7 @@ const coreOnlyNames = [
 const vueOnlyNames = [
   'RouterlessTabBar',
   'RouterlessTabPaneHost',
+  'RouterlessTabs',
   'createRetapRefreshContext',
   'useRouterlessTabs',
 ]

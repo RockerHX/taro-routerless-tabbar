@@ -12,6 +12,11 @@ export type RouterlessTabBarItem<Key extends string = string> =
     selectedIconPath?: string
   }
 
+export type RouterlessTabsItem<Key extends string = string> =
+  RouterlessTabBarItem<Key> & {
+    component: import('vue').Component
+  }
+
 export type TabClickResult<Key extends string> =
   | { type: 'change'; key: Key }
   | { type: 'retap'; key: Key }

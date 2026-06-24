@@ -10,7 +10,11 @@
     >
       <template #pane="{ pane, active }">
         <slot name="pane" :pane="pane" :active="active">
-          <component :is="pane.component" embedded :active="active" />
+          <component
+            :is="resolvePaneComponent(pane)"
+            embedded
+            :active="active"
+          />
         </slot>
       </template>
     </RouterlessTabPaneHost>
@@ -33,16 +37,12 @@
 <script setup lang="ts">
 import type { Component, PropType } from 'vue'
 
-import type { RouterlessTabBarItem } from '../types.js'
+import type { RouterlessTabPaneItem, RouterlessTabsItem } from '../types.js'
 import RouterlessTabBar from './RouterlessTabBar.vue'
 import RouterlessTabPaneHost from './RouterlessTabPaneHost.vue'
 import { useRouterlessTabs } from './useRouterlessTabs.js'
 
 type ClassValue = string | string[] | Record<string, boolean>
-type RouterlessTabsItem = RouterlessTabBarItem & {
-  component: Component
-}
-
 const props = defineProps({
   tabs: {
     type: Array as PropType<readonly RouterlessTabsItem[]>,
@@ -88,6 +88,10 @@ const tabsState = useRouterlessTabs({
   defaultKey: props.defaultKey,
   initialKey: props.initialKey || undefined,
 })
+
+function resolvePaneComponent(pane: RouterlessTabPaneItem): Component {
+  return (pane as RouterlessTabsItem).component
+}
 
 function handleChange(key: string) {
   tabsState.activateTab(key)
