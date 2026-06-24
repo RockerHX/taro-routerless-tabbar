@@ -45,6 +45,12 @@ jobs:
       - name: Taro smoke builds
         run: pnpm run test:taro
 
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Taro H5 runtime smoke
+        run: pnpm run test:taro:h5:runtime
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
