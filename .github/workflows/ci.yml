@@ -46,6 +46,9 @@ jobs:
       - name: Pack dry run
         run: pnpm run pack:dry-run
 
+      - name: Package consumer validation
+        run: pnpm run test:package-consumer
+
       - name: Audit
         run: pnpm audit --audit-level moderate
 
