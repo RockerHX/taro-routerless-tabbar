@@ -1,31 +1,33 @@
 # 项目现状分析与后续路线图
 
 生成日期：2026-06-23  
-当前版本：`0.2.0`
+当前版本：`0.2.1`
 
 ## 结论
 
-当前项目没有发现阻塞发布的代码质量问题。本次本地验证通过了 lint、格式检查、类型检查、单元测试、构建、打包预检、依赖审计和 Taro H5 smoke build。
+当前项目没有发现阻塞发布的代码质量问题。本次本地验证通过了 lint、格式检查、类型检查、单元测试、构建、打包预检、依赖审计和 Taro H5 / WeChat 小程序 smoke build。
 
 但项目仍有几个需要处理或跟踪的产品化/DX 问题：
 
 1. `README.md` 已达到 561 行、约 17KB，内容混合了定位说明、完整接入、retap、样式、API 和实现限制，作为首页文档偏重，建议精简并拆分。
 2. 已处理：retap 示例已统一为共享 context，避免使用者复制出不可工作的刷新链路。
 3. 已处理：新增 `./core`、`./vue` 和 `./style.css` 子路径导出，helper-only 使用者可避开默认样式副作用。
-4. 当前多端验证以 H5 smoke 为主，对小程序端、subpackages、自定义页面目录等真实 Taro 场景覆盖还不够。
+4. 已处理：扩展 Taro fixture 覆盖 retap、query、图标和 CSS 变量，并新增 H5 / WeChat 小程序 smoke build；subpackage、自定义页面目录等复杂 resolver 能力留给问题 5。
 
 ## 本次验证结果
 
-| 检查项        | 命令                                | 结果                                           |
-| ------------- | ----------------------------------- | ---------------------------------------------- |
-| ESLint        | `pnpm run lint`                     | 通过                                           |
-| Prettier      | `pnpm run format:check`             | 通过                                           |
-| TypeScript    | `pnpm run typecheck`                | 通过                                           |
-| 单元测试      | `pnpm run test:run`                 | 9 个测试文件、63 个用例通过                    |
-| 库构建        | `pnpm run build`                    | 通过，生成 `dist/index.js` 与 `dist/style.css` |
-| 打包预检      | `pnpm run pack:dry-run`             | 通过，tarball 含 16 个文件                     |
-| 依赖审计      | `pnpm audit --audit-level moderate` | 未发现已知漏洞                                 |
-| Taro H5 smoke | `pnpm run test:taro:h5`             | 通过                                           |
+| 检查项               | 命令                                | 结果                                           |
+| -------------------- | ----------------------------------- | ---------------------------------------------- |
+| ESLint               | `pnpm run lint`                     | 通过                                           |
+| Prettier             | `pnpm run format:check`             | 通过                                           |
+| TypeScript           | `pnpm run typecheck`                | 通过                                           |
+| 单元测试             | `pnpm run test:run`                 | 9 个测试文件、63 个用例通过                    |
+| 库构建               | `pnpm run build`                    | 通过，生成 `dist/index.js` 与 `dist/style.css` |
+| 打包预检             | `pnpm run pack:dry-run`             | 通过，tarball 含 16 个文件                     |
+| 依赖审计             | `pnpm audit --audit-level moderate` | 未发现已知漏洞                                 |
+| Taro H5 smoke        | `pnpm run test:taro:h5`             | 通过                                           |
+| Taro weapp smoke     | `pnpm run test:taro:weapp`          | 通过                                           |
+| Taro multi-end smoke | `pnpm run test:taro`                | 通过                                           |
 
 ## 发布策略备注
 
@@ -118,27 +120,30 @@ import './style.css'
 
 当前 root 入口仍自动引入默认样式；helper-only 使用者可改用 `./core`，组件用户可改用 `./vue` 并按需显式导入 `./style.css`。
 
-### 问题 4：小程序端和复杂 Taro 项目覆盖不足
+### 问题 4：小程序端和复杂 Taro 项目覆盖不足（已处理）
 
 **优先级：中**
 
+**处理状态：已完成（2026-06-24）**
+
 **现象**
 
-当前已有最小 Taro Vue3 H5 fixture，能够证明 H5 构建链路可用；但项目 README 面向“小程序/H5 场景”，还需要更多实际端验证。
+此前已有最小 Taro Vue3 H5 fixture，能够证明 H5 构建链路可用；但项目 README 面向“小程序/H5 场景”，还需要更多实际端验证。
 
-待补覆盖：
+已补覆盖：
 
 - WeChat 小程序构建 smoke。
-- 至少一个包含 retap 刷新链路的示例。
-- subpackage 或非标准 pages 目录结构下的页面模块解析说明。
+- 包含 retap 刷新链路的 fixture 示例。
+- subpackage 或非标准 pages 目录结构下的页面模块解析限制说明。
 - 图标、刷新态、CSS 变量覆盖示例。
 
 **解决方案**
 
-分两步做：
+已完成：
 
-1. 扩展现有 `examples/taro-vue3-basic`，加入 retap、初始 query、样式覆盖。
-2. 新增 weapp smoke 脚本，例如 `test:taro:weapp`，并视依赖体积决定是否纳入默认 CI。
+1. 扩展现有 `examples/taro-vue3-basic`，加入 retap、初始 query、样式覆盖和本地图标。
+2. 新增 `test:taro:weapp` 与 `test:taro`，并将 H5 + weapp smoke 纳入 CI。
+3. 新增 `doc/compatibility.md`，说明 H5 / WeChat 小程序 smoke 覆盖、routerless tab 与原生 `tabBar` 生命周期关系，以及复杂页面结构限制。
 
 ### 问题 5：`resolveTabPageModuleKey` 对目录结构假设较强
 
@@ -275,18 +280,18 @@ return result
 
 ### 0.4.0：多端验证与示例增强
 
-- [ ] 扩展 Taro fixture，覆盖 retap、query 初始化、样式覆盖和 icon。
-- [ ] 增加 WeChat 小程序 smoke build。
-- [ ] 梳理 H5/小程序差异，形成兼容性矩阵。
-- [ ] 补充 subpackage 或复杂页面结构的示例/限制说明。
+- [x] 扩展 Taro fixture，覆盖 retap、query 初始化、样式覆盖和 icon。
+- [x] 增加 WeChat 小程序 smoke build。
+- [x] 梳理 H5/小程序差异，形成兼容性矩阵。
+- [x] 补充 subpackage 或复杂页面结构的示例/限制说明。
 
 ### 1.0.0：稳定版条件
 
 - [ ] API 命名和导出结构冻结。
 - [ ] README 与 doc 文档完成拆分且无重复过期示例。
-- [ ] H5 + 至少一个主流小程序端 smoke build 稳定。
+- [x] H5 + 至少一个主流小程序端 smoke build 稳定。
 - [ ] npm 发布流程可重复，构建产物与 tarball 内容有自动检查。
-- [ ] CHANGELOG、兼容性说明、已知限制齐全。
+- [x] CHANGELOG、兼容性说明、已知限制齐全。
 
 ## 推荐下一步
 
