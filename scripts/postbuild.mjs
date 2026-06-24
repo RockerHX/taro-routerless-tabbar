@@ -5,7 +5,10 @@ import { fileURLToPath } from 'node:url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const distDir = path.resolve(__dirname, '../dist')
 const indexFile = path.join(distDir, 'index.js')
-const styleFreeEntryFiles = [path.join(distDir, 'core.js')]
+const styleFreeEntryFiles = [
+  path.join(distDir, 'core.js'),
+  path.join(distDir, 'vue.js'),
+]
 const styleFile = path.join(distDir, 'style.css')
 const styleImport = 'import "./style.css";\n'
 

@@ -25,7 +25,12 @@
     "./core": {
       "types": "./dist/core.d.ts",
       "import": "./dist/core.js"
-    }
+    },
+    "./vue": {
+      "types": "./dist/vue.d.ts",
+      "import": "./dist/vue.js"
+    },
+    "./style.css": "./dist/style.css"
   },
   "scripts": {
     "build": "pnpm run build:clean && pnpm run build:types && pnpm run build:lib && pnpm run build:postprocess",

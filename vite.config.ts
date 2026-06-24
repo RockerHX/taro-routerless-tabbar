@@ -7,6 +7,7 @@ const taroTemplateTags = new Set(['view', 'image', 'text'])
 const libEntries = {
   index: path.resolve(__dirname, 'src/index.ts'),
   core: path.resolve(__dirname, 'src/core.ts'),
+  vue: path.resolve(__dirname, 'src/vue.ts'),
 }
 
 export default defineConfig({
