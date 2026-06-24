@@ -31,6 +31,27 @@
           <text class="fixture-pane-meta" :data-testid="`pane-retap-${pane.key}`">
             retap refresh count: {{ refreshCounts[pane.key] }}
           </text>
+          <text class="fixture-pane-meta" :data-testid="`pane-state-${pane.key}`">
+            pane local state: {{ paneLocalCounts[pane.key] }}
+          </text>
+          <view
+            class="fixture-pane-state-action"
+            :data-testid="`pane-state-action-${pane.key}`"
+            @click="incrementPaneState(pane.key)"
+          >
+            <text>增加 {{ pane.text }} 本地状态</text>
+          </view>
+          <view class="fixture-card-list" :data-testid="`card-list-${pane.key}`">
+            <view
+              v-for="card in fixtureCards[pane.key]"
+              :key="card.id"
+              class="fixture-card"
+              :data-testid="`card-${pane.key}-${card.id}`"
+            >
+              <text class="fixture-card-title">{{ card.title }}</text>
+              <text class="fixture-card-desc">{{ card.desc }}</text>
+            </view>
+          </view>
         </view>
       </template>
     </RouterlessTabPaneHost>
@@ -105,11 +126,39 @@ const refreshCounts = reactive<Record<TabKey, number>>({
   orders: 0,
   profile: 0,
 })
+const paneLocalCounts = reactive<Record<TabKey, number>>({
+  home: 0,
+  orders: 0,
+  profile: 0,
+})
 const refreshAnimations = {
   home: useFixtureRetapRefreshAnimation('home'),
   orders: useFixtureRetapRefreshAnimation('orders'),
   profile: useFixtureRetapRefreshAnimation('profile'),
 } satisfies Record<TabKey, ReturnType<typeof useFixtureRetapRefreshAnimation>>
+const fixtureCards = {
+  home: Array.from({ length: 18 }, function createHomeCard(_, index) {
+    return {
+      id: index + 1,
+      title: `首页推荐卡片 ${index + 1}`,
+      desc: '用于验证长列表底部 padding 与 Tab 切换后的滚动内容保留。',
+    }
+  }),
+  orders: Array.from({ length: 8 }, function createOrderCard(_, index) {
+    return {
+      id: index + 1,
+      title: `订单状态 ${index + 1}`,
+      desc: '用于模拟真实订单列表、筛选条件和切换后的页面状态。',
+    }
+  }),
+  profile: Array.from({ length: 6 }, function createProfileCard(_, index) {
+    return {
+      id: index + 1,
+      title: `个人中心入口 ${index + 1}`,
+      desc: '用于展示 profile Tab 中的卡片式业务入口。',
+    }
+  }),
+} satisfies Record<TabKey, Array<{ id: number; title: string; desc: string }>>
 const stopWatchingRefreshAnimation = fixtureRetap.subscribeRefreshAnimation(
   (tab) => {
     refreshingTab.value = tab
@@ -162,6 +211,10 @@ function handleChange(key: TabKey) {
 
 async function handleRetap(key: TabKey) {
   await fixtureRetap.runRefresh(key)
+}
+
+function incrementPaneState(key: TabKey) {
+  paneLocalCounts[key] += 1
 }
 
 useLoad((query: Record<string, string | undefined>) => {
@@ -245,6 +298,44 @@ onUnmounted(() => {
 .fixture-pane-meta {
   color: #4e5969;
   font-size: 22px;
+  line-height: 1.5;
+}
+
+.fixture-pane-state-action {
+  display: inline-flex;
+  margin-top: 16px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #fff1f0;
+  color: #f75d5b;
+  font-size: 22px;
+}
+
+.fixture-card-list {
+  padding-bottom: calc(var(--routerless-tabbar-height) + 32px);
+}
+
+.fixture-card {
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f7f8fa;
+}
+
+.fixture-card-title,
+.fixture-card-desc {
+  display: block;
+}
+
+.fixture-card-title {
+  color: #1f2329;
+  font-size: 24px;
+}
+
+.fixture-card-desc {
+  margin-top: 8px;
+  color: #86909c;
+  font-size: 20px;
   line-height: 1.5;
 }
 
