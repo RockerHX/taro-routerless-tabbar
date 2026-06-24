@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 0.3.2
+
+面向 0.3.x 剩余调试、样式边界和发布预检能力的收敛版本。
+
+### Added
+
+- retap core/context 新增 `hasRefreshHandler` 和 `isRefreshRunning`，便于判断刷新 handler 注册状态和执行状态。
+- `RouterlessTabPaneHost` 新增 `hostClass`、`paneClass` 和 `hiddenClass`，支持在保留默认 class 的同时追加业务 class。
+- 新增 `release:check` 发布预检脚本，校验版本号、CHANGELOG 和发布文件清单，并复用 `prepublishOnly`。
+
+### Docs
+
+- 补充 retap 刷新链路调试说明，区分未注册、执行中和 handler 抛错等场景。
+- 补充 PaneHost class 定制和端侧布局检查清单，覆盖安全区、内容区 padding、滚动容器和重型原生组件。
+
+### Changed
+
+- release workflow 改为复用 `pnpm run release:check`，减少本地和 CI 发布门禁漂移。
+
 ## 0.3.1
 
 面向消费侧稳定性和独立页接入样板的功能版本。
