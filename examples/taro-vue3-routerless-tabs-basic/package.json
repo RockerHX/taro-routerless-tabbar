@@ -1,0 +1,32 @@
+{
+  "name": "taro-routerless-tabbar-taro-vue3-routerless-tabs-basic",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev:h5": "taro build --type h5 --watch --port 10086",
+    "dev:weapp": "taro build --type weapp --watch",
+    "dev:alipay": "taro build --type alipay --watch",
+    "build:h5": "taro build --type h5",
+    "build:weapp": "taro build --type weapp",
+    "build:alipay": "taro build --type alipay"
+  },
+  "dependencies": {
+    "@tarojs/components": "4.2.0",
+    "@tarojs/helper": "4.2.0",
+    "@tarojs/plugin-framework-vue3": "4.2.0",
+    "@tarojs/plugin-platform-alipay": "4.2.0",
+    "@tarojs/plugin-platform-h5": "4.2.0",
+    "@tarojs/plugin-platform-weapp": "4.2.0",
+    "@tarojs/runtime": "4.2.0",
+    "@tarojs/shared": "4.2.0",
+    "@tarojs/taro": "4.2.0",
+    "taro-routerless-tabbar": "file:../..",
+    "vue": "^3.5.38"
+  },
+  "devDependencies": {
+    "@tarojs/cli": "4.2.0",
+    "@tarojs/vite-runner": "4.2.0",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "typescript": "^5.9.3"
+  }
+}
