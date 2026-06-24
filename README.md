@@ -122,6 +122,7 @@ const handleTabRetap = (tab: TabKey) => {
 - [完整接入指南](doc/integration-guide.md)：`config/tabbar.ts`、main 容器、页面模块解析、独立页 redirect。
 - [retap 刷新指南](doc/retap-refresh.md)：共享 context、并发刷新、错误处理、动画状态。
 - [样式自定义指南](doc/styling.md)：默认样式、`#item` slot、CSS 变量。
+- [多端兼容性说明](doc/compatibility.md)：H5 / WeChat 小程序 smoke、复杂页面结构限制。
 - [API 文档](doc/api.md)：完整导出、类型、返回值和边界行为。
 
 ## 常用 API
@@ -139,7 +140,7 @@ const handleTabRetap = (tab: TabKey) => {
 
 - 当前版本：`0.2.1`。
 - 目标技术栈：Taro 4、Vue 3、Vite、小程序/H5。
-- 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、Taro H5 smoke build。
+- 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、Taro H5 / WeChat 小程序 smoke build。
 - 非目标：不替代 Pinia、Vue Router 或 Taro navigation；暂不承诺 React 支持；暂不承诺所有 Taro 运行端表现完全一致。
 
 源码仓库：https://github.com/RockerHX/taro-routerless-tabbar

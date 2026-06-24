@@ -15,6 +15,7 @@
     "doc/integration-guide.md",
     "doc/retap-refresh.md",
     "doc/styling.md",
+    "doc/compatibility.md",
     "doc/api.md"
   ],
   "exports": {
