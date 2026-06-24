@@ -54,7 +54,9 @@
     "test:taro:prepare": "pnpm run build && pnpm --dir examples/taro-vue3-basic install --frozen-lockfile",
     "test:taro:weapp": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:weapp",
     "test:taro": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5 && pnpm --dir examples/taro-vue3-basic run build:weapp",
-    "test:taro:h5:runtime": "node ./scripts/test-taro-h5-runtime.mjs"
+    "test:taro:h5:runtime": "node ./scripts/test-taro-h5-runtime.mjs",
+    "test:taro:alipay": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:alipay",
+    "test:taro:extended": "pnpm run test:taro:alipay"
   },
   "peerDependencies": {
     "@tarojs/components": ">=4 <5",

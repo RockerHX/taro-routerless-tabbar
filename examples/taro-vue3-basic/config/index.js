@@ -1,3 +1,17 @@
+function createAlipayBrowserslistAssetPlugin() {
+  return {
+    name: 'fixture-alipay-browserslist-asset',
+    apply: 'build',
+    buildStart() {
+      this.emitFile({
+        type: 'asset',
+        fileName: '.browserslistrc',
+        source: 'defaults and fully supports es6-module',
+      })
+    },
+  }
+}
+
 const config = {
   projectName: 'taro-routerless-tabbar-fixture',
   date: '2026-06-23',
@@ -12,6 +26,10 @@ const config = {
   framework: 'vue3',
   compiler: {
     type: 'vite',
+    vitePlugins:
+      process.env.TARO_ENV === 'alipay'
+        ? [createAlipayBrowserslistAssetPlugin()]
+        : [],
   },
   h5: {
     publicPath: '/',
