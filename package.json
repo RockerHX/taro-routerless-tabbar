@@ -46,7 +46,10 @@
     "test:run": "vitest run -c vitest.config.ts",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "prepare": "husky",
-    "test:taro:h5": "pnpm run build && pnpm --dir examples/taro-vue3-basic install --frozen-lockfile && pnpm --dir examples/taro-vue3-basic run build:h5"
+    "test:taro:h5": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5",
+    "test:taro:prepare": "pnpm run build && pnpm --dir examples/taro-vue3-basic install --frozen-lockfile",
+    "test:taro:weapp": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:weapp",
+    "test:taro": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5 && pnpm --dir examples/taro-vue3-basic run build:weapp"
   },
   "peerDependencies": {
     "@tarojs/components": ">=4 <5",
