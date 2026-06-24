@@ -37,6 +37,14 @@ export function createRetapRefreshCore<Key extends string>(
     return refreshHandlers.get(key)
   }
 
+  function hasRefreshHandler(key: Key) {
+    return refreshHandlers.has(key)
+  }
+
+  function isRefreshRunning(key: Key) {
+    return runningKeys.has(key)
+  }
+
   async function runRefresh(key: Key) {
     if (runningKeys.has(key)) {
       return false
@@ -103,6 +111,8 @@ export function createRetapRefreshCore<Key extends string>(
     registerRefreshHandler,
     unregisterRefreshHandler,
     getRefreshHandler,
+    hasRefreshHandler,
+    isRefreshRunning,
     runRefresh,
     getAnimatingKey,
     startRefreshAnimation,

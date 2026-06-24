@@ -8,10 +8,13 @@ describe('createRetapRefreshCore registry and runner', function () {
   it('注册后可按 key 取到 handler，并可注销', function () {
     const core = createRetapRefreshCore<'recommend' | 'orders' | 'profile'>()
     const handler = vi.fn()
+    expect(core.hasRefreshHandler('recommend')).toBe(false)
     core.registerRefreshHandler('recommend', handler)
     expect(core.getRefreshHandler('recommend')).toBe(handler)
+    expect(core.hasRefreshHandler('recommend')).toBe(true)
     core.unregisterRefreshHandler('recommend', handler)
     expect(core.getRefreshHandler('recommend')).toBeUndefined()
+    expect(core.hasRefreshHandler('recommend')).toBe(false)
   })
   it('同一 key 重复注册时后注册 handler 覆盖先注册 handler', async function () {
     const core = createRetapRefreshCore<'recommend'>()
@@ -24,9 +27,12 @@ describe('createRetapRefreshCore registry and runner', function () {
     expect(firstHandler).not.toHaveBeenCalled()
     expect(secondHandler).toHaveBeenCalledTimes(1)
   })
-  it('未注册 key 上 runRefresh 返回 false', async function () {
+  it('未注册 key 上 runRefresh 返回 false，且状态查询为 false', async function () {
     const core = createRetapRefreshCore<'recommend' | 'orders'>()
+    expect(core.hasRefreshHandler('orders')).toBe(false)
+    expect(core.isRefreshRunning('orders')).toBe(false)
     await expect(core.runRefresh('orders')).resolves.toBe(false)
+    expect(core.isRefreshRunning('orders')).toBe(false)
   })
   it('已注册 key 上 runRefresh 返回 true', async function () {
     const core = createRetapRefreshCore<'recommend' | 'orders'>()
@@ -44,19 +50,25 @@ describe('createRetapRefreshCore registry and runner', function () {
       })
     })
     core.registerRefreshHandler('profile', handler)
+    expect(core.isRefreshRunning('profile')).toBe(false)
     const firstRun = core.runRefresh('profile')
     await Promise.resolve()
+    expect(core.isRefreshRunning('profile')).toBe(true)
     await expect(core.runRefresh('profile')).resolves.toBe(false)
+    expect(core.isRefreshRunning('profile')).toBe(true)
     expect(handler).toHaveBeenCalledTimes(1)
     resolveRefresh?.()
     await firstRun
+    expect(core.isRefreshRunning('profile')).toBe(false)
   })
   it('handler 抛错后会释放当前 key 的执行态', async function () {
     const core = createRetapRefreshCore<'recommend'>()
     const handler = vi.fn().mockRejectedValue(new Error('boom'))
     core.registerRefreshHandler('recommend', handler)
     await expect(core.runRefresh('recommend')).resolves.toBe(true)
+    expect(core.isRefreshRunning('recommend')).toBe(false)
     await expect(core.runRefresh('recommend')).resolves.toBe(true)
+    expect(core.isRefreshRunning('recommend')).toBe(false)
     expect(handler).toHaveBeenCalledTimes(2)
   })
   it('onError 会在 handler 抛错时被调用一次', async function () {
