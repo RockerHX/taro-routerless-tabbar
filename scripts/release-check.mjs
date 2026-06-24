@@ -45,6 +45,11 @@ requiredFiles.forEach(function assertRequiredPackageFile(file) {
   )
 })
 
+execFileSync('pnpm', ['run', 'api:check'], {
+  cwd: rootDir,
+  stdio: 'inherit',
+})
+
 execFileSync('pnpm', ['run', 'prepublishOnly'], {
   cwd: rootDir,
   stdio: 'inherit',

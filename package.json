@@ -35,6 +35,7 @@
     "./style.css": "./dist/style.css"
   },
   "scripts": {
+    "api:check": "node ./scripts/check-api-surface.mjs",
     "build": "pnpm run build:clean && pnpm run build:types && pnpm run build:lib && pnpm run build:postprocess",
     "build:clean": "node ./scripts/clean-dist.mjs",
     "build:lib": "vite build -c vite.config.ts",
