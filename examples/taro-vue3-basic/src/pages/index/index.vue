@@ -54,6 +54,13 @@
           >
             <text>模拟下一次 {{ pane.text }} 刷新失败</text>
           </view>
+          <view
+            class="fixture-detail-action"
+            :data-testid="`pane-detail-action-${pane.key}`"
+            @click="openFixtureDetail(pane.key)"
+          >
+            <text>进入 {{ pane.text }} 详情页再返回</text>
+          </view>
           <view class="fixture-card-list" :data-testid="`card-list-${pane.key}`">
             <view
               v-for="card in fixtureCards[pane.key]"
@@ -107,12 +114,12 @@
 </template>
 
 <script setup lang="ts">
-import { useLoad } from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
 import {
   RouterlessTabBar,
   RouterlessTabPaneHost,
-  buildRouterlessTabUrl,
   normalizeTabKey,
+  resolveStandaloneTabRedirect,
   useRouterlessTabs,
 } from 'taro-routerless-tabbar'
 import { computed, onUnmounted, reactive, ref } from 'vue'
@@ -188,14 +195,23 @@ const stopWatchingRefreshAnimation = fixtureRetap.subscribeRefreshAnimation(
   },
 )
 const previewUrl = computed(function getPreviewUrl() {
-  return buildRouterlessTabUrl({
+  const redirect = resolveStandaloneTabRedirect({
     mainPagePath: '/pages/index/index?from=fixture#top',
-    tabKey: 'profile',
-    query: {
-      from: 'smoke',
+    tabKey: 'home',
+    currentQuery: {
+      campaign: 'summer',
+      embedded: '0',
+      from: 'share-card',
       lastRetap: lastRetapTab.value || undefined,
+      tab: 'legacy',
     },
   })
+
+  if (!redirect.shouldRedirect) {
+    return 'embedded=true 时不需要 redirect'
+  }
+
+  return redirect.url
 })
 const activeTitle = computed(function getActiveTitle() {
   return `当前 Tab：${tabs.activeTab.value?.text ?? ''}`
@@ -264,6 +280,12 @@ function incrementPaneState(key: TabKey) {
 function markNextRefreshFailed(key: TabKey) {
   failNextRefresh[key] = true
   refreshStatus[key] = 'will-fail'
+}
+
+function openFixtureDetail(key: TabKey) {
+  void Taro.navigateTo({
+    url: `/pages/detail/index?tab=${key}&from=fixture-detail&embedded=true`,
+  })
 }
 
 useLoad((query: Record<string, string | undefined>) => {
@@ -351,7 +373,8 @@ onUnmounted(() => {
 }
 
 .fixture-pane-state-action,
-.fixture-pane-fail-action {
+.fixture-pane-fail-action,
+.fixture-detail-action {
   display: inline-flex;
   margin-top: 16px;
   margin-right: 12px;
@@ -365,6 +388,11 @@ onUnmounted(() => {
 .fixture-pane-fail-action {
   background: #fff7e6;
   color: #d46b08;
+}
+
+.fixture-detail-action {
+  background: #e6f4ff;
+  color: #1677ff;
 }
 
 .fixture-card-list {
