@@ -2,6 +2,12 @@
 
 `retap` 指用户再次点击当前激活 Tab。`taro-routerless-tabbar` 只负责识别 retap、维护刷新 handler 注册表和刷新动画 key；真正的数据刷新、错误提示和动画时机由业务页面决定。
 
+可复制的接入链路只有三步：
+
+1. 在 `pages/main/retap-refresh.ts` 创建并导出唯一的共享单例。
+2. main 容器导入同一个 `tabRetap`，在 `retap` 事件里调用 `tabRetap.runRefresh(tab)`。
+3. 所有 Tab 页面都从同一个文件导入 `useTabRetapRefresh` / `useTabRetapRefreshAnimation` 注册刷新逻辑。
+
 ## 1. 创建共享 context
 
 必须让 main 容器和所有 Tab 页面共享同一个 context。推荐放在 main 页面目录旁边：
@@ -26,7 +32,7 @@ export const useTabRetapRefreshAnimation = tabRetap.useRetapRefreshAnimation
 
 ## 2. main 容器派发 retap
 
-main 容器监听默认底栏的 `retap` 事件，并调用共享 context 的 `runRefresh`。
+main 容器监听默认底栏的 `retap` 事件，并调用共享 `tabRetap` 的 `runRefresh`。
 
 ```vue
 <!-- pages/main/index.vue 片段 -->
@@ -70,7 +76,7 @@ onUnmounted(() => {
 
 ## 3. Tab 页面注册刷新 handler
 
-Tab 页面通过共享的 `useTabRetapRefresh` 注册刷新 handler。建议用 `embedded` 控制注册状态，避免独立页面重定向过程中的临时实例注册刷新逻辑。
+Tab 页面通过共享文件导出的 `useTabRetapRefresh` 注册刷新 handler。建议用 `embedded` 控制注册状态，避免独立页面重定向过程中的临时实例注册刷新逻辑。
 
 ```vue
 <!-- pages/home/index.vue -->
