@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 0.2.3
+
+面向页面模块解析、组件事件类型和内部性能细节的维护版本。
+
+### Added
+
+- 新增 `createTabPageModuleResolver`，支持通过 `pageRoot`、`modulePrefix` 和 `extension` 配置页面模块 key 解析。
+
+### Changed
+
+- `resolveTabPageModuleKey` 保持兼容旧行为，并复用默认页面模块 resolver。
+- `RouterlessTabBar` 的 `change` / `retap` 事件声明参数从 `any[]` 收敛为 `string`。
+- `createVisitedTabRecord` 改为原地赋值创建 visited 记录，避免 reduce 中每轮展开对象。
+- 更新页面模块解析文档，补充复杂项目可直接声明 `moduleKey` 的接入方式。
+
 ## 0.2.2
 
 面向导出结构、多端 smoke 和兼容性说明的维护版本。

@@ -138,7 +138,7 @@ const handleTabRetap = (tab: TabKey) => {
 
 ## 兼容性与当前状态
 
-- 当前版本：`0.2.1`。
+- 当前版本：`0.2.3`。
 - 目标技术栈：Taro 4、Vue 3、Vite、小程序/H5。
 - 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、Taro H5 / WeChat 小程序 smoke build。
 - 非目标：不替代 Pinia、Vue Router 或 Taro navigation；暂不承诺 React 支持；暂不承诺所有 Taro 运行端表现完全一致。
