@@ -44,6 +44,7 @@
     "pack:dry-run": "npm pack --dry-run",
     "prepack": "pnpm run build",
     "prepublishOnly": "pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run test:run && pnpm run test:package-consumer && pnpm run pack:dry-run",
+    "release:check": "node ./scripts/release-check.mjs",
     "test:run": "vitest run -c vitest.config.ts",
     "test:package-consumer": "node ./scripts/test-package-consumer.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
