@@ -10,6 +10,19 @@ export interface TabPageModuleResolver {
   (pagePath: string): string
 }
 
+export type StandaloneTabRedirectOptions<Key extends string> = {
+  mainPagePath: string
+  tabKey: Key
+  embedded?: boolean
+  currentQuery?: Record<string, RouterlessTabQueryValue>
+  queryKey?: string
+  embeddedQueryKey?: string
+}
+
+export type StandaloneTabRedirectResult =
+  | { shouldRedirect: false; url: '' }
+  | { shouldRedirect: true; url: string }
+
 export function buildRouterlessTabUrl<Key extends string>(options: {
   mainPagePath: string
   tabKey: Key
@@ -57,6 +70,53 @@ export function buildRouterlessTabUrl<Key extends string>(options: {
   })
 
   return `${path}?${params.toString()}${hash}`
+}
+
+export function resolveStandaloneTabRedirect<Key extends string>(
+  options: StandaloneTabRedirectOptions<Key>,
+): StandaloneTabRedirectResult {
+  const {
+    currentQuery,
+    embedded,
+    embeddedQueryKey = 'embedded',
+    mainPagePath,
+    queryKey = 'tab',
+    tabKey,
+  } = options
+  const embeddedValue = currentQuery?.[embeddedQueryKey]
+  const isEmbedded =
+    embedded === true ||
+    (embedded === undefined &&
+      (embeddedValue === true ||
+        embeddedValue === 'true' ||
+        embeddedValue === '1'))
+
+  if (isEmbedded) {
+    return {
+      shouldRedirect: false,
+      url: '',
+    }
+  }
+
+  const query = {} as Record<string, RouterlessTabQueryValue>
+
+  Object.entries(currentQuery ?? {}).forEach(
+    function appendStandaloneQueryEntry([key, value]) {
+      if (key !== embeddedQueryKey) {
+        query[key] = value
+      }
+    },
+  )
+
+  return {
+    shouldRedirect: true,
+    url: buildRouterlessTabUrl({
+      mainPagePath,
+      tabKey,
+      queryKey,
+      query,
+    }),
+  }
 }
 
 export function createTabPageModuleResolver(

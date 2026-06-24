@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildRouterlessTabUrl,
   createTabPageModuleResolver,
+  resolveStandaloneTabRedirect,
   resolveTabPageModuleKey,
 } from './routes.js'
 describe('routerless route helpers', function () {
@@ -78,6 +79,91 @@ describe('routerless route helpers', function () {
         },
       }),
     ).toBe('/pages/main/index?tab=profile&from=push#profile')
+  })
+  it('embedded=true 时不生成独立页重定向 URL', function () {
+    expect(
+      resolveStandaloneTabRedirect({
+        mainPagePath: '/pages/main/index',
+        tabKey: 'home',
+        embedded: true,
+      }),
+    ).toEqual({
+      shouldRedirect: false,
+      url: '',
+    })
+  })
+  it('query 中 embedded=true 或 embedded=1 时不生成独立页重定向 URL', function () {
+    expect(
+      resolveStandaloneTabRedirect({
+        mainPagePath: '/pages/main/index',
+        tabKey: 'home',
+        currentQuery: {
+          embedded: 'true',
+        },
+      }),
+    ).toEqual({
+      shouldRedirect: false,
+      url: '',
+    })
+    expect(
+      resolveStandaloneTabRedirect({
+        mainPagePath: '/pages/main/index',
+        tabKey: 'orders',
+        currentQuery: {
+          embedded: '1',
+        },
+      }),
+    ).toEqual({
+      shouldRedirect: false,
+      url: '',
+    })
+  })
+  it('独立打开时生成 main 容器重定向 URL', function () {
+    expect(
+      resolveStandaloneTabRedirect({
+        mainPagePath: '/pages/main/index',
+        tabKey: 'profile',
+      }),
+    ).toEqual({
+      shouldRedirect: true,
+      url: '/pages/main/index?tab=profile',
+    })
+  })
+  it('生成重定向 URL 时保留普通 query、过滤 embedded 并覆盖旧 tab', function () {
+    expect(
+      resolveStandaloneTabRedirect({
+        mainPagePath: '/pages/main/index?from=main&tab=home',
+        tabKey: 'orders',
+        currentQuery: {
+          embedded: false,
+          from: 'share',
+          tab: 'profile',
+          source: 'push',
+          empty: undefined,
+        },
+      }),
+    ).toEqual({
+      shouldRedirect: true,
+      url: '/pages/main/index?tab=orders&from=share&source=push',
+    })
+  })
+  it('生成重定向 URL 时支持自定义 queryKey 和 embeddedQueryKey', function () {
+    expect(
+      resolveStandaloneTabRedirect({
+        mainPagePath: '/pages/main/index?active=home&from=main',
+        tabKey: 'profile',
+        queryKey: 'active',
+        embeddedQueryKey: 'inTab',
+        currentQuery: {
+          active: 'orders',
+          from: 'share',
+          inTab: false,
+        },
+      }),
+    ).toEqual({
+      shouldRedirect: true,
+      url: '/pages/main/index?active=profile&from=share',
+    })
   })
   it('把 pagePath 转成 main 页面可用模块 key', function () {
     expect(resolveTabPageModuleKey('/pages/orders/index')).toBe(
