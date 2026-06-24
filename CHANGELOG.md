@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 1.0.0
+
+### Added
+
+- 新增 API surface 检查脚本，并接入 `release:check`，用于冻结 1.0.0 稳定导出结构。
+- 新增发布流程文档，明确发布前门禁、版本清单、tag 和常见失败排查。
+
+### Docs
+
+- 明确 root、`./core`、`./vue` 和 `./style.css` 的稳定 API / exports 承诺。
+- 补齐组件 props、事件、slot 参数和非公开范围说明。
+- 记录 WeChat 开发者工具尝试结果、Alipay experimental 验证边界和文档一致性收敛。
+
+### Changed
+
+- 将版本推进到 1.0.0，作为当前 Taro 4 + Vue 3 + Vite routerless tabbar 能力的稳定版承诺。
+
 ## 0.4.0
 
 ### Added
