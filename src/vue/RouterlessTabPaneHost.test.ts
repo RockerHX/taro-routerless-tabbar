@@ -77,6 +77,40 @@ describe('RouterlessTabPaneHost', function () {
     expect(panes[0]?.classes()).toContain('routerless-tab-pane-hidden')
     expect(panes[1]?.classes()).not.toContain('routerless-tab-pane-hidden')
   })
+  it('支持追加 host、pane 和 hidden class，且保留默认 class', function () {
+    const wrapper = mount(RouterlessTabPaneHost, {
+      props: {
+        items,
+        active: 'orders',
+        visited: ['recommend', 'orders'],
+        hostClass: 'custom-host',
+        paneClass: ['custom-pane', 'custom-pane-extra'],
+        hiddenClass: {
+          'custom-hidden': true,
+          'custom-hidden-disabled': false,
+        },
+      },
+      slots: {
+        pane: function ({ pane }) {
+          return h('div', (pane as (typeof items)[number]).text)
+        },
+      },
+    })
+    const host = wrapper.find('.routerless-tab-pane-host')
+    const panes = wrapper.findAll('.routerless-tab-pane')
+
+    expect(host.classes()).toContain('custom-host')
+    expect(panes[0]?.classes()).toContain('routerless-tab-pane')
+    expect(panes[0]?.classes()).toContain('custom-pane')
+    expect(panes[0]?.classes()).toContain('custom-pane-extra')
+    expect(panes[0]?.classes()).toContain('routerless-tab-pane-hidden')
+    expect(panes[0]?.classes()).toContain('custom-hidden')
+    expect(panes[0]?.classes()).not.toContain('custom-hidden-disabled')
+    expect(panes[1]?.classes()).toContain('routerless-tab-pane')
+    expect(panes[1]?.classes()).toContain('custom-pane')
+    expect(panes[1]?.classes()).not.toContain('routerless-tab-pane-hidden')
+    expect(panes[1]?.classes()).not.toContain('custom-hidden')
+  })
   it('slot 能收到完整 pane 数据', function () {
     const received: Array<(typeof items)[number]> = []
     mount(RouterlessTabPaneHost, {

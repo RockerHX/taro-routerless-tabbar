@@ -1,11 +1,13 @@
 <template>
-  <view class="routerless-tab-pane-host">
+  <view :class="['routerless-tab-pane-host', hostClass]">
     <view
       v-for="pane in visitedItems"
       :key="pane.key"
       :class="[
         'routerless-tab-pane',
+        paneClass,
         pane.key === active ? '' : 'routerless-tab-pane-hidden',
+        pane.key === active ? '' : hiddenClass,
       ]"
     >
       <slot name="pane" :pane="pane" :active="pane.key === active" />
@@ -19,6 +21,8 @@ import type { PropType } from 'vue'
 
 import type { RouterlessTabPaneItem } from '../types.js'
 
+type ClassValue = string | string[] | Record<string, boolean>
+
 const props = defineProps({
   items: {
     type: Array as PropType<readonly RouterlessTabPaneItem[]>,
@@ -31,6 +35,18 @@ const props = defineProps({
   visited: {
     type: Array as PropType<readonly string[]>,
     required: true,
+  },
+  hostClass: {
+    type: [String, Array, Object] as PropType<ClassValue>,
+    default: '',
+  },
+  paneClass: {
+    type: [String, Array, Object] as PropType<ClassValue>,
+    default: '',
+  },
+  hiddenClass: {
+    type: [String, Array, Object] as PropType<ClassValue>,
+    default: '',
   },
 })
 
