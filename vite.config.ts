@@ -4,6 +4,10 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
 const taroTemplateTags = new Set(['view', 'image', 'text'])
+const libEntries = {
+  index: path.resolve(__dirname, 'src/index.ts'),
+  core: path.resolve(__dirname, 'src/core.ts'),
+}
 
 export default defineConfig({
   plugins: [
@@ -21,10 +25,10 @@ export default defineConfig({
     copyPublicDir: false,
     emptyOutDir: false,
     lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
+      entry: libEntries,
       cssFileName: 'style',
-      fileName() {
-        return 'index.js'
+      fileName(_format, entryName) {
+        return `${entryName}.js`
       },
       formats: ['es'],
     },
