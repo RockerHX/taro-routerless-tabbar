@@ -12,7 +12,8 @@
 1. `README.md` 已达到 561 行、约 17KB，内容混合了定位说明、完整接入、retap、样式、API 和实现限制，作为首页文档偏重，建议精简并拆分。
 2. 已处理：retap 示例已统一为共享 context，避免使用者复制出不可工作的刷新链路。
 3. 已处理：新增 `./core`、`./vue` 和 `./style.css` 子路径导出，helper-only 使用者可避开默认样式副作用。
-4. 已处理：扩展 Taro fixture 覆盖 retap、query、图标和 CSS 变量，并新增 H5 / WeChat 小程序 smoke build；subpackage、自定义页面目录等复杂 resolver 能力留给问题 5。
+4. 已处理：扩展 Taro fixture 覆盖 retap、query、图标和 CSS 变量，并新增 H5 / WeChat 小程序 smoke build。
+5. 已处理：新增 `createTabPageModuleResolver`，并在文档中说明复杂项目可直接声明 `moduleKey`。
 
 ## 本次验证结果
 
@@ -145,9 +146,11 @@ import './style.css'
 2. 新增 `test:taro:weapp` 与 `test:taro`，并将 H5 + weapp smoke 纳入 CI。
 3. 新增 `doc/compatibility.md`，说明 H5 / WeChat 小程序 smoke 覆盖、routerless tab 与原生 `tabBar` 生命周期关系，以及复杂页面结构限制。
 
-### 问题 5：`resolveTabPageModuleKey` 对目录结构假设较强
+### 问题 5：`resolveTabPageModuleKey` 对目录结构假设较强（已处理）
 
 **优先级：中**
+
+**处理状态：已完成（2026-06-24）**
 
 **现象**
 
@@ -155,19 +158,20 @@ import './style.css'
 
 **解决方案**
 
-短期：在 README/API 文档中明确限制，并告诉用户复杂项目可以自行实现 resolver。
+已完成：
 
-中期：新增可配置 resolver，例如：
+1. 保留 `resolveTabPageModuleKey(pagePath)` 作为默认 resolver 的兼容快捷方法，继续支持 `/pages/...` 或 `pages/...` 转成 `../xxx/index.vue`。
+2. 新增 `createTabPageModuleResolver`，支持通过 `pageRoot`、`modulePrefix` 和 `extension` 覆盖页面根目录、模块 key 前缀和文件扩展名。
+3. 更新 README/API/完整接入/兼容性文档，说明 subpackage、自定义页面根目录、非同级 main 页面等场景可使用自定义 resolver。
+4. 文档补充 `tabbarItems` 直接声明 `moduleKey` 的写法，适合页面路径和 `import.meta.glob` key 不存在稳定推导关系的项目。
 
 ```ts
 createTabPageModuleResolver({
-  pageRoot: '/pages',
-  modulePrefix: '..',
+  pageRoot: '/subpackages/shop/pages',
+  modulePrefix: '../../subpackages/shop/pages',
   extension: '.vue',
 })
 ```
-
-或允许 `tabbarItems` 直接声明 `moduleKey`，避免 package 推断业务目录结构。
 
 ### 问题 6：组件事件类型还可以更精确
 
@@ -274,7 +278,7 @@ return result
 
 - [x] 增加 `./core` 子路径导出，纯 helper 不引入 CSS。
 - [x] 评估 `./vue` 子路径导出，明确组件与样式导入策略。
-- [ ] 增强 `resolveTabPageModuleKey` 或新增可配置 resolver。
+- [x] 增强 `resolveTabPageModuleKey` 或新增可配置 resolver。
 - [ ] 评估是否导出官方版 `useStandaloneTabRedirect`。
 - [ ] 增加构建后声明文件/子路径导出的消费侧类型测试。
 
