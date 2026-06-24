@@ -173,9 +173,11 @@ createTabPageModuleResolver({
 })
 ```
 
-### 问题 6：组件事件类型还可以更精确
+### 问题 6：组件事件类型还可以更精确（已处理）
 
 **优先级：低**
+
+**处理状态：已完成（2026-06-24）**
 
 **现象**
 
@@ -183,7 +185,7 @@ createTabPageModuleResolver({
 
 **解决方案**
 
-将 `defineEmits(['change', 'retap'])` 改为类型化 emits：
+已将 `defineEmits(['change', 'retap'])` 改为类型化 emits：
 
 ```ts
 const emit = defineEmits<{
@@ -192,7 +194,7 @@ const emit = defineEmits<{
 }>()
 ```
 
-受限于 Vue SFC 泛型，组件 props 的 key 很难自动保留业务字面量联合类型，但至少可以从 `any[]` 收敛到 `string`。
+构建后的声明文件中，`change` / `retap` 事件参数已从 `any[]` 收敛为 `string`。受限于 Vue SFC 泛型，组件 props 的 key 暂不自动保留业务字面量联合类型。
 
 ### 问题 7：内部小性能点
 
@@ -272,7 +274,7 @@ return result
 - [ ] 精简 README，保留快速判断和最小接入。
 - [ ] 新增 `doc/integration-guide.md`、`doc/retap-refresh.md`、`doc/styling.md`、`doc/api.md`。
 - [x] 修正 retap 文档示例，统一使用共享 context。
-- [ ] 将 `RouterlessTabBar` emits 类型从 `any[]` 收敛到 `string`。
+- [x] 将 `RouterlessTabBar` emits 类型从 `any[]` 收敛到 `string`。
 
 ### 0.3.0：DX 与导出结构优化
 
