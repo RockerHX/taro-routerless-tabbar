@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.0
+
 ### Added
 
 - 新增 H5 运行时自动化 smoke，覆盖初始 `tab` query、Tab 切换、pane 状态保留、retap、redirect query 和返回链路。
