@@ -9,11 +9,19 @@
     <text class="fixture-retap" data-testid="retap-summary">
       {{ retapSummary }}
     </text>
+    <view class="fixture-style-boundary" data-testid="style-boundary">
+      <text class="fixture-style-boundary-title">样式边界示例</text>
+      <text class="fixture-style-boundary-desc">
+        当前 fixture 使用 hostClass / paneClass / hiddenClass 追加业务 class，
+        并通过 CSS 变量覆盖底栏高度、图标尺寸、激活色和背景色。
+      </text>
+    </view>
 
     <RouterlessTabPaneHost
       :items="tabItems"
       :active="tabs.activeKey.value"
       :visited="tabs.visitedKeys.value"
+      host-class="fixture-routerless-host"
       pane-class="fixture-routerless-pane"
       hidden-class="fixture-routerless-pane-hidden"
     >
@@ -338,8 +346,37 @@ onUnmounted(() => {
   margin-top: 24px;
 }
 
+.fixture-routerless-host {
+  border-top: 1px dashed #ffd6a5;
+}
+
 .fixture-routerless-pane-hidden {
   pointer-events: none;
+}
+
+.fixture-style-boundary {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px dashed #ffd6a5;
+  border-radius: 12px;
+  background: #fffaf0;
+}
+
+.fixture-style-boundary-title,
+.fixture-style-boundary-desc {
+  display: block;
+}
+
+.fixture-style-boundary-title {
+  color: #d46b08;
+  font-size: 24px;
+}
+
+.fixture-style-boundary-desc {
+  margin-top: 8px;
+  color: #4e5969;
+  font-size: 20px;
+  line-height: 1.5;
 }
 
 .fixture-pane {
