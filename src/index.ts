@@ -10,6 +10,10 @@ export type {
   UseRouterlessTabsOptions,
   UseRouterlessTabsResult,
 } from './types.js'
+export type {
+  TabPageModuleResolver,
+  TabPageModuleResolverOptions,
+} from './core/routes.js'
 
 export { resolveTabClick } from './core/click.js'
 export {
@@ -21,6 +25,7 @@ export {
 } from './core/tabs.js'
 export {
   buildRouterlessTabUrl,
+  createTabPageModuleResolver,
   resolveTabPageModuleKey,
 } from './core/routes.js'
 export { createRetapRefreshCore } from './core/retap.js'

@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { buildRouterlessTabUrl, resolveTabPageModuleKey } from './routes.js'
+import {
+  buildRouterlessTabUrl,
+  createTabPageModuleResolver,
+  resolveTabPageModuleKey,
+} from './routes.js'
 describe('routerless route helpers', function () {
   it('使用默认 tab query 生成主入口路径', function () {
     expect(
@@ -86,6 +90,41 @@ describe('routerless route helpers', function () {
   it('非法 pagePath 抛错', function () {
     expect(function () {
       return resolveTabPageModuleKey('/subpkg/orders/index')
+    }).toThrow('Invalid tab pagePath')
+  })
+  it('支持自定义页面模块 resolver', function () {
+    const resolveSubpackageModuleKey = createTabPageModuleResolver({
+      pageRoot: '/subpackages/shop/pages',
+      modulePrefix: '../../subpackages/shop/pages',
+      extension: '.vue',
+    })
+
+    expect(
+      resolveSubpackageModuleKey('/subpackages/shop/pages/orders/index'),
+    ).toBe('../../subpackages/shop/pages/orders/index.vue')
+    expect(
+      resolveSubpackageModuleKey('subpackages/shop/pages/cart/index'),
+    ).toBe('../../subpackages/shop/pages/cart/index.vue')
+  })
+  it('支持自定义模块前缀和扩展名', function () {
+    const resolveTsxModuleKey = createTabPageModuleResolver({
+      pageRoot: 'custom-pages',
+      modulePrefix: './custom-pages/',
+      extension: '.tsx',
+    })
+
+    expect(resolveTsxModuleKey('/custom-pages/home/index')).toBe(
+      './custom-pages/home/index.tsx',
+    )
+  })
+  it('自定义 resolver 对非法 pagePath 保持相同错误语义', function () {
+    const resolveCustomModuleKey = createTabPageModuleResolver({
+      pageRoot: '/custom-pages',
+      modulePrefix: './custom-pages',
+    })
+
+    expect(function () {
+      return resolveCustomModuleKey('/pages/home/index')
     }).toThrow('Invalid tab pagePath')
   })
 })

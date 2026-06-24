@@ -1,5 +1,15 @@
 import type { RouterlessTabQueryValue } from '../types.js'
 
+export type TabPageModuleResolverOptions = {
+  pageRoot?: string
+  modulePrefix?: string
+  extension?: string
+}
+
+export interface TabPageModuleResolver {
+  (pagePath: string): string
+}
+
 export function buildRouterlessTabUrl<Key extends string>(options: {
   mainPagePath: string
   tabKey: Key
@@ -49,12 +59,36 @@ export function buildRouterlessTabUrl<Key extends string>(options: {
   return `${path}?${params.toString()}${hash}`
 }
 
-export function resolveTabPageModuleKey(pagePath: string): string {
-  const normalizedPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`
+export function createTabPageModuleResolver(
+  options: TabPageModuleResolverOptions = {},
+): TabPageModuleResolver {
+  const pageRoot = normalizePageRoot(options.pageRoot ?? '/pages')
+  const modulePrefix = normalizeModulePrefix(options.modulePrefix ?? '..')
+  const extension = options.extension ?? '.vue'
 
-  if (!normalizedPath.startsWith('/pages/')) {
-    throw new Error(`Invalid tab pagePath: ${pagePath}`)
+  return function resolveTabPageModuleKeyWithOptions(pagePath: string): string {
+    const normalizedPath = pagePath.startsWith('/') ? pagePath : `/${pagePath}`
+
+    if (!normalizedPath.startsWith(`${pageRoot}/`)) {
+      throw new Error(`Invalid tab pagePath: ${pagePath}`)
+    }
+
+    return `${modulePrefix}${normalizedPath.replace(pageRoot, '')}${extension}`
   }
+}
 
-  return `..${normalizedPath.replace('/pages', '')}.vue`
+const defaultTabPageModuleResolver = createTabPageModuleResolver()
+
+export function resolveTabPageModuleKey(pagePath: string): string {
+  return defaultTabPageModuleResolver(pagePath)
+}
+
+function normalizePageRoot(pageRoot: string): string {
+  const normalizedRoot = pageRoot.startsWith('/') ? pageRoot : `/${pageRoot}`
+
+  return normalizedRoot.replace(/\/+$/, '')
+}
+
+function normalizeModulePrefix(modulePrefix: string): string {
+  return modulePrefix.replace(/\/+$/, '')
 }
