@@ -43,7 +43,7 @@ H5 runtime fixture 当前保留高级受控模式，用于覆盖复杂 query、r
 
 | 日期       | Taro  | Vue | 平台插件                       | 环境             | 结果                                                                                           |
 | ---------- | ----- | --- | ------------------------------ | ---------------- | ---------------------------------------------------------------------------------------------- |
-| 2026-06-24 | 4.2.0 | 3.x | h5/weapp/alipay 4.2.0          | Node 24 / macOS  | H5 runtime、H5/WeChat build、Alipay extended build 通过                                        |
+| 2026-06-24 | 4.2.0 | 3.x | h5/weapp/alipay 4.2.0          | Node 24 / macOS  | `test:taro:basic:h5`、H5 runtime、H5/WeChat build、Alipay extended build 通过                  |
 | 2026-06-24 | 4.2.0 | 3.x | WeChat 开发者工具 1.06.2402040 | macOS / CLI open | 已确认工具版本；`pnpm run test:taro` 通过；本轮尝试打开构建产物超时，未完成开发者工具点击验证  |
 | 2026-06-24 | 4.2.0 | 3.x | Alipay 4.2.0                   | Node 24 / macOS  | `pnpm run test:taro:extended` 通过；本机未安装支付宝开发者工具，未执行 experimental 运行时验证 |
 
