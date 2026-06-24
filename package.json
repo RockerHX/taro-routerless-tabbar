@@ -16,6 +16,7 @@
     "doc/retap-refresh.md",
     "doc/styling.md",
     "doc/compatibility.md",
+    "doc/runtime-validation.md",
     "doc/api.md"
   ],
   "exports": {

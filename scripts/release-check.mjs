@@ -19,6 +19,7 @@ const requiredFiles = [
   'doc/retap-refresh.md',
   'doc/styling.md',
   'doc/compatibility.md',
+  'doc/runtime-validation.md',
 ]
 
 function assert(condition, message) {
