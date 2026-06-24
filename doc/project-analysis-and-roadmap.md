@@ -1,7 +1,7 @@
 # 项目现状分析与 0.3.x 路线图
 
 生成日期：2026-06-24  
-当前版本：`0.2.3`
+当前版本：`0.3.0`
 
 ## 结论
 
@@ -214,11 +214,11 @@ const redirectUrl = buildStandaloneTabRedirectUrl({
 
 ### 0.3.0：消费侧稳定性与接入样板
 
-- [ ] 增加打包后消费侧 fixture，验证 root、`./core`、`./vue`、`./style.css` 导入。
-- [ ] 将消费侧类型/导出验证接入 CI 和 `prepublishOnly`。
-- [ ] 设计并实现独立页 redirect 的官方 core helper。
-- [ ] 更新 `doc/integration-guide.md` / `doc/api.md`，用官方 helper 替代手写 redirect 样板。
-- [ ] fixture 至少使用一次官方 redirect helper。
+- [x] 增加打包后消费侧 fixture，验证 root、`./core`、`./vue`、`./style.css` 导入。
+- [x] 将消费侧类型/导出验证接入 CI 和 `prepublishOnly`。
+- [x] 设计并实现独立页 redirect 的官方 core helper。
+- [x] 更新 `doc/integration-guide.md` / `doc/api.md`，用官方 helper 替代手写 redirect 样板。
+- [x] fixture 至少使用一次官方 redirect helper。
 
 ### 0.3.x：调试能力、样式边界与发布预检
 
@@ -245,9 +245,8 @@ const redirectUrl = buildStandaloneTabRedirectUrl({
 
 ## 推荐下一步
 
-建议 0.3.0 先做两个最能降低发布风险的任务：
+0.3.0 的两个高优先级目标已经完成。后续建议进入 0.3.x 的中优先级收敛：
 
-1. 新增打包后消费侧 fixture，并接入 CI / `prepublishOnly`。
-2. 设计独立页 redirect 的 core helper，先把 URL 构建和 query 合并规则稳定下来。
-
-这两个任务完成后，再根据真实业务反馈决定是否继续扩展 retap 可观测 API 和 pane host 定制能力。
+1. 为 retap core/context 增加 `hasRefreshHandler` / `isRefreshRunning` 等可观测 API。
+2. 补充端侧布局检查清单，明确安全区、内容区 padding、滚动容器和重型原生组件的接入注意事项。
+3. 新增发布预检脚本，把版本号、CHANGELOG、质量门禁和 tarball 关键文件校验收敛成一个命令。

@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 0.3.0
+
+面向消费侧稳定性和独立页接入样板的功能版本。
+
+### Added
+
+- 新增 `resolveStandaloneTabRedirect`，用于判断独立 Tab 页面是否需要重定向回 main 容器，并生成保留普通 query、过滤 `embedded` 的目标 URL。
+- 新增打包后消费侧 fixture，验证 root、`./core`、`./vue` 和 `./style.css` 子路径可从真实 tarball 正常导入和构建。
+- Taro Vue3 smoke fixture 新增独立 `home` 页面，覆盖官方独立页 redirect helper 的构建链路。
+
+### Changed
+
+- CI、release workflow 和 `prepublishOnly` 接入打包产物消费侧验证。
+- 完整接入指南和 API 文档改为推荐官方独立页 redirect helper。
+
 ## 0.2.3
 
 面向页面模块解析、组件事件类型和内部性能细节的维护版本。

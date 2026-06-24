@@ -1,6 +1,6 @@
 {
   "name": "taro-routerless-tabbar",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "private": false,
   "type": "module",
   "packageManager": "pnpm@11.8.0",
