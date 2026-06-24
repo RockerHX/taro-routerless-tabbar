@@ -119,22 +119,22 @@ const handleTabRetap = (tab: TabKey) => {
 
 ## 文档
 
-- [完整接入指南](doc/integration-guide.md)：`config/tabbar.ts`、main 容器、页面模块解析、独立页 redirect。
+- [完整接入指南](doc/integration-guide.md)：`config/tabbar.ts`、main 容器、页面模块 resolver、独立页 redirect。
 - [retap 刷新指南](doc/retap-refresh.md)：共享 context、并发刷新、错误处理、动画状态。
 - [样式自定义指南](doc/styling.md)：默认样式、`#item` slot、CSS 变量。
-- [多端兼容性说明](doc/compatibility.md)：H5 / WeChat 小程序 smoke、复杂页面结构限制。
+- [多端兼容性说明](doc/compatibility.md)：H5 / WeChat 小程序 smoke、复杂页面结构说明。
 - [API 文档](doc/api.md)：完整导出、类型、返回值和边界行为。
 
 ## 常用 API
 
-| API                         | 说明                             |
-| --------------------------- | -------------------------------- |
-| `useRouterlessTabs`         | 管理 active、visited 和点击状态  |
-| `RouterlessTabPaneHost`     | 渲染已访问 Tab pane              |
-| `RouterlessTabBar`          | 默认底部 TabBar UI               |
-| `createRetapRefreshContext` | 创建共享 retap refresh context   |
-| `buildRouterlessTabUrl`     | 生成 main 容器 URL               |
-| `resolveTabPageModuleKey`   | 生成 `import.meta.glob` 模块 key |
+| API                         | 说明                                   |
+| --------------------------- | -------------------------------------- |
+| `useRouterlessTabs`         | 管理 active、visited 和点击状态        |
+| `RouterlessTabPaneHost`     | 渲染已访问 Tab pane                    |
+| `RouterlessTabBar`          | 默认底部 TabBar UI                     |
+| `createRetapRefreshContext` | 创建共享 retap refresh context         |
+| `buildRouterlessTabUrl`     | 生成 main 容器 URL                     |
+| `resolveTabPageModuleKey`   | 生成或配置 `import.meta.glob` 模块 key |
 
 ## 兼容性与当前状态
 

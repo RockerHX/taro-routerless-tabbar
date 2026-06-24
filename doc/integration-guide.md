@@ -270,7 +270,7 @@ useStandaloneTabRedirect('home', () => props.embedded)
 
 `order`、`profile` 等其他 Tab 页面保持同样结构，只替换对应 Tab key 和业务内容。需要二次点击刷新时，按 [retap 刷新指南](./retap-refresh.md) 从共享单例文件导入 `useTabRetapRefresh`，不要在每个页面重复创建新的 context。
 
-## 5. 页面模块解析限制
+## 5. 页面模块解析
 
 `import.meta.glob` 必须写在业务项目里：
 
@@ -282,4 +282,55 @@ const tabPageModules = import.meta.glob('../*/index.vue', {
 
 原因是 Vite 需要静态分析 glob 路径，而不同项目的 `pages` 目录结构不一定相同。package 只提供 `resolveTabPageModuleKey` 这类 helper，不会扫描使用者项目目录。
 
-当前 `resolveTabPageModuleKey` 只接受 `/pages/...` 或 `pages/...` 形式，并转换为 main 页面相邻目录可用的 `../xxx/index.vue`。如果项目使用 subpackages、自定义页面根目录，或 main 页面与 Tab 页面不在同级目录，建议自行实现 resolver 或在业务配置中直接声明模块 key。
+基础项目可以继续使用 `resolveTabPageModuleKey`，它只接受 `/pages/...` 或 `pages/...` 形式，并转换为 main 页面相邻目录可用的 `../xxx/index.vue`。
+
+如果项目使用 subpackages、自定义页面根目录，或 main 页面与 Tab 页面不在同级目录，可以创建自定义 resolver：
+
+```ts
+import { createTabPageModuleResolver } from 'taro-routerless-tabbar'
+
+const resolveSubpackageModuleKey = createTabPageModuleResolver({
+  pageRoot: '/subpackages/shop/pages',
+  modulePrefix: '../../subpackages/shop/pages',
+  extension: '.vue',
+})
+
+const tabPageModules = import.meta.glob<TabPageModule>(
+  '../../subpackages/shop/pages/**/index.vue',
+  {
+    eager: true,
+  },
+)
+
+const pageModule =
+  tabPageModules[
+    resolveSubpackageModuleKey('/subpackages/shop/pages/orders/index')
+  ]
+```
+
+如果页面路径和 `import.meta.glob` key 不存在稳定推导关系，也可以在业务 Tab 配置中直接声明 `moduleKey`，并优先使用显式配置：
+
+```ts
+export const tabbarItems = [
+  {
+    key: 'order',
+    text: '订单',
+    pagePath: '/subpackages/shop/pages/order/index',
+    moduleKey: '../../subpackages/shop/pages/order/index.vue',
+  },
+] as const
+
+const tabPanes = tabbarItems.map((item) => {
+  const moduleKey = item.moduleKey ?? resolveTabPageModuleKey(item.pagePath)
+  const pageModule = tabPageModules[moduleKey]
+
+  if (!pageModule) {
+    throw new Error(`Missing tab page component: ${item.pagePath}`)
+  }
+
+  return {
+    ...item,
+    component: pageModule.default,
+  }
+})
+```

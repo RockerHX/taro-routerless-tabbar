@@ -43,9 +43,9 @@
 
 当前验证属于 build smoke，不等同于覆盖所有平台运行时交互细节。接入真实业务后，仍建议在目标端做端侧点击、刷新、样式和页面返回链路验证。
 
-## subpackage / 非标准页面结构限制
+## subpackage / 非标准页面结构
 
-当前 `resolveTabPageModuleKey` 对目录结构有基础假设，适合常规 `/pages/...` 页面路径和相邻页面模块解析。对于以下复杂场景，本次不新增复杂 resolver 能力：
+默认 `resolveTabPageModuleKey` 对目录结构有基础假设，适合常规 `/pages/...` 页面路径和相邻页面模块解析。对于以下复杂场景，已提供 `createTabPageModuleResolver` 创建自定义 resolver：
 
 - subpackage 页面。
 - 自定义 pages 根目录。
@@ -54,6 +54,6 @@
 
 建议做法：
 
-1. 在业务侧自行实现 resolver，把页面路径转换为项目实际的 `import.meta.glob` key。
+1. 使用 `createTabPageModuleResolver`，把页面路径转换为项目实际的 `import.meta.glob` key。
 2. 或在 Tab 配置中直接声明模块 key，避免由本包推断业务目录结构。
-3. 将复杂 resolver 能力作为后续独立改造处理，不与当前多端 smoke 覆盖混在一起。
+3. `import.meta.glob` 仍需业务侧静态声明，本包不会扫描使用者项目目录。
