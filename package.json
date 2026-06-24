@@ -52,7 +52,8 @@
     "test:taro:h5": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5",
     "test:taro:prepare": "pnpm run build && pnpm --dir examples/taro-vue3-basic install --frozen-lockfile",
     "test:taro:weapp": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:weapp",
-    "test:taro": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5 && pnpm --dir examples/taro-vue3-basic run build:weapp"
+    "test:taro": "pnpm run test:taro:prepare && pnpm --dir examples/taro-vue3-basic run build:h5 && pnpm --dir examples/taro-vue3-basic run build:weapp",
+    "test:taro:h5:runtime": "node ./scripts/test-taro-h5-runtime.mjs"
   },
   "peerDependencies": {
     "@tarojs/components": ">=4 <5",
@@ -61,6 +62,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.0",
     "@typescript-eslint/parser": "8.61.1",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vue/compiler-sfc": "^3.5.38",
