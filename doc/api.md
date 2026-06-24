@@ -2,18 +2,20 @@
 
 本文按 root 入口和子路径入口整理 API。类型以源码声明为准，示例面向 Taro 4 + Vue 3。
 
+从 `1.0.0` 起，本文列出的入口、导出名称、公开类型、组件 props、事件和 slot 参数属于稳定版公开契约；后续破坏性调整应进入新的 major 版本。仓库内测试脚本、fixture、release 脚本、构建脚本和 `dist/` 内 chunk 文件名不属于运行时公开 API。
+
 ## 1. 导出总览
 
 ### 入口
 
 | 入口                               | 导出范围                       | 样式行为                    |
 | ---------------------------------- | ------------------------------ | --------------------------- |
-| `taro-routerless-tabbar`           | 全部 API，保持兼容             | 自动引入默认 `style.css`    |
+| `taro-routerless-tabbar`           | 全部稳定 API，兼容入口         | 自动引入默认 `style.css`    |
 | `taro-routerless-tabbar/core`      | 纯 helper、retap core 和纯类型 | 不引入 CSS，不导出 Vue API  |
 | `taro-routerless-tabbar/vue`       | Vue composable、组件和相关类型 | 不自动引入 CSS              |
 | `taro-routerless-tabbar/style.css` | 默认样式文件                   | 供 `./vue` 入口用户显式导入 |
 
-helper-only 场景应从 `taro-routerless-tabbar/core` 导入，避免 root 入口的默认样式副作用。使用 `taro-routerless-tabbar/vue` 时，如果需要默认底栏样式，请额外导入 `taro-routerless-tabbar/style.css`。
+helper-only 场景应从 `taro-routerless-tabbar/core` 导入，避免 root 入口的默认样式副作用。`taro-routerless-tabbar/core` 和 `taro-routerless-tabbar/vue` 都不会自动引入 CSS；使用 `taro-routerless-tabbar/vue` 时，如果需要默认底栏样式，请额外导入 `taro-routerless-tabbar/style.css`。
 
 ### 类型
 
@@ -374,25 +376,25 @@ useRouterlessTabs<Item extends KeyedTabItem<string>>(options: {
 
 Props：
 
-| 名称          | 类型                              | 说明                               |
-| ------------- | --------------------------------- | ---------------------------------- |
-| `active`      | `string`                          | 当前激活 Tab key                   |
-| `items`       | `readonly RouterlessTabBarItem[]` | Tab 列表，至少包含 `key` 和 `text` |
-| `refreshing`  | `string`                          | 正在显示刷新态的 Tab key，默认空   |
-| `refreshIcon` | `string`                          | 刷新态图标路径，默认空             |
+| 名称          | 类型                              | 说明                                                                     |
+| ------------- | --------------------------------- | ------------------------------------------------------------------------ |
+| `active`      | `string`                          | 当前激活 Tab key；用于判断 active 样式和点击结果                         |
+| `items`       | `readonly RouterlessTabBarItem[]` | Tab 列表，至少包含 `key` 和 `text`，可选 `iconPath` / `selectedIconPath` |
+| `refreshing`  | `string`                          | 正在显示刷新态的 Tab key，默认空；等于 item key 时展示刷新态 class       |
+| `refreshIcon` | `string`                          | 刷新态图标路径，默认空；为空时继续展示普通 icon/text                     |
 
 Events：
 
-| 名称     | 参数     | 触发时机       |
-| -------- | -------- | -------------- |
-| `change` | `string` | 点击非当前 Tab |
-| `retap`  | `string` | 点击当前 Tab   |
+| 名称     | 参数          | 触发时机                           |
+| -------- | ------------- | ---------------------------------- |
+| `change` | `key: string` | 点击非当前 Tab，参数为目标 Tab key |
+| `retap`  | `key: string` | 点击当前 Tab，参数为当前 Tab key   |
 
 Slots：
 
-| 名称   | slot props                               | 说明           |
-| ------ | ---------------------------------------- | -------------- |
-| `item` | `{ item, active, refreshing, iconPath }` | 自定义单个 Tab |
+| 名称   | slot props                               | 说明                                                                                                               |
+| ------ | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `item` | `{ item, active, refreshing, iconPath }` | 自定义单个 Tab；`item` 为当前配置，`active` / `refreshing` 为布尔值，`iconPath` 为已按 active 状态解析后的图标路径 |
 
 样式自定义参考 [样式自定义指南](./styling.md)。
 
@@ -402,19 +404,29 @@ Slots：
 
 Props：
 
-| 名称          | 类型                               | 说明                       |
-| ------------- | ---------------------------------- | -------------------------- |
-| `items`       | `readonly RouterlessTabPaneItem[]` | 所有 pane 配置             |
-| `active`      | `string`                           | 当前激活 key               |
-| `visited`     | `readonly string[]`                | 已访问 key 列表            |
-| `hostClass`   | `string \| string[] \| object`     | 追加到 host 的自定义类     |
-| `paneClass`   | `string \| string[] \| object`     | 追加到每个 pane 的自定义类 |
-| `hiddenClass` | `string \| string[] \| object`     | 追加到非 active pane 的类  |
+| 名称          | 类型                               | 说明                                         |
+| ------------- | ---------------------------------- | -------------------------------------------- |
+| `items`       | `readonly RouterlessTabPaneItem[]` | 所有 pane 配置，至少包含 `key`               |
+| `active`      | `string`                           | 当前激活 key；active pane 不添加隐藏 class   |
+| `visited`     | `readonly string[]`                | 已访问 key 列表；组件只渲染命中该列表的 pane |
+| `hostClass`   | `string \| string[] \| object`     | 追加到 host 的自定义类，默认空               |
+| `paneClass`   | `string \| string[] \| object`     | 追加到每个 pane 的自定义类，默认空           |
+| `hiddenClass` | `string \| string[] \| object`     | 追加到非 active pane 的类，默认空            |
 
 Slots：
 
-| 名称   | slot props         | 说明                |
-| ------ | ------------------ | ------------------- |
-| `pane` | `{ pane, active }` | 渲染单个已访问 pane |
+| 名称   | slot props         | 说明                                                      |
+| ------ | ------------------ | --------------------------------------------------------- |
+| `pane` | `{ pane, active }` | 渲染单个已访问 pane；`pane` 为当前配置，`active` 为布尔值 |
 
 组件会给非 active pane 添加 `routerless-tab-pane-hidden`，默认样式为 `display: none`。`hostClass` / `paneClass` / `hiddenClass` 只追加 class，不替换默认 class。
+
+## 7. 非公开范围
+
+以下内容用于项目验证、构建或发布流程，不属于 1.0.0 运行时 API 契约：
+
+- `scripts/*`、`.github/workflows/*`、`examples/*` 和测试文件。
+- `dist/` 中由打包器生成的 hash chunk 文件名。
+- `pnpm run test:*`、`pnpm run release:check`、`pnpm run api:check` 等仓库脚本。
+
+这些能力可以在 minor / patch 版本中按维护需要调整；使用者项目不应依赖它们作为运行时导入入口。
