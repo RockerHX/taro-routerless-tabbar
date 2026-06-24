@@ -8,6 +8,8 @@
       :items="tabItems"
       :active="tabs.activeKey.value"
       :visited="tabs.visitedKeys.value"
+      pane-class="fixture-routerless-pane"
+      hidden-class="fixture-routerless-pane-hidden"
     >
       <template #pane="{ pane, active }">
         <view :class="['fixture-pane', active ? 'fixture-pane-active' : '']">
@@ -169,6 +171,14 @@ onUnmounted(() => {
   font-size: 22px;
   line-height: 1.5;
   word-break: break-all;
+}
+
+.fixture-routerless-pane {
+  margin-top: 24px;
+}
+
+.fixture-routerless-pane-hidden {
+  pointer-events: none;
 }
 
 .fixture-pane {
