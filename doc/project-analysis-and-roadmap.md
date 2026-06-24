@@ -181,6 +181,7 @@
 - [x] 新增 `RouterlessTabs` 低门槛高阶组件，并把 README 快速开始改为极简集成示例。
 - [x] 准备 1.0.0 版本号、CHANGELOG、README 当前版本和发布说明。
 - [x] 完成 1.0.0 发布前完整质量门禁。
+  - 2026-06-24 `RouterlessTabs` DX 补强后，lint、format、typecheck、unit、build、pack、consumer、release、Taro H5/WeChat、H5 runtime 和 Alipay extended 全部门禁通过。
 
 ### 1.x：发布后维护方向
 
