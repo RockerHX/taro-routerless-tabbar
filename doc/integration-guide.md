@@ -71,6 +71,7 @@ export { resolveTabPageModuleKey }
 ## 2. 创建共享 retap context
 
 如果暂不需要二次点击刷新，也可以先保留这个文件但不在页面注册 handler。需要完整刷新链路时参考 [retap 刷新指南](./retap-refresh.md)。
+main 容器和所有 Tab 页面必须引用这个文件导出的同一个实例，不能在页面组件内重新创建 context。
 
 ```ts
 // pages/main/retap-refresh.ts
@@ -267,7 +268,7 @@ useStandaloneTabRedirect('home', () => props.embedded)
 </script>
 ```
 
-`order`、`profile` 等其他 Tab 页面保持同样结构，只替换对应 Tab key 和业务内容。需要二次点击刷新时，在 Tab 页面里额外接入共享的 `useTabRetapRefresh`，不要在每个页面重复创建新的 context。
+`order`、`profile` 等其他 Tab 页面保持同样结构，只替换对应 Tab key 和业务内容。需要二次点击刷新时，按 [retap 刷新指南](./retap-refresh.md) 从共享单例文件导入 `useTabRetapRefresh`，不要在每个页面重复创建新的 context。
 
 ## 5. 页面模块解析限制
 

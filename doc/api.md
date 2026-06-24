@@ -227,7 +227,7 @@ const { startRefreshAnimation, stopRefreshAnimation } =
 tabRetap.useRetapRefresh('home', refreshHome, () => props.embedded)
 ```
 
-推荐只创建一个业务共享单例，然后 main 容器和所有 Tab 页面都从该文件导入。
+业务项目应把 context 封装为共享单例文件，然后 main 容器和所有 Tab 页面都从该文件导入。不要在页面组件内重复调用 `createRetapRefreshContext`。
 
 ### `useRouterlessTabs(options)`
 
