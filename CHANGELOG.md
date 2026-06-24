@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Added
+
+- 新增 H5 运行时自动化 smoke，覆盖初始 `tab` query、Tab 切换、pane 状态保留、retap、redirect query 和返回链路。
+- 升级 Taro Vue3 fixture，加入长列表、异步刷新、复杂 query、模拟详情返回链路和样式边界示例。
+- 新增端侧运行时验证矩阵，区分单元测试、消费侧验证、H5 runtime、小程序 build smoke 和手动真机/开发者工具验证。
+
+### Changed
+
+- CI 和 release workflow 接入 H5 runtime smoke，`prepublishOnly` 仍保持轻量发布前检查。
+
 ## 0.3.2
 
 面向 0.3.x 剩余调试、样式边界和发布预检能力的收敛版本。
