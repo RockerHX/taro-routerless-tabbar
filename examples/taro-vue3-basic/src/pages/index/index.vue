@@ -31,6 +31,12 @@
           <text class="fixture-pane-meta" :data-testid="`pane-retap-${pane.key}`">
             retap refresh count: {{ refreshCounts[pane.key] }}
           </text>
+          <text
+            class="fixture-pane-meta"
+            :data-testid="`pane-refresh-status-${pane.key}`"
+          >
+            refresh status: {{ refreshStatus[pane.key] }}
+          </text>
           <text class="fixture-pane-meta" :data-testid="`pane-state-${pane.key}`">
             pane local state: {{ paneLocalCounts[pane.key] }}
           </text>
@@ -40,6 +46,13 @@
             @click="incrementPaneState(pane.key)"
           >
             <text>增加 {{ pane.text }} 本地状态</text>
+          </view>
+          <view
+            class="fixture-pane-fail-action"
+            :data-testid="`pane-fail-action-${pane.key}`"
+            @click="markNextRefreshFailed(pane.key)"
+          >
+            <text>模拟下一次 {{ pane.text }} 刷新失败</text>
           </view>
           <view class="fixture-card-list" :data-testid="`card-list-${pane.key}`">
             <view
@@ -126,6 +139,16 @@ const refreshCounts = reactive<Record<TabKey, number>>({
   orders: 0,
   profile: 0,
 })
+const refreshStatus = reactive<Record<TabKey, string>>({
+  home: 'idle',
+  orders: 'idle',
+  profile: 'idle',
+})
+const failNextRefresh = reactive<Record<TabKey, boolean>>({
+  home: false,
+  orders: false,
+  profile: false,
+})
 const paneLocalCounts = reactive<Record<TabKey, number>>({
   home: 0,
   orders: 0,
@@ -183,17 +206,34 @@ const retapSummary = computed(function getRetapSummary() {
     : '点击当前 Tab 可触发 retap 刷新'
 })
 
+function waitForFixtureRefresh() {
+  return new Promise<void>(function resolveFixtureRefresh(resolve) {
+    setTimeout(resolve, 250)
+  })
+}
+
 function createRefreshHandler(key: TabKey) {
   return async function refreshFixtureTab() {
     const animation = refreshAnimations[key]
 
     if (!animation.startRefreshAnimation()) {
+      refreshStatus[key] = 'busy'
       return
     }
 
     try {
+      refreshStatus[key] = 'loading'
+      await waitForFixtureRefresh()
+
+      if (failNextRefresh[key]) {
+        failNextRefresh[key] = false
+        refreshStatus[key] = 'failed'
+        throw new Error(`${key} fixture refresh failed`)
+      }
+
       refreshCounts[key] += 1
       lastRetapTab.value = key
+      refreshStatus[key] = 'success'
       await Promise.resolve()
     } finally {
       animation.stopRefreshAnimation()
@@ -210,11 +250,20 @@ function handleChange(key: TabKey) {
 }
 
 async function handleRetap(key: TabKey) {
-  await fixtureRetap.runRefresh(key)
+  const started = await fixtureRetap.runRefresh(key)
+
+  if (!started) {
+    refreshStatus[key] = 'busy'
+  }
 }
 
 function incrementPaneState(key: TabKey) {
   paneLocalCounts[key] += 1
+}
+
+function markNextRefreshFailed(key: TabKey) {
+  failNextRefresh[key] = true
+  refreshStatus[key] = 'will-fail'
 }
 
 useLoad((query: Record<string, string | undefined>) => {
@@ -301,14 +350,21 @@ onUnmounted(() => {
   line-height: 1.5;
 }
 
-.fixture-pane-state-action {
+.fixture-pane-state-action,
+.fixture-pane-fail-action {
   display: inline-flex;
   margin-top: 16px;
+  margin-right: 12px;
   padding: 12px 18px;
   border-radius: 999px;
   background: #fff1f0;
   color: #f75d5b;
   font-size: 22px;
+}
+
+.fixture-pane-fail-action {
+  background: #fff7e6;
+  color: #d46b08;
 }
 
 .fixture-card-list {
