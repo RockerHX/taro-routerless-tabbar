@@ -12,6 +12,7 @@
     "@tarojs/plugin-framework-vue3": "4.2.0",
     "@tarojs/plugin-platform-h5": "4.2.0",
     "@tarojs/runtime": "4.2.0",
+    "@tarojs/shared": "4.2.0",
     "@tarojs/taro": "4.2.0",
     "taro-routerless-tabbar": "file:../..",
     "vue": "^3.5.38"
@@ -19,7 +20,7 @@
   "devDependencies": {
     "@tarojs/cli": "4.2.0",
     "@tarojs/vite-runner": "4.2.0",
-    "typescript": "^5.9.3",
-    "@vitejs/plugin-vue-jsx": "^3.1.0"
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "typescript": "^5.9.3"
   }
 }
