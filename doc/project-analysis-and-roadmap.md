@@ -7,10 +7,10 @@
 
 当前项目没有发现阻塞发布的代码质量问题。本次本地验证通过了 lint、格式检查、类型检查、单元测试、构建、打包预检、依赖审计和 Taro H5 smoke build。
 
-但项目仍有几个需要处理的产品化/DX 问题：
+但项目仍有几个需要处理或跟踪的产品化/DX 问题：
 
 1. `README.md` 已达到 561 行、约 17KB，内容混合了定位说明、完整接入、retap、样式、API 和实现限制，作为首页文档偏重，建议精简并拆分。
-2. README 中 retap 示例存在“示范代码直接新建 context”和“真实项目应共享 context”的混用，容易让使用者复制出不可工作的刷新链路。
+2. 已处理：retap 示例已统一为共享 context，避免使用者复制出不可工作的刷新链路。
 3. root 入口会自动引入 `style.css`，纯 helper 使用者也会被带入默认样式；后续可以通过子路径导出改善。
 4. 当前多端验证以 H5 smoke 为主，对小程序端、subpackages、自定义页面目录等真实 Taro 场景覆盖还不够。
 
@@ -63,9 +63,11 @@
 - `doc/styling.md`：默认样式、slot 自定义、CSS 变量。
 - `doc/api.md`：完整 API、类型、返回值和边界行为。
 
-### 问题 2：retap 示例容易误导
+### 问题 2：retap 示例容易误导（已处理）
 
 **优先级：高**
+
+**处理状态：已完成（2026-06-24）**
 
 **现象**
 
@@ -86,6 +88,8 @@ export const useTabRetapRefreshAnimation = tabRetap.useRetapRefreshAnimation
 ```
 
 然后 main 容器和所有 Tab 页面都只引用这个共享对象。README 里不要展示“新建第二个 context”的反例，反例可以放到 FAQ 或注意事项中。
+
+当前 README 快速示例只保留核心 retap 事件入口，并明确指向 `doc/retap-refresh.md` 的共享单例接入方式；`doc/retap-refresh.md`、`doc/integration-guide.md` 和 `doc/api.md` 均已强调 main 容器与所有 Tab 页面必须复用同一个 context。
 
 ### 问题 3：root 入口自动带入 CSS，helper-only 使用场景不够干净
 
@@ -255,7 +259,7 @@ return result
 
 - [ ] 精简 README，保留快速判断和最小接入。
 - [ ] 新增 `doc/integration-guide.md`、`doc/retap-refresh.md`、`doc/styling.md`、`doc/api.md`。
-- [ ] 修正 retap 文档示例，统一使用共享 context。
+- [x] 修正 retap 文档示例，统一使用共享 context。
 - [ ] 将 `RouterlessTabBar` emits 类型从 `any[]` 收敛到 `string`。
 
 ### 0.3.0：DX 与导出结构优化
