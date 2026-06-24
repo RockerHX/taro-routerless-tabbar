@@ -9,11 +9,7 @@
     <text class="fixture-detail-meta" data-testid="detail-from">
       来源参数：{{ from }}
     </text>
-    <view
-      class="fixture-detail-back"
-      data-testid="detail-back"
-      @click="goBack"
-    >
+    <view class="fixture-detail-back" data-testid="detail-back" @click="goBack">
       <text>返回主容器</text>
     </view>
   </view>

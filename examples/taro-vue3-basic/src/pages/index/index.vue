@@ -50,13 +50,22 @@
           :class="['fixture-pane', active ? 'fixture-pane-active' : '']"
           :data-testid="`pane-${pane.key}`"
         >
-          <text class="fixture-pane-title" :data-testid="`pane-title-${pane.key}`">
+          <text
+            class="fixture-pane-title"
+            :data-testid="`pane-title-${pane.key}`"
+          >
             {{ pane.text }}
           </text>
-          <text class="fixture-pane-meta" :data-testid="`pane-visited-${pane.key}`">
+          <text
+            class="fixture-pane-meta"
+            :data-testid="`pane-visited-${pane.key}`"
+          >
             visited: {{ tabs.isVisited(pane.key) ? 'yes' : 'no' }}
           </text>
-          <text class="fixture-pane-meta" :data-testid="`pane-retap-${pane.key}`">
+          <text
+            class="fixture-pane-meta"
+            :data-testid="`pane-retap-${pane.key}`"
+          >
             retap refresh count: {{ refreshCounts[pane.key] }}
           </text>
           <text
@@ -65,7 +74,10 @@
           >
             refresh status: {{ refreshStatus[pane.key] }}
           </text>
-          <text class="fixture-pane-meta" :data-testid="`pane-state-${pane.key}`">
+          <text
+            class="fixture-pane-meta"
+            :data-testid="`pane-state-${pane.key}`"
+          >
             pane local state: {{ paneLocalCounts[pane.key] }}
           </text>
           <view
@@ -89,7 +101,10 @@
           >
             <text>进入 {{ pane.text }} 详情页再返回</text>
           </view>
-          <view class="fixture-card-list" :data-testid="`card-list-${pane.key}`">
+          <view
+            class="fixture-card-list"
+            :data-testid="`card-list-${pane.key}`"
+          >
             <view
               v-for="card in fixtureCards[pane.key]"
               :key="card.id"
@@ -130,7 +145,10 @@
             :src="iconPath"
           />
           <text
-            :class="['fixture-tabbar-text', active ? 'fixture-tabbar-text-active' : '']"
+            :class="[
+              'fixture-tabbar-text',
+              active ? 'fixture-tabbar-text-active' : '',
+            ]"
             :data-testid="`tabbar-text-${item.key}`"
           >
             {{ item.text }}
