@@ -28,7 +28,7 @@ export default [
       'node_modules/**',
       'examples/taro-vue3-basic/dist/**',
       'examples/taro-vue3-basic/node_modules/**',
-      'examples/taro-vue3-basic/.swc/**',
+      'examples/*/.swc/**',
     ],
   },
   js.configs.recommended,
