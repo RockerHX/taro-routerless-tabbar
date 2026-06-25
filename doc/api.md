@@ -408,6 +408,12 @@ useRouterlessTabs<Item extends KeyedTabItem<string>>(options: {
 - `activateTab` / `handleTabClick` 收到非法 key 会抛出 `Invalid routerless tab key`。
 - `initialKey` 非法时回退到 `defaultKey`。
 
+初始化契约：
+
+- `tabs`、`defaultKey` 和 `initialKey` 会在调用 `useRouterlessTabs()` 时用于初始化 active / visited 状态和合法 key 集合。
+- 调用后动态替换或扩展 `tabs`，不会自动重建合法 key 集合或重置 visited 状态。
+- 如果业务需要异步加载 Tab 配置，建议在数据就绪后再调用本 composable；需要动态增删 Tab 时，应由业务自行设计状态重建策略。
+
 ## 6. Vue 组件
 
 ### `RouterlessTabs`
@@ -433,6 +439,11 @@ Props：
 | `hostClass`   | `string \| string[] \| object`  | 透传给内部 `RouterlessTabPaneHost` 的 host class   |
 | `paneClass`   | `string \| string[] \| object`  | 透传给内部 `RouterlessTabPaneHost` 的 pane class   |
 | `hiddenClass` | `string \| string[] \| object`  | 透传给内部 `RouterlessTabPaneHost` 的 hidden class |
+
+初始化契约：
+
+- `tabs`、`defaultKey` 和 `initialKey` 建议视为初始化输入；组件挂载后修改这些 props，不会重建内部 active / visited 状态。
+- 如果 Tab 配置来自异步接口，请在配置就绪后再渲染 `RouterlessTabs`，避免先以占位配置挂载后再替换。
 
 默认 pane 渲染会执行：
 

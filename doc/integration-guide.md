@@ -13,6 +13,8 @@
 - `examples/taro-vue3-routerless-tabs-basic`：面向 README 用户的最小接入示例，适合直接复制 `RouterlessTabs` 默认模式。
 - `examples/taro-vue3-basic`：高级受控 fixture，包含长列表、复杂 query、retap 异步刷新、模拟详情返回链路和样式边界示例。
 
+`RouterlessTabs` 默认模式适合静态 Tab 配置。若 Tab 列表、默认 key 或初始 key 来自异步数据，请在数据就绪后再渲染组件；需要运行时动态增删 Tab 或重建状态时，建议改用 `useRouterlessTabs`、`RouterlessTabPaneHost` 和 `RouterlessTabBar` 自行拼装并管理重置策略。
+
 高级 fixture 的 H5 运行时可通过 `pnpm run test:taro:h5:runtime` 自动验证核心交互。
 
 ## 1. 定义 Tab 配置
