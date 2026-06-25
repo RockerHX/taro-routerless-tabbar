@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+## 1.0.3
+
+### Fixed
+
+- 补齐 H5 真实详情返回 smoke，修正示例入口与页面结构，确保 `navigateTo` / `navigateBack` 返回链路可覆盖。
+- 避免消费侧安装时自动拉取 Taro peer，改为将 `@tarojs/taro` 和 `@tarojs/components` 标记为 optional。
+- 固定 H5 入口模板占位，避免构建模板被格式化破坏。
+
+### Docs
+
+- 增强文档网状导航，补齐 README、API、接入、retap、样式、兼容性、运行时验证和示例 README 的相关入口。
+- 校准返回链路验证说明，统一 README、兼容性和 runtime validation 的表述。
+- 删除过期的 1.0.0 roadmap。
+
+### Changed
+
+- 扩展 lint 门禁覆盖脚本到 `scripts/**/*.mjs` 和根目录 `.mjs` 文件。
+
 ## 1.0.2
 
 ### Fixed
