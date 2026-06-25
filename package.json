@@ -75,6 +75,14 @@
     "@tarojs/taro": ">=4 <5",
     "vue": ">=3.3 <4"
   },
+  "peerDependenciesMeta": {
+    "@tarojs/components": {
+      "optional": true
+    },
+    "@tarojs/taro": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.0",
