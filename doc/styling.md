@@ -88,6 +88,8 @@ export const tabbarItems = [
 }
 ```
 
+如果内容区和 `.routerless-tabbar` 是兄弟节点，内容区通常不会继承只声明在 `.routerless-tabbar` 上的变量。需要让内容区 padding 跟随自定义底栏高度时，请把 `--routerless-tabbar-height` 放在页面根节点、应用全局根节点等共同祖先上，或在内容区单独设置同名变量。示例中的 `49px` fallback 应保留，用于变量未定义时兜底。
+
 ## 3. 刷新态图标
 
 当 `refreshing` 等于某个 Tab key 时，该 Tab 会添加 `routerless-tabbar-item-refreshing` 类。如果同时传入 `refresh-icon`，默认内容会展示旋转刷新图标：
