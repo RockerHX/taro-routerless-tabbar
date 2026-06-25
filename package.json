@@ -51,7 +51,7 @@
     "dev:fixture:alipay": "pnpm run dev:fixture:prepare && pnpm --dir examples/taro-vue3-basic run dev:alipay",
     "build:types": "vue-tsc -p tsconfig.build.json",
     "format:check": "prettier . --check --ignore-unknown",
-    "lint": "eslint src/**/*.ts src/**/*.vue *.ts",
+    "lint": "eslint src/**/*.ts src/**/*.vue scripts/**/*.mjs *.ts *.mjs",
     "pack:dry-run": "npm pack --dry-run",
     "prepack": "pnpm run build",
     "prepublishOnly": "pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm run test:run && pnpm run test:package-consumer && pnpm run pack:dry-run",
