@@ -62,6 +62,8 @@ pnpm dev
 import 'taro-routerless-tabbar/style.css'
 ```
 
+各入口的完整命名导出范围见 [API 文档的按入口导出矩阵](doc/api.md#按入口导出矩阵)。
+
 ## 快速开始
 
 最小集成只需要准备 Tab 配置，并把页面组件交给 `RouterlessTabs`。组件内部会自动管理 active、visited、懒挂载和默认底栏切换：

@@ -17,6 +17,44 @@
 
 helper-only 场景应从 `taro-routerless-tabbar/core` 导入，避免 root 入口的默认样式副作用。`taro-routerless-tabbar/core` 和 `taro-routerless-tabbar/vue` 都不会自动引入 CSS；使用 `taro-routerless-tabbar/vue` 时，如果需要默认底栏样式，请额外导入 `taro-routerless-tabbar/style.css`。
 
+### 按入口导出矩阵
+
+下表只列出 JS / TS 命名导出；`taro-routerless-tabbar/style.css` 是样式入口，不提供命名导出。矩阵以仓库内 `scripts/check-api-surface.mjs` 的稳定导出面为同步来源。
+
+| 名称                           | root | `./core` | `./vue` |
+| ------------------------------ | ---- | -------- | ------- |
+| `KeyedTabItem`                 | ✅   | ✅       | ✅      |
+| `RetapAnimationListener`       | ✅   | ✅       | ✅      |
+| `RetapRefreshContextOptions`   | ✅   | ✅       | ✅      |
+| `RetapRefreshHandler`          | ✅   | ✅       | ✅      |
+| `RouterlessTabBar`             | ✅   | —        | ✅      |
+| `RouterlessTabBarItem`         | ✅   | —        | ✅      |
+| `RouterlessTabPaneHost`        | ✅   | —        | ✅      |
+| `RouterlessTabPaneItem`        | ✅   | —        | ✅      |
+| `RouterlessTabs`               | ✅   | —        | ✅      |
+| `RouterlessTabsItem`           | ✅   | —        | ✅      |
+| `RouterlessTabQueryValue`      | ✅   | ✅       | —       |
+| `StandaloneTabRedirectOptions` | ✅   | ✅       | —       |
+| `StandaloneTabRedirectResult`  | ✅   | ✅       | —       |
+| `TabClickResult`               | ✅   | ✅       | ✅      |
+| `TabPageModuleResolver`        | ✅   | ✅       | —       |
+| `TabPageModuleResolverOptions` | ✅   | ✅       | —       |
+| `UseRouterlessTabsOptions`     | ✅   | —        | ✅      |
+| `UseRouterlessTabsResult`      | ✅   | —        | ✅      |
+| `buildRouterlessTabUrl`        | ✅   | ✅       | —       |
+| `createRetapRefreshContext`    | ✅   | —        | ✅      |
+| `createRetapRefreshCore`       | ✅   | ✅       | —       |
+| `createTabPageModuleResolver`  | ✅   | ✅       | —       |
+| `createVisitedTabRecord`       | ✅   | ✅       | —       |
+| `getTabKeys`                   | ✅   | ✅       | —       |
+| `getVisitedTabs`               | ✅   | ✅       | —       |
+| `isTabKey`                     | ✅   | ✅       | —       |
+| `normalizeTabKey`              | ✅   | ✅       | —       |
+| `resolveStandaloneTabRedirect` | ✅   | ✅       | —       |
+| `resolveTabClick`              | ✅   | ✅       | —       |
+| `resolveTabPageModuleKey`      | ✅   | ✅       | —       |
+| `useRouterlessTabs`            | ✅   | —        | ✅      |
+
 ### 类型
 
 | 名称                           | 说明                             |
