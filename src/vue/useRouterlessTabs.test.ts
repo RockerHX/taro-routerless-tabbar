@@ -67,6 +67,35 @@ describe('useRouterlessTabs', function () {
     expect(mounted.exposed.visitedKeys.value).toEqual(['recommend'])
     mounted.unmount()
   })
+  it('初始化后扩展原 tabs 不会自动扩展合法 key 集合', function () {
+    const dynamicTabs: Array<{
+      key: 'recommend' | 'orders' | 'profile' | 'settings'
+      text: string
+    }> = tabs.map(function cloneTab(tab) {
+      return {
+        key: tab.key,
+        text: tab.text,
+      }
+    })
+    const mounted = mountSetup(function () {
+      return useRouterlessTabs({
+        tabs: dynamicTabs,
+        defaultKey: 'recommend',
+      })
+    })
+
+    dynamicTabs.push({
+      key: 'settings',
+      text: '设置',
+    })
+
+    expect(function activateAddedTab() {
+      mounted.exposed.activateTab('settings')
+    }).toThrow('Invalid routerless tab key: settings')
+    expect(mounted.exposed.activeKey.value).toBe('recommend')
+    expect(mounted.exposed.visitedKeys.value).toEqual(['recommend'])
+    mounted.unmount()
+  })
   it('activateTab 会切换 active 并标记 visited', function () {
     const mounted = mountSetup(function () {
       return useRouterlessTabs({

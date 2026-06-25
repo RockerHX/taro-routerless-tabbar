@@ -269,4 +269,36 @@ describe('RouterlessTabs', function () {
       tabbarItems[1]?.find('.routerless-tabbar-refresh-icon').attributes('src'),
     ).toBe('/icons/refresh.svg')
   })
+
+  it('挂载后变更 defaultKey 和 initialKey 不会重建 active 或 visited', async function () {
+    resetMountCounts()
+
+    const wrapper = mount(RouterlessTabs, {
+      props: {
+        tabs: panes,
+        defaultKey: 'recommend',
+        initialKey: 'orders',
+      },
+    })
+
+    expect(wrapper.findAll('.routerless-tab-pane')).toHaveLength(2)
+    expect(wrapper.find('.pane-orders').attributes('data-active')).toBe('true')
+
+    await wrapper.setProps({
+      defaultKey: 'profile',
+      initialKey: 'profile',
+    })
+
+    expect(wrapper.findAll('.routerless-tab-pane')).toHaveLength(2)
+    expect(wrapper.find('.pane-recommend').attributes('data-active')).toBe(
+      'false',
+    )
+    expect(wrapper.find('.pane-orders').attributes('data-active')).toBe('true')
+    expect(wrapper.find('.pane-profile').exists()).toBe(false)
+    expect(mountCounts).toEqual({
+      recommend: 1,
+      orders: 1,
+      profile: 0,
+    })
+  })
 })
