@@ -4,19 +4,19 @@
 
 ## 验证层级
 
-| 层级                 | 命令或方式                         | 说明                                                          |
-| -------------------- | ---------------------------------- | ------------------------------------------------------------- |
-| 极简示例 build 验证  | `pnpm run test:taro:basic:h5`      | 验证 `RouterlessTabs` 最小 Taro H5 工程可构建。               |
-| 单元测试             | `pnpm run test:run`                | 覆盖 core helper、retap 和 Vue 状态。                         |
-| 打包后消费侧验证     | `pnpm run test:package-consumer`   | 验证真实 tarball 导入、类型、`RouterlessTabs` 和构建。        |
-| H5 自动化运行时验证  | `pnpm run test:taro:h5:runtime`    | Playwright 覆盖真实浏览器交互链路。                           |
-| 小程序 build smoke   | `pnpm run test:taro`               | 验证 H5 + WeChat 小程序可构建。                               |
-| 小程序手动端侧验证   | 开发者工具 / 真机                  | 验证平台运行时样式、点击和页面栈；需与 build smoke 分开记录。 |
-| 扩展平台 build smoke | `pnpm run test:taro:extended` 可选 | 当前覆盖支付宝构建，不阻断主链路。                            |
+| 层级                 | 命令或方式                         | 说明                                                                       |
+| -------------------- | ---------------------------------- | -------------------------------------------------------------------------- |
+| 极简示例 build 验证  | `pnpm run test:taro:basic:h5`      | 验证 `RouterlessTabs` 最小 Taro H5 工程可构建。                            |
+| 单元测试             | `pnpm run test:run`                | 覆盖 core helper、retap 和 Vue 状态。                                      |
+| 打包后消费侧验证     | `pnpm run test:package-consumer`   | 验证真实 tarball 导入、类型、`RouterlessTabs` 和构建。                     |
+| H5 自动化运行时验证  | `pnpm run test:taro:h5:runtime`    | Playwright 覆盖真实浏览器交互链路，包含 H5 `navigateTo` / `navigateBack`。 |
+| 小程序 build smoke   | `pnpm run test:taro`               | 验证 H5 + WeChat 小程序可构建。                                            |
+| 小程序手动端侧验证   | 开发者工具 / 真机                  | 验证平台运行时样式、点击和页面栈；需与 build smoke 分开记录。              |
+| 扩展平台 build smoke | `pnpm run test:taro:extended` 可选 | 当前覆盖支付宝构建，不阻断主链路。                                         |
 
 ## 能力覆盖矩阵
 
-H5 runtime fixture 当前保留高级受控模式，用于覆盖复杂 query、redirect、retap 和返回链路；`RouterlessTabs` 高阶组件由单元测试、打包后消费侧验证和 `pnpm run test:taro:basic:h5` 极简示例构建共同覆盖。
+H5 runtime fixture 当前保留高级受控模式，用于覆盖复杂 query、redirect、retap 和真实详情页返回链路；`RouterlessTabs` 高阶组件由单元测试、打包后消费侧验证和 `pnpm run test:taro:basic:h5` 极简示例构建共同覆盖。
 
 | 能力                      | 单元测试 | 消费侧 | H5 runtime | WeChat build | Alipay build | 小程序手动 |
 | ------------------------- | -------- | ------ | ---------- | ------------ | ------------ | ---------- |
@@ -35,7 +35,7 @@ H5 runtime fixture 当前保留高级受控模式，用于覆盖复杂 query、r
 - Tab 切换：首次访问懒挂载，访问后切换不销毁 pane 状态。
 - retap：点击当前 Tab 触发 loading、成功、失败提示，重复点击不并发刷新。
 - redirect：独立 Tab 页面保留普通 query，过滤 `embedded`，覆盖旧 `tab`。
-- 返回链路：从详情入口返回主容器后，active Tab 和 pane 本地状态保持。
+- 返回链路：从真实详情页 `navigateBack` 返回主容器后，active Tab 和 pane 本地状态保持。
 - 布局：长列表最后一屏不被底栏遮挡，安全区 padding 生效。
 - 重型原生组件：视频、地图、直播等在隐藏 pane 中恢复行为正常。
 

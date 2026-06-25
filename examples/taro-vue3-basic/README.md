@@ -16,9 +16,9 @@
 - 长列表和卡片列表底部 padding，用于验证底栏遮挡边界。
 - 页面根节点声明底栏 CSS 变量，卡片列表复用同一高度变量验证内容区 padding。
 - 复杂 redirect query 预览，覆盖普通 query、旧 `tab` 和 `embedded` 过滤。
-- 模拟详情入口与返回主容器后的 active Tab / pane 本地状态保留。
+- 真实 `Taro.navigateTo` 详情入口，以及 `navigateBack` 返回主容器后的 active Tab / pane 本地状态保留。
 - 默认 TabBar CSS 变量覆盖，例如高度、图标尺寸、激活色和背景色。
-- H5 自动化 runtime smoke 覆盖初始化、切换、保活、retap、redirect 和返回链路。
+- H5 自动化 runtime smoke 覆盖初始化、切换、保活、retap、redirect 和真实 `navigateTo` / `navigateBack` 返回链路。
 
 ## 启动命令
 

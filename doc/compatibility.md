@@ -14,7 +14,7 @@
 | Taro Vue3 H5 runtime smoke         | `pnpm run test:taro:h5:runtime` | 已覆盖     |
 | Taro Vue3 Alipay extended build    | `pnpm run test:taro:alipay`     | 实验性覆盖 |
 
-当前 examples 分为两层：`examples/taro-vue3-routerless-tabs-basic` 面向默认模式用户，提供 `RouterlessTabs` 最小接入和 H5 build 验证；`examples/taro-vue3-basic` 继续作为高级受控 smoke fixture，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。`RouterlessTabs` 高阶组件同时通过单元测试、package consumer 和极简示例构建覆盖；高级 fixture 保留 query、redirect、retap 和样式边界等复杂链路验证。
+当前 examples 分为两层：`examples/taro-vue3-routerless-tabs-basic` 面向默认模式用户，提供 `RouterlessTabs` 最小接入和 H5 build 验证；`examples/taro-vue3-basic` 继续作为高级受控 smoke fixture，使用 Taro 4、Vue 3 和 Vite。CI 中执行 `pnpm run test:taro`，一次 prepare 后连续验证 H5 与 WeChat 小程序构建。WeChat 开发者工具运行时点击验证需与 build smoke 分开记录；当前记录见端侧运行时验证矩阵。支付宝小程序通过 `pnpm run test:taro:extended` 作为实验性扩展构建验证，不阻断 H5 + WeChat 主链路。`RouterlessTabs` 高阶组件同时通过单元测试、package consumer 和极简示例构建覆盖；高级 fixture 保留 query、redirect、retap、真实详情页返回链路和样式边界等复杂链路验证。
 
 ## 与原生 tabBar 生命周期的关系
 
@@ -36,11 +36,11 @@
 - `RouterlessTabPaneHost` 的 `paneClass` / `hiddenClass` 构建覆盖。
 - 长列表/卡片列表、pane 本地状态、异步 retap loading/成功/失败提示。
 - 复杂 redirect query 预览，覆盖普通 query、旧 `tab` 和 `embedded` 过滤。
-- 模拟详情入口与返回主容器后的 active Tab / pane 状态保留。
+- 真实 `Taro.navigateTo` 详情入口，以及 `navigateBack` 返回主容器后的 active Tab / pane 状态保留。
 - `hostClass`、`paneClass`、`hiddenClass` 与 CSS 变量覆盖的样式边界示例。
 - H5 与 WeChat 小程序 build smoke。
 - 支付宝小程序 experimental extended build smoke。
-- H5 自动化 runtime smoke，覆盖初始化、切换、保活、retap、redirect 和返回链路。
+- H5 自动化 runtime smoke，覆盖初始化、切换、保活、retap、redirect 和真实 `navigateTo` / `navigateBack` 返回链路。
 
 `examples/taro-vue3-routerless-tabs-basic` 当前只覆盖默认模式最小链路：`tabs + defaultKey`、默认 pane 渲染、默认底栏切换和 pane 保活示意。
 
@@ -56,7 +56,7 @@
 | PaneHost 自定义 class          | 已验证构建 | 已验证构建    | 已验证构建    | fixture 覆盖 `paneClass` / `hiddenClass` 构建链路。          |
 | 原生 tabBar 生命周期           | 不依赖     | 不依赖        | 不依赖        | 本包不接管或模拟平台原生 tabBar 生命周期。                   |
 
-H5 已有自动化运行时 smoke。WeChat 小程序主链路当前是 build smoke，并在端侧运行时验证矩阵中记录开发者工具尝试结果；Alipay 小程序属于 experimental extended build smoke。二者都不等同于完整覆盖开发者工具或真机运行时交互细节。接入真实业务后，仍建议按
+H5 已有自动化运行时 smoke，并覆盖真实 `navigateTo` / `navigateBack` 返回链路。WeChat 小程序主链路当前是 build smoke，并在端侧运行时验证矩阵中记录开发者工具尝试结果；Alipay 小程序属于 experimental extended build smoke。二者都不等同于完整覆盖开发者工具或真机运行时交互细节。接入真实业务后，仍建议按
 [端侧运行时验证矩阵](./runtime-validation.md)
 在目标端做点击、刷新、样式和页面返回链路验证。
 
