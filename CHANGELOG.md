@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## 1.0.2
+
+### Fixed
+
+- 移除极简示例误跟踪的 `.swc` 构建缓存，并统一 example 缓存忽略规则。
+
+### Docs
+
+- 同步高级受控 smoke fixture 的覆盖点说明，补齐 query、retap、redirect、返回链路和样式边界记录。
+- 补充按 root / `./core` / `./vue` 划分的 API 导出矩阵，避免误用子路径入口。
+- 明确 `RouterlessTabs` / `useRouterlessTabs` 的静态初始化边界，以及内容区 padding 复用 CSS 变量时的作用域要求。
+
+### Tests
+
+- 新增静态初始化契约单测，固定挂载后不自动重建 active / visited 状态和合法 key 集合的当前行为。
+
 ## 1.0.0
 
 ### Added

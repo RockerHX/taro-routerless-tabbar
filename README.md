@@ -119,7 +119,7 @@ const tabs = [
 
 ## 兼容性与稳定版承诺
 
-- 当前版本：`1.0.0`。
+- 当前版本：`1.0.2`。
 - 目标技术栈：Taro 4、Vue 3、Vite、小程序/H5。
 - 1.0.0 稳定承诺：冻结 root、`./core`、`./vue`、`./style.css` 入口和文档列出的公开 API / 类型 / 组件契约。
 - 当前已覆盖：lint、格式检查、类型检查、单元测试、库构建、pack dry-run、打包后消费侧验证、API surface 检查、Taro H5 / WeChat 小程序 smoke build、Taro H5 运行时自动化 smoke；支付宝小程序作为 experimental extended build smoke。
