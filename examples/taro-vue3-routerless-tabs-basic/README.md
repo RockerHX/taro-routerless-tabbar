@@ -2,6 +2,13 @@
 
 这是面向业务接入方的最小示例：只演示 `RouterlessTabs + tabs + defaultKey`，适合直接照着复制到项目里。
 
+## 相关文档
+
+- [README](../../README.md)：安装、入口选择和总导航。
+- [完整接入指南](../../doc/integration-guide.md)：需要从默认模式升级到高级受控模式时阅读。
+- [API 文档](../../doc/api.md)：`RouterlessTabs`、类型和导出矩阵说明。
+- [端侧运行时验证矩阵](../../doc/runtime-validation.md)：本示例对应 `test:taro:basic:h5` 的验证层级。
+
 ## 适用场景
 
 - 想先快速判断 `RouterlessTabs` 是否符合项目预期。

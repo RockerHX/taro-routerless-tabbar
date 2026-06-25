@@ -2,6 +2,13 @@
 
 `retap` 指用户再次点击当前激活 Tab。`taro-routerless-tabbar` 只负责识别 retap、维护刷新 handler 注册表和刷新动画 key；真正的数据刷新、错误提示和动画时机由业务页面决定。
 
+## 相关文档
+
+- [完整接入指南](./integration-guide.md)：main 容器如何派发 retap。
+- [样式自定义指南](./styling.md)：默认底栏刷新态图标和 slot 自定义。
+- [API 文档](./api.md)：`createRetapRefreshContext`、`createRetapRefreshCore` 等签名说明。
+- [高级 fixture README](../examples/taro-vue3-basic/README.md)：包含异步 retap 成功/失败 smoke。
+
 `RouterlessTabs` 和高级受控模式都可以接入同一套 retap refresh：
 
 | 接入层                    | main 容器怎么派发 retap                                                                 | 适合场景                                      |

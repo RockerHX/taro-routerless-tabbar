@@ -2,6 +2,14 @@
 
 本文展示 Taro 4 + Vue 3 + Vite 项目中一个 `home`、`order`、`profile` 三个 Tab 的高级受控接入方式。若只需要默认 active/visited 管理和默认底栏，优先使用 README 或 `examples/taro-vue3-routerless-tabs-basic` 中的 `RouterlessTabs` 极简示例；本文适合需要完全控制状态、页面模块 resolver、独立页 redirect 或复杂 retap refresh 的项目。
 
+## 相关文档
+
+- [README](../README.md)：总入口、安装方式和阅读路径。
+- [retap 刷新指南](./retap-refresh.md)：共享 context、handler 注册和刷新动画。
+- [样式自定义指南](./styling.md)：默认样式、slot、自定义 class 和布局检查。
+- [API 文档](./api.md)：组件、helper 和类型的稳定公开契约。
+- [高级 fixture README](../examples/taro-vue3-basic/README.md)：仓库内复杂链路验证示例。
+
 ## 何时使用哪种模式
 
 | 目标                                                                   | 推荐模式                  | 说明                                                                                            |

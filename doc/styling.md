@@ -2,6 +2,14 @@
 
 `RouterlessTabs` 是低门槛高阶组件，默认复用 `RouterlessTabPaneHost` 和 `RouterlessTabBar` 的 class、CSS 变量和 slot。`RouterlessTabBar` 是受控展示组件：它只展示当前 active、刷新态和底栏内容，并派发 `change` / `retap` 事件；路由跳转、业务数据刷新和页面布局由业务项目控制。
 
+## 相关文档
+
+- [完整接入指南](./integration-guide.md)：默认模式和高级受控模式的组件拼装方式。
+- [retap 刷新指南](./retap-refresh.md)：刷新态图标和 retap 状态来源。
+- [API 文档](./api.md)：`RouterlessTabBar`、`RouterlessTabPaneHost` props 与 slot 参数。
+- [多端兼容性说明](./compatibility.md)：端侧布局、重型组件和样式边界说明。
+- [高级 fixture README](../examples/taro-vue3-basic/README.md)：仓库内 CSS 变量和 class 边界示例。
+
 ## 1. 样式导入
 
 从 root 入口 `taro-routerless-tabbar` 导入组件时，默认样式会随 root 入口自动引入。若改用 `taro-routerless-tabbar/vue` 子路径入口，则默认不自动带 CSS，需要在业务入口显式导入：

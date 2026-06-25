@@ -104,6 +104,12 @@ const tabs = [
 - [极简示例 README](examples/taro-vue3-routerless-tabs-basic/README.md)：面向 README 用户的最小接入工程。
 - [高级 fixture README](examples/taro-vue3-basic/README.md)：面向复杂链路验证和 smoke 的受控模式工程。
 
+## 推荐阅读路径
+
+- 默认模式接入：`README` → [极简示例 README](examples/taro-vue3-routerless-tabs-basic/README.md) → [完整接入指南](doc/integration-guide.md) → [API 文档](doc/api.md)
+- 高级受控模式：`README` → [完整接入指南](doc/integration-guide.md) → [retap 刷新指南](doc/retap-refresh.md) → [样式自定义指南](doc/styling.md)
+- 发布/验证：`README` → [多端兼容性说明](doc/compatibility.md) → [端侧运行时验证矩阵](doc/runtime-validation.md) → [发布流程](doc/release.md)
+
 ## 常用 API
 
 | API                            | 说明                                       |

@@ -2,6 +2,14 @@
 
 本文记录当前能力在不同验证层级下的覆盖状态，避免把 build smoke 误解为端侧运行时验证。
 
+## 相关文档
+
+- [README](../README.md)：对外稳定承诺和验证分层总览。
+- [多端兼容性说明](./compatibility.md)：复杂页面结构、端侧布局和平台差异说明。
+- [发布流程](./release.md)：发布前如何消费本矩阵中的门禁。
+- [高级 fixture README](../examples/taro-vue3-basic/README.md)：H5 runtime smoke 对应的受控 fixture。
+- [极简示例 README](../examples/taro-vue3-routerless-tabs-basic/README.md)：默认模式最小示例，对应 `test:taro:basic:h5`。
+
 ## 验证层级
 
 | 层级                 | 命令或方式                         | 说明                                                                       |

@@ -3,6 +3,13 @@
 本文记录 1.0.0 稳定版面向 Taro 4 + Vue 3 + Vite 的验证范围、fixture 覆盖点和复杂页面结构限制。更细的能力覆盖层级见
 [端侧运行时验证矩阵](./runtime-validation.md)。
 
+## 相关文档
+
+- [README](../README.md)：稳定承诺、示例分层和总导航。
+- [端侧运行时验证矩阵](./runtime-validation.md)：区分 build smoke、H5 runtime 和手动验证边界。
+- [发布流程](./release.md)：发布前如何组合主链路与扩展验证。
+- [高级 fixture README](../examples/taro-vue3-basic/README.md)：复杂链路覆盖点和本地运行命令。
+
 ## 已验证范围
 
 | 场景                               | 验证命令                        | 状态       |

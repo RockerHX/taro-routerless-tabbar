@@ -2,6 +2,13 @@
 
 本文按 root 入口和子路径入口整理 API。类型以源码声明为准，示例面向 Taro 4 + Vue 3。
 
+## 相关文档
+
+- [README](../README.md)：入口选择、快速开始和常用 API。
+- [完整接入指南](./integration-guide.md)：API 在真实 main 容器中的拼装方式。
+- [样式自定义指南](./styling.md)：组件样式、slot 和 CSS 变量的实际用法。
+- [retap 刷新指南](./retap-refresh.md)：retap 相关 API 的完整链路示例。
+
 从 `1.0.0` 起，本文列出的入口、导出名称、公开类型、组件 props、事件和 slot 参数属于稳定版公开契约；后续破坏性调整应进入新的 major 版本。仓库内测试脚本、fixture、release 脚本、构建脚本和 `dist/` 内 chunk 文件名不属于运行时公开 API。
 
 ## 1. 导出总览

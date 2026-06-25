@@ -5,6 +5,15 @@
 如果只需要可复制的最小接入工程，请优先查看
 `examples/taro-vue3-routerless-tabs-basic`。
 
+## 相关文档
+
+- [README](../../README.md)：总导航、示例分层和稳定承诺。
+- [完整接入指南](../../doc/integration-guide.md)：高级受控模式的主文档。
+- [retap 刷新指南](../../doc/retap-refresh.md)：本 fixture 中 retap 链路的设计说明。
+- [样式自定义指南](../../doc/styling.md)：CSS 变量、class 边界和底栏样式说明。
+- [多端兼容性说明](../../doc/compatibility.md)：本 fixture 在验证矩阵中的职责。
+- [端侧运行时验证矩阵](../../doc/runtime-validation.md)：H5 runtime、WeChat build 和 Alipay extended 的覆盖边界。
+
 ## 覆盖点
 
 - `home`、`orders`、`profile` 三个 Tab。
