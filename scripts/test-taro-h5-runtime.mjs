@@ -153,13 +153,18 @@ async function runRuntimeAssertions(baseUrl) {
     expect(previewUrl).not.toContain('tab=legacy')
 
     await page.getByTestId('pane-detail-action-orders').click()
+    await expect(page).toHaveURL(/\/pages\/detail\/index/u)
     await expect(page.getByTestId('detail-title')).toContainText(
       'Fixture 详情页',
     )
     await expect(page.getByTestId('detail-tab')).toContainText(
       '来源 Tab：orders',
     )
+    await expect(page.getByTestId('detail-from')).toContainText(
+      '来源参数：fixture-detail',
+    )
     await page.getByTestId('detail-back').click()
+    await expect(page).toHaveURL(/\/pages\/index\/index/u)
     await expect(page.getByTestId('active-title')).toContainText(
       '当前 Tab：订单',
     )

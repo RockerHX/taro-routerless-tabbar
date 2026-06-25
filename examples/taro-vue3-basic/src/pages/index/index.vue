@@ -9,26 +9,6 @@
     <text class="fixture-retap" data-testid="retap-summary">
       {{ retapSummary }}
     </text>
-    <view
-      v-if="activeDetailTab"
-      class="fixture-inline-detail"
-      data-testid="detail-title"
-    >
-      <text class="fixture-inline-detail-title">Fixture 详情页</text>
-      <text class="fixture-inline-detail-meta" data-testid="detail-tab">
-        来源 Tab：{{ activeDetailTab }}
-      </text>
-      <text class="fixture-inline-detail-meta" data-testid="detail-from">
-        来源参数：fixture-detail
-      </text>
-      <view
-        class="fixture-inline-detail-back"
-        data-testid="detail-back"
-        @click="closeFixtureDetail"
-      >
-        <text>返回主容器</text>
-      </view>
-    </view>
     <view class="fixture-style-boundary" data-testid="style-boundary">
       <text class="fixture-style-boundary-title">样式边界示例</text>
       <text class="fixture-style-boundary-desc">
@@ -160,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { useLoad } from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
 import {
   RouterlessTabBar,
   RouterlessTabPaneHost,
@@ -187,7 +167,6 @@ const tabs = useRouterlessTabs({
 })
 const refreshingTab = ref<TabKey | ''>(fixtureRetap.getAnimatingKey())
 const lastRetapTab = ref<TabKey | ''>('')
-const activeDetailTab = ref<TabKey | ''>('')
 const refreshCounts = reactive<Record<TabKey, number>>({
   home: 0,
   orders: 0,
@@ -330,11 +309,9 @@ function markNextRefreshFailed(key: TabKey) {
 }
 
 function openFixtureDetail(key: TabKey) {
-  activeDetailTab.value = key
-}
-
-function closeFixtureDetail() {
-  activeDetailTab.value = ''
+  void Taro.navigateTo({
+    url: `/pages/detail/index?tab=${key}&from=fixture-detail`,
+  })
 }
 
 function readBrowserQuery() {
@@ -459,39 +436,6 @@ onUnmounted(() => {
   color: #4e5969;
   font-size: 20px;
   line-height: 1.5;
-}
-
-.fixture-inline-detail {
-  margin-top: 20px;
-  padding: 24px;
-  border-radius: 12px;
-  background: #e6f4ff;
-}
-
-.fixture-inline-detail-title,
-.fixture-inline-detail-meta {
-  display: block;
-  margin-bottom: 12px;
-}
-
-.fixture-inline-detail-title {
-  color: #1f2329;
-  font-size: 26px;
-}
-
-.fixture-inline-detail-meta {
-  color: #4e5969;
-  font-size: 22px;
-}
-
-.fixture-inline-detail-back {
-  display: inline-flex;
-  margin-top: 8px;
-  padding: 12px 18px;
-  border-radius: 999px;
-  background: #1677ff;
-  color: #fff;
-  font-size: 22px;
 }
 
 .fixture-pane {
